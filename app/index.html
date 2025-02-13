@@ -1,1 +1,471 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parramatta Arabic School Enrollment Form</title>
+    <style>
+        /* Reset and base styles */
+        .pas-form * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
+
+        .pas-form {
+            background: #fff;
+            color: #333;
+            padding: 1.5em;
+            max-width: 100%;
+            overflow: auto;
+        }
+
+        /* Typography */
+        .pas-form h1 {
+            color: #004a87;
+            margin-bottom: 1em;
+            font-size: 1.8em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.8em;
+        }
+
+        .pas-form legend {
+            font-size: 1.2em;
+            padding: 0 0.8em;
+            font-weight: 700;
+            color: #004a87;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Form elements consistency */
+        .pas-form input,
+        .pas-form select,
+        .pas-form textarea {
+            font-size: 0.95em;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .pas-form input:focus,
+        .pas-form select:focus,
+        .pas-form textarea:focus {
+            outline: none;
+            border-color: #004a87;
+            box-shadow: 0 0 0 3px rgba(0,74,135,0.1);
+        }
+
+        .pas-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Layout adjustments */
+        .pas-form .form-row {
+            display: grid;
+            gap: 1em;
+            margin-bottom: 1.2em;
+            align-items: start; /* Changed from 'center' for better alignment */
+            grid-template-columns: minmax(150px, 200px) 1fr;
+        }
+
+        /* Ensure full-width elements */
+        .pas-form .form-row > .checkbox-group,
+        .pas-form .form-row > .radio-group,
+        .pas-form .form-row > .instruction-text,
+        .pas-form .form-row > textarea {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        /* Adjust for lone elements needing full width */
+        .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
+            grid-column: 1 / -1;
+        }
+
+        .pas-form fieldset {
+            margin: 1.5em 0;
+            padding: 1.5em;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .pas-form .inline-group {
+            display: flex;
+            gap: 1em;
+            margin: 1em 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .pas-form .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .pas-form .inline-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Consistent interactive elements */
+        .pas-form button {
+            background: #004a87;
+            color: #fff;
+            padding: 1em 2em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 1.5em 0;
+            transition: all 0.3s ease;
+        }
+
+        .pas-form button:hover {
+            background: #003366;
+            transform: translateY(-1px);
+        }
+
+        .pas-form input[type="radio"],
+        .pas-form input[type="checkbox"] {
+            width: auto;
+            height: 1.1em;
+            margin-right: 0.5em;
+        }
+
+        .pas-form .checkbox-group label,
+        .pas-form .radio-group label {
+            display: flex;
+            align-items: center;
+            margin: 0.5em 0;
+        }
+
+        /* Enhanced iframe compatibility */
+        .pas-form {
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .pas-form .instruction-text {
+            font-size: 0.9em;
+            margin: 1em 0;
+            padding: 1em;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: #f8f9fa;
+            color: #555;
+        }
+
+        /* Required field styling */
+        .pas-form .required {
+            font-weight: 600;
+        }
+
+        .pas-form .required::after {
+            content: "*";
+            color: #e00;
+            margin-left: 4px;
+            display: inline-block;
+        }
+
+        /* Fix for content shifts */
+        .pas-form select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.8em center;
+            background-size: 1em;
+        }
+
+        /* Consistent spacing */
+        .pas-form h3 {
+            margin: 1.5em 0 1em;
+            color: #444;
+            font-size: 1.1em;
+            padding-top: 0.5em;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="pas-form">
+        <div class="instruction-text">
+            <p>To enroll your child at Parramatta Arabic School, please complete our expression of interest form. The information provided in this form will be used to finalise your child's enrolment.</p>
+            <p>For applications submitted before the start of Term 1, we will organise an assessment day approximately one week before the term begins and notify you via email. For applications received after the assessment day, including those submitted after Term 1 starts, please bring your child for assessment on any Saturday during school terms between 9:30 am and 12:30 pm.</p>
+        </div>
+
+        <form id="enrollmentForm">
+            <!-- Student Details Section -->
+            <fieldset>
+                <legend>Student Details</legend>
+                <div class="instruction-text">
+                    <p>* Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</p>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Student First Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Student Last Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Student Birth Date</label>
+                    <input type="date" placeholder="DD/MM/YYYY" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Gender</label>
+                    <div class="checkbox-group">
+                        <label><input type="radio" name="gender" required> Male</label>
+                        <label><input type="radio" name="gender" required> Female</label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Mainstream School Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Year Level</label>
+                    <select required>
+                        <option value="">Select Year Level</option>
+                        <option>Kindergarten</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Year 5</option>
+                        <option>Year 6</option>
+                        <option>Year 7</option>
+                        <option>Year 8</option>
+                        <option>Year 9</option>
+                        <option>Year 10</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Student School Email</label>
+                    <input type="email">
+                </div>
+            </fieldset>
+
+            <!-- Family Details Section -->
+            <fieldset>
+                <legend>Family Details</legend>
+                
+                <h3>Parent/Carer 1</h3>
+                <div class="form-row">
+                    <label class="required">Full Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Relationship to Student</label>
+                    <input type="text" placeholder="e.g. Father, Mother, Carer" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Mobile</label>
+                    <input type="tel" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Email</label>
+                    <input type="email" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Confirm Email Address</label>
+                    <input type="email" required>
+                </div>
+
+                <h3>Parent/Carer 2</h3>
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <input type="text">
+                </div>
+
+                <div class="form-row">
+                    <label>Relationship to Student</label>
+                    <input type="text" placeholder="e.g. Father, Mother, Carer">
+                </div>
+
+                <div class="form-row">
+                    <label>Mobile</label>
+                    <input type="tel">
+                </div>
+
+                <div class="form-row">
+                    <label>Email Address</label>
+                    <input type="email">
+                </div>
+
+                <h3>Address</h3>
+                <div class="form-row">
+                    <label class="required">Street Address</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="inline-group">
+                    <div class="form-row" style="flex:1">
+                        <label class="required">Suburb</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-row" style="flex:1">
+                        <label class="required">State</label>
+                        <select required>
+                            <option>New South Wales</option>
+                        </select>
+                    </div>
+                    <div class="form-row" style="flex:1">
+                        <label class="required">Post Code</label>
+                        <input type="number" required>
+                    </div>
+                </div>
+
+                <h3>Emergency Contact</h3>
+                <div class="form-row">
+                    <div class="instruction-text" style="margin: 2px;">Please provide a different person's details to the one making the application.</div>
+                    <label class="required">Full Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Relationship</label>
+                    <input type="text" placeholder="e.g. neighbour, aunt, uncle" required>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Emergency Phone Number</label>
+                    <input type="tel" required>
+                    <div class="instruction-text" style="margin: 2px;">Please provide a different number than the one provided for parent one and parent two.</div>
+                </div>
+            </fieldset>
+
+            <!-- Program Details Section -->
+            <fieldset>
+                <legend>Program Details</legend>
+                <div class="instruction-text">
+                    <p>The school serves students of diverse backgrounds, apps, and interests, creating a welcoming environment where they can develop their Arabic language skills. Our program focuses on building skills in reading, writing, speaking, and listening through structured lessons and interactive activities.</p>
+                    <p>This is supplemented by a Quran Program that helps students memorise selected venues and improve recitation, enhancing both literacy and language development. Families who prefer their children to participate in the Arabic program only or have specific preferences are encouraged to indicate these in their application and discuss them with us during the enrolment process.</p>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Arabic Proficiency Level</label>
+                    <select required>
+                        <option value="">Select Level</option>
+                        <option>Beginner – My child has little to no exposure to Arabic and is just beginning to learn.</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label>Areas of Interest</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox"> Arabic Language</label>
+                        <label><input type="checkbox"> Quran Recitation and Tajweed</label>
+                        <label><input type="checkbox"> Quran Memorization</label>
+                        <label><input type="checkbox"> Others (please specify in the notes)</label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label>Notes/Suggestions/Comments</label>
+                    <textarea rows="4"></textarea>
+                </div>
+            </fieldset>
+
+            <!-- Consent & Declaration Section -->
+            <fieldset>
+                <legend>Consent and Declaration</legend>
+                <div class="instruction-text">
+                    <p>The personal information collected on this information form is for purposes directly related to your child's attendance at Parramatta Arabic School, including the processing of applications for the NSW Community Languages Schools Program, administered by the NSW Department of Education.</p>
+                    <p>Any information provided to the Department of Education will be used, disclosed and stored consistent with the NSW privacy laws. Certain information is required by the Department of Education to meet its obligations in relation to data collection, reporting and the payment of grants.</p>
+                </div>
+                <label>Does your child have any medical conditions or allergies we should be aware of?</label>
+                <div class="form-row">
+                    <textarea rows="4"></textarea>
+                </div>
+
+                <div class="instruction-text">Please provide details of any medical conditions, allergies, or specific health needs your child has. If your child requires medication or special assistance, please include this in your response.</div>
+
+                <div class="form-row">
+                    <label class="required">Photo Consent</label>
+                    <p class="instruction-text">The school takes photos during classroom activities and events, sharing them through our school app and social media. While we aim to accommodate exclusion requests, this may not always be practical. If you prefer your child not to be included, please discuss this with our management team.</p>
+                    <div class="checkbox-group">
+                        <label><input type="radio" name="photo" required> Yes</label>
+                        <label><input type="radio" name="photo" required> No</label>
+                    </div>
+                </div>
+
+                <div class="instruction-text">
+                    <p>I consent to providing information contained on this form to the Department of Education and to confirm the accuracy of the information with other organisations that may also hold information related to the student named.</p>
+                    <p>I have read the information concerning the collection of personal information. I declare that the information provided in this enrolment form is accurate and complete to the best of my knowledge.</p>
+                </div>
+
+                <div class="form-row">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" required> I have accurately provided information related to the student in this form</label>
+                        <label><input type="checkbox" required> I consent to information sharing as described above</label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Applicant's Full Name</label>
+                    <input type="text" required>
+                </div>
+            </fieldset>
+
+            <div style="text-align: center">
+                <button type="submit">Submit Application</button>
+            </div>
+        </form>
+        <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
+    </div>
+    <script>
+        document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            const statusMessage = document.getElementById('statusMessage');
+
+            try {
+                const response = await fetch('https://api.example.com/enroll', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    statusMessage.textContent = 'Application submitted successfully!';
+                    statusMessage.style.color = 'green';
+                    form.reset();
+                } else {
+                    const errorData = await response.json();
+                    statusMessage.textContent = `Error: ${errorData.message}`;
+                    statusMessage.style.color = 'red';
+                }
+            } catch (error) {
+                statusMessage.textContent = `Error: ${error.message}`;
+                statusMessage.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>
