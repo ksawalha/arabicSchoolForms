@@ -1,0 +1,16 @@
+{
+  "routes": [
+    {
+      "route": "/students",
+      "methods": [
+        "get"
+      ],
+      "rewrite": "/students",
+      "redirect": "/students",
+      "statusCode": 301,
+      "allowedRoles": [
+        "anonymous"
+      ]
+    }
+  ]
+}
