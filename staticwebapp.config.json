@@ -5,8 +5,8 @@
       "methods": [
         "get"
       ],
-      "rewrite": "/students",
-      "redirect": "/students",
+      "rewrite": "/app/students",
+      "redirect": "/app/students",
       "statusCode": 301,
       "allowedRoles": [
         "anonymous"
