@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -433,6 +432,13 @@
                 <button type="submit">Submit Application</button>
             </div>
         </form>
+
+        <div id="thankYouMessage" style="display: none; text-align: center; margin-top: 2em;">
+            <h1>Thank You!</h1>
+            <p>Your application has been submitted successfully.</p>
+            <p>We will review your application and contact you soon.</p>
+        </div>
+
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
     <script>
@@ -442,20 +448,25 @@
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             const statusMessage = document.getElementById('statusMessage');
+            const thankYouMessage = document.getElementById('thankYouMessage');
+
+            statusMessage.textContent = 'Please wait...';
+            statusMessage.style.color = 'blue';
 
             try {
-                const response = await fetch('https://api.example.com/enroll', {
+                const response = await fetch('https://arabicschool.azurewebsites.net/senroll', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'x-functions-key': 's-179PL4Auqa_SLMwVBSzXMnlbp7UC-s0WBgwLenHsriAzFukUj1FA=='
                     },
                     body: JSON.stringify(data)
                 });
 
                 if (response.ok) {
-                    statusMessage.textContent = 'Application submitted successfully!';
-                    statusMessage.style.color = 'green';
-                    form.reset();
+                    form.style.display = 'none';
+                    thankYouMessage.style.display = 'block';
+                    statusMessage.textContent = '';
                 } else {
                     const errorData = await response.json();
                     statusMessage.textContent = `Error: ${errorData.message}`;
