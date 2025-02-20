@@ -449,52 +449,52 @@
             document.getElementById('statusMessage').textContent = 'Submitting...';
         
             try {
-                const formData = {
+                const formData = new FormData(event.target);
+                const data = {
                     student: {
-                        firstName: document.querySelector('label:contains("Student First Name") + input').value,
-                        lastName: document.querySelector('label:contains("Student Last Name") + input').value,
-                        birthDate: document.querySelector('label:contains("Student Birth Date") + input').value,
-                        gender: document.querySelector('input[name="gender"]:checked')?.nextSibling.textContent.trim(),
-                        school: document.querySelector('label:contains("Mainstream School Name") + input').value,
-                        yearLevel: document.querySelector('label:contains("Year Level") + select').value,
-                        email: document.querySelector('label:contains("Student School Email") + input').value
+                        firstName: formData.get('studentFirstName'),
+                        lastName: formData.get('studentLastName'),
+                        birthDate: formData.get('studentBirthDate'),
+                        gender: formData.get('gender'),
+                        school: formData.get('mainstreamSchoolName'),
+                        yearLevel: formData.get('yearLevel'),
+                        email: formData.get('studentEmail')
                     },
                     parent1: {
-                        name: document.querySelector('h3:contains("Parent/Carer 1") + .form-row input').value,
-                        relationship: document.querySelector('h3:contains("Parent/Carer 1") + .form-row + .form-row input').value,
-                        phone: document.querySelector('h3:contains("Parent/Carer 1") + .form-row + .form-row + .form-row input').value,
-                        email: document.querySelector('h3:contains("Parent/Carer 1") + .form-row + .form-row + .form-row + .form-row input').value
+                        name: formData.get('parent1Name'),
+                        relationship: formData.get('parent1Relationship'),
+                        phone: formData.get('parent1Phone'),
+                        email: formData.get('parent1Email')
                     },
                     parent2: {
-                        name: document.querySelector('h3:contains("Parent/Carer 2") + .form-row input').value,
-                        relationship: document.querySelector('h3:contains("Parent/Carer 2") + .form-row + .form-row input').value,
-                        phone: document.querySelector('h3:contains("Parent/Carer 2") + .form-row + .form-row + .form-row input').value,
-                        email: document.querySelector('h3:contains("Parent/Carer 2") + .form-row + .form-row + .form-row + .form-row input').value
+                        name: formData.get('parent2Name'),
+                        relationship: formData.get('parent2Relationship'),
+                        phone: formData.get('parent2Phone'),
+                        email: formData.get('parent2Email')
                     },
                     address: {
-                        street: document.querySelector('label:contains("Street Address") + input').value,
-                        suburb: document.querySelector('label:contains("Suburb") + input').value,
-                        state: document.querySelector('label:contains("State") + select').value,
-                        postCode: document.querySelector('label:contains("Post Code") + input').value
+                        street: formData.get('streetAddress'),
+                        suburb: formData.get('suburb'),
+                        state: formData.get('state'),
+                        postCode: formData.get('postCode')
                     },
                     emergencyContact: {
-                        name: document.querySelector('h3:contains("Emergency Contact") + .form-row input').value,
-                        relationship: document.querySelector('h3:contains("Emergency Contact") + .form-row + .form-row input').value,
-                        phone: document.querySelector('h3:contains("Emergency Contact") + .form-row + .form-row + .form-row input').value
+                        name: formData.get('emergencyContactName'),
+                        relationship: formData.get('emergencyContactRelationship'),
+                        phone: formData.get('emergencyContactPhone')
                     },
                     programDetails: {
-                        proficiency: document.querySelector('label:contains("Arabic Proficiency Level") + select').value,
-                        interests: Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-                            .map(checkbox => checkbox.nextSibling.textContent.trim()),
-                        notes: document.querySelector('label:contains("Notes/Suggestions/Comments") + textarea').value
+                        proficiency: formData.get('proficiencyLevel'),
+                        interests: formData.getAll('interests'),
+                        notes: formData.get('notes')
                     },
-                    medicalInfo: document.querySelector('label:contains("Does your child have any medical conditions or allergies we should be aware of?") + textarea').value,
-                    photoConsent: document.querySelector('input[name="photo"]:checked')?.nextSibling.textContent.trim(),
+                    medicalInfo: formData.get('medicalInfo'),
+                    photoConsent: formData.get('photoConsent'),
                     consent: {
-                        informationAccuracy: document.querySelector('label:contains("I have accurately provided information related to the student in this form") input').checked,
-                        dataSharing: document.querySelector('label:contains("I consent to information sharing as described above") input').checked
+                        informationAccuracy: formData.get('informationAccuracy') === 'on',
+                        dataSharing: formData.get('dataSharing') === 'on'
                     },
-                    applicantName: document.querySelector('label:contains("Applicant\'s Full Name") + input').value
+                    applicantName: formData.get('applicantName')
                 };
         
                 // API call
@@ -503,7 +503,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(data)
                 });
         
                 if (!response.ok) throw new Error('Network response was not ok');
