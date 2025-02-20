@@ -210,35 +210,35 @@
 
                 <div class="form-row">
                     <label class="required">Student First Name</label>
-                    <input type="text" required>
+                    <input type="text" name="studentFirstName" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Student Last Name</label>
-                    <input type="text" required>
+                    <input type="text" name="studentLastName" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Student Birth Date</label>
-                    <input type="date" placeholder="DD/MM/YYYY" required>
+                    <input type="date" name="studentBirthDate" placeholder="DD/MM/YYYY" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Gender</label>
                     <div class="checkbox-group">
-                        <label><input type="radio" name="gender" required> Male</label>
-                        <label><input type="radio" name="gender" required> Female</label>
+                        <label><input type="radio" name="gender" value="Male" required> Male</label>
+                        <label><input type="radio" name="gender" value="Female" required> Female</label>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Mainstream School Name</label>
-                    <input type="text" required>
+                    <input type="text" name="mainstreamSchoolName" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Year Level</label>
-                    <select required>
+                    <select name="yearLevel" required>
                         <option value="">Select Year Level</option>
                         <option>Kindergarten</option>
                         <option>Year 1</option>
@@ -256,7 +256,7 @@
 
                 <div class="form-row">
                     <label>Student School Email</label>
-                    <input type="email">
+                    <input type="email" name="studentEmail">
                 </div>
             </fieldset>
 
@@ -267,70 +267,70 @@
                 <h3>Parent/Carer 1</h3>
                 <div class="form-row">
                     <label class="required">Full Name</label>
-                    <input type="text" required>
+                    <input type="text" name="parent1Name" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Relationship to Student</label>
-                    <input type="text" placeholder="e.g. Father, Mother, Carer" required>
+                    <input type="text" name="parent1Relationship" placeholder="e.g. Father, Mother, Carer" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Mobile</label>
-                    <input type="tel" required>
+                    <input type="tel" name="parent1Phone" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Email</label>
-                    <input type="email" required>
+                    <input type="email" name="parent1Email" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Confirm Email Address</label>
-                    <input type="email" required>
+                    <input type="email" name="parent1ConfirmEmail" required>
                 </div>
 
                 <h3>Parent/Carer 2</h3>
                 <div class="form-row">
                     <label>Full Name</label>
-                    <input type="text">
+                    <input type="text" name="parent2Name">
                 </div>
 
                 <div class="form-row">
                     <label>Relationship to Student</label>
-                    <input type="text" placeholder="e.g. Father, Mother, Carer">
+                    <input type="text" name="parent2Relationship" placeholder="e.g. Father, Mother, Carer">
                 </div>
 
                 <div class="form-row">
                     <label>Mobile</label>
-                    <input type="tel">
+                    <input type="tel" name="parent2Phone">
                 </div>
 
                 <div class="form-row">
                     <label>Email Address</label>
-                    <input type="email">
+                    <input type="email" name="parent2Email">
                 </div>
 
                 <h3>Address</h3>
                 <div class="form-row">
                     <label class="required">Street Address</label>
-                    <input type="text" required>
+                    <input type="text" name="streetAddress" required>
                 </div>
 
                 <div class="inline-group">
                     <div class="form-row" style="flex:1">
                         <label class="required">Suburb</label>
-                        <input type="text" required>
+                        <input type="text" name="suburb" required>
                     </div>
                     <div class="form-row" style="flex:1">
                         <label class="required">State</label>
-                        <select required>
+                        <select name="state" required>
                             <option>New South Wales</option>
                         </select>
                     </div>
                     <div class="form-row" style="flex:1">
                         <label class="required">Post Code</label>
-                        <input type="number" required>
+                        <input type="number" name="postCode" required>
                     </div>
                 </div>
 
@@ -338,17 +338,17 @@
                 <div class="form-row">
                     <div class="instruction-text" style="margin: 2px;">Please provide a different person's details to the one making the application.</div>
                     <label class="required">Full Name</label>
-                    <input type="text" required>
+                    <input type="text" name="emergencyContactName" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Relationship</label>
-                    <input type="text" placeholder="e.g. neighbour, aunt, uncle" required>
+                    <input type="text" name="emergencyContactRelationship" placeholder="e.g. neighbour, aunt, uncle" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Emergency Phone Number</label>
-                    <input type="tel" required>
+                    <input type="tel" name="emergencyContactPhone" required>
                     <div class="instruction-text" style="margin: 2px;">Please provide a different number than the one provided for parent one and parent two.</div>
                 </div>
             </fieldset>
@@ -363,7 +363,7 @@
 
                 <div class="form-row">
                     <label class="required">Arabic Proficiency Level</label>
-                    <select required>
+                    <select name="proficiencyLevel" required>
                         <option value="">Select Level</option>
                         <option>Beginner – My child has little to no exposure to Arabic and is just beginning to learn.</option>
                         <option>Intermediate</option>
@@ -374,16 +374,16 @@
                 <div class="form-row">
                     <label>Areas of Interest</label>
                     <div class="checkbox-group">
-                        <label><input type="checkbox"> Arabic Language</label>
-                        <label><input type="checkbox"> Quran Recitation and Tajweed</label>
-                        <label><input type="checkbox"> Quran Memorization</label>
-                        <label><input type="checkbox"> Others (please specify in the notes)</label>
+                        <label><input type="checkbox" name="interests" value="Arabic Language"> Arabic Language</label>
+                        <label><input type="checkbox" name="interests" value="Quran Recitation and Tajweed"> Quran Recitation and Tajweed</label>
+                        <label><input type="checkbox" name="interests" value="Quran Memorization"> Quran Memorization</label>
+                        <label><input type="checkbox" name="interests" value="Others"> Others (please specify in the notes)</label>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label>Notes/Suggestions/Comments</label>
-                    <textarea rows="4"></textarea>
+                    <textarea name="notes" rows="4"></textarea>
                 </div>
             </fieldset>
 
@@ -396,7 +396,7 @@
                 </div>
                 <label>Does your child have any medical conditions or allergies we should be aware of?</label>
                 <div class="form-row">
-                    <textarea rows="4"></textarea>
+                    <textarea name="medicalInfo" rows="4"></textarea>
                 </div>
 
                 <div class="instruction-text">Please provide details of any medical conditions, allergies, or specific health needs your child has. If your child requires medication or special assistance, please include this in your response.</div>
@@ -405,8 +405,8 @@
                     <label class="required">Photo Consent</label>
                     <p class="instruction-text">The school takes photos during classroom activities and events, sharing them through our school app and social media. While we aim to accommodate exclusion requests, this may not always be practical. If you prefer your child not to be included, please discuss this with our management team.</p>
                     <div class="checkbox-group">
-                        <label><input type="radio" name="photo" required> Yes</label>
-                        <label><input type="radio" name="photo" required> No</label>
+                        <label><input type="radio" name="photoConsent" value="Yes" required> Yes</label>
+                        <label><input type="radio" name="photoConsent" value="No" required> No</label>
                     </div>
                 </div>
 
@@ -417,14 +417,14 @@
 
                 <div class="form-row">
                     <div class="checkbox-group">
-                        <label><input type="checkbox" required> I have accurately provided information related to the student in this form</label>
-                        <label><input type="checkbox" required> I consent to information sharing as described above</label>
+                        <label><input type="checkbox" name="informationAccuracy" required> I have accurately provided information related to the student in this form</label>
+                        <label><input type="checkbox" name="dataSharing" required> I consent to information sharing as described above</label>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Applicant's Full Name</label>
-                    <input type="text" required>
+                    <input type="text" name="applicantName" required>
                 </div>
             </fieldset>
 
