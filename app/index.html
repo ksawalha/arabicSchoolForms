@@ -497,7 +497,7 @@
                     applicantName: formData.get('applicantName')
                 };
         
-                // API call
+                console.log(JSON.stringify(data));
                 const response = await fetch('https://arabicschool.azurewebsites.net/api/student?code=jBJmpUad8UZ03f6ftJkX6l55TrxIFGjvp2khZuZw1Rq6AzFuM_nJ7g==', {
                     method: 'POST',
                     headers: {
