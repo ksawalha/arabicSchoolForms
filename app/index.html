@@ -71,7 +71,7 @@
             display: grid;
             gap: 1em;
             margin-bottom: 1.2em;
-            align-items: start; /* Changed from 'center' for better alignment */
+            align-items: start;
             grid-template-columns: minmax(150px, 200px) 1fr;
         }
 
@@ -190,6 +190,18 @@
             font-size: 1.1em;
             padding-top: 0.5em;
             border-top: 1px solid #eee;
+        }
+
+        /* Error styling */
+        .error-highlight {
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 0.8em;
+            margin-top: 0.2em;
         }
     </style>
 </head>
@@ -442,14 +454,79 @@
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
     <script>
+        function clearExistingErrors() {
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
+        }
+
+        function validateForm(formData) {
+            const errors = [];
+            const parent1Name = formData.get('parent1Name');
+            const parent1Phone = formData.get('parent1Phone');
+            const parent1Email = formData.get('parent1Email');
+            const parent2Name = formData.get('parent2Name');
+            const parent2Phone = formData.get('parent2Phone');
+            const parent2Email = formData.get('parent2Email');
+            const emergencyName = formData.get('emergencyContactName');
+            const emergencyPhone = formData.get('emergencyContactPhone');
+
+            // Check Emergency Contact vs Parent 1
+            if (emergencyName === parent1Name) {
+                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
+            }
+
+            // Check Emergency Contact vs Parent 2
+            if (parent2Name && emergencyName === parent2Name) {
+                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
+            }
+
+            if (emergencyPhone === parent1Phone) {
+                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 1.' });
+            }
+
+            if (parent2Phone && emergencyPhone === parent2Phone) {
+                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
+            }
+
+            // Check Parent 2 vs Parent 1
+            if (parent2Phone && parent2Phone === parent1Phone) {
+                errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
+            }
+
+            if (parent2Email && parent2Email === parent1Email) {
+                errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
+            }
+
+            return errors;
+        }
+
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
             submitButton.disabled = true;
             document.getElementById('statusMessage').textContent = 'Submitting...';
-        
+            clearExistingErrors();
+
+            const formData = new FormData(event.target);
+            const errors = validateForm(formData);
+
+            if (errors.length > 0) {
+                document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
+                errors.forEach(error => {
+                    const field = document.querySelector(`[name="${error.field}"]`);
+                    if (field) {
+                        field.classList.add('error-highlight');
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message';
+                        errorDiv.textContent = error.message;
+                        field.parentNode.insertBefore(errorDiv, field.nextSibling);
+                    }
+                });
+                submitButton.disabled = false;
+                return;
+            }
+
             try {
-                const formData = new FormData(event.target);
                 const data = {
                     student: {
                         firstName: formData.get('studentFirstName'),
@@ -496,7 +573,7 @@
                     },
                     applicantName: formData.get('applicantName')
                 };
-        
+
                 console.log(JSON.stringify(data));
                 const response = await fetch('https://arabicschool.azurewebsites.net/api/student?code=jBJmpUad8UZ03f6ftJkX6l55TrxIFGjvp2khZuZw1Rq6AzFuM_nJ7g==', {
                     method: 'POST',
@@ -505,9 +582,9 @@
                     },
                     body: JSON.stringify(data)
                 });
-        
+
                 if (!response.ok) throw new Error('Network response was not ok');
-        
+
                 // Success handling
                 document.getElementById('enrollmentForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
@@ -520,6 +597,6 @@
                 submitButton.disabled = false;
             }
         });
-        </script>
+    </script>
 </body>
 </html>
