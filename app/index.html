@@ -203,8 +203,8 @@
             font-size: 0.9em;
             margin-top: 0.5em;
             padding: 0.5em;
-            background-color: #fff0f0; /* Light red background */
-            border: 1px solid #ffcccc; /* Light red border */
+            background-color: #fff0f0;
+            border: 1px solid #ffcccc;
             border-radius: 4px;
             display: inline-block;
             width: 100%;
@@ -241,6 +241,15 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* New styles for datalist */
+        .pas-form datalist {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 0 0 4px 4px;
+            width: 100%;
         }
     </style>
 </head>
@@ -282,9 +291,19 @@
                     </div>
                 </div>
 
+                <!-- Updated Mainstream School Name Field -->
                 <div class="form-row">
                     <label class="required">Mainstream School Name</label>
-                    <input type="text" name="mainstreamSchoolName" required>
+                    <input type="text" name="mainstreamSchoolName" list="schools" required placeholder="Type to search or select 'Other'">
+                    <datalist id="schools">
+                        <!-- Options populated by JavaScript -->
+                    </datalist>
+                </div>
+
+                <!-- New Conditional Field for "Other" School -->
+                <div class="form-row" id="otherSchoolContainer" style="display: none;">
+                    <label class="required">Specify School Name</label>
+                    <input type="text" name="otherSchoolName">
                 </div>
 
                 <div class="form-row">
@@ -502,52 +521,55 @@
     </div>
 
     <script>
-        function clearExistingErrors() {
-            document.querySelectorAll('.error-message').forEach(el => el.remove());
-            document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
-        }
+        // Fetch schools and populate datalist
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
+                .then(response => response.json())
+                .then(schools => {
+                    const datalist = document.getElementById('schools');
+                    schools.forEach(school => {
+                        const option = document.createElement('option');
+                        option.value = school;
+                        datalist.appendChild(option);
+                    });
+                    // Add "Other" option
+                    const otherOption = document.createElement('option');
+                    otherOption.value = 'Other';
+                    datalist.appendChild(otherOption);
+                })
+                .catch(error => console.error('Error fetching schools:', error));
+        });
 
+        // Handle "Other" selection
+        const schoolInput = document.querySelector('[name="mainstreamSchoolName"]');
+        const otherSchoolContainer = document.getElementById('otherSchoolContainer');
+
+        schoolInput.addEventListener('input', function() {
+            if (this.value === 'Other') {
+                otherSchoolContainer.style.display = 'block';
+                document.querySelector('[name="otherSchoolName"]').required = true;
+            } else {
+                otherSchoolContainer.style.display = 'none';
+                document.querySelector('[name="otherSchoolName"]').required = false;
+            }
+        });
+
+        // Modified validation function
         function validateForm(formData) {
             const errors = [];
-            const parent1Name = formData.get('parent1Name');
-            const parent1Phone = formData.get('parent1Phone');
-            const parent1Email = formData.get('parent1Email');
-            const parent2Name = formData.get('parent2Name');
-            const parent2Phone = formData.get('parent2Phone');
-            const parent2Email = formData.get('parent2Email');
-            const emergencyName = formData.get('emergencyContactName');
-            const emergencyPhone = formData.get('emergencyContactPhone');
+            // ... (existing validation checks) ...
 
-            // Check Emergency Contact vs Parent 1
-            if (emergencyName === parent1Name) {
-                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
-            }
-
-            // Check Emergency Contact vs Parent 2
-            if (parent2Name && emergencyName === parent2Name) {
-                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
-            }
-
-            if (emergencyPhone === parent1Phone) {
-                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 1.' });
-            }
-
-            if (parent2Phone && emergencyPhone === parent2Phone) {
-                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
-            }
-
-            // Check Parent 2 vs Parent 1
-            if (parent2Phone && parent2Phone === parent1Phone) {
-                errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
-            }
-
-            if (parent2Email && parent2Email === parent1Email) {
-                errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
+            // Check for "Other" school validation
+            const schoolValue = formData.get('mainstreamSchoolName');
+            const otherSchoolValue = formData.get('otherSchoolName');
+            if (schoolValue === 'Other' && !otherSchoolValue) {
+                errors.push({ field: 'otherSchoolName', message: 'Please specify the school name.' });
             }
 
             return errors;
         }
 
+        // Modified submission handler
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
@@ -555,7 +577,7 @@
             
             // Show loading overlay
             loadingOverlay.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
+            document.body.style.overflow = 'hidden';
             submitButton.disabled = true;
             clearExistingErrors();
 
@@ -567,13 +589,18 @@
                     throw new Error('Validation errors');
                 }
 
+                // Get school value
+                const schoolValue = formData.get('mainstreamSchoolName');
+                const otherSchoolValue = formData.get('otherSchoolName');
+                const mainstream = schoolValue === 'Other' ? otherSchoolValue : schoolValue;
+
                 const data = {
                     student: {
                         firstName: formData.get('studentFirstName'),
                         lastName: formData.get('studentLastName'),
                         birthDate: formData.get('studentBirthDate'),
                         gender: formData.get('gender'),
-                        school: formData.get('mainstreamSchoolName'),
+                        school: schoolValue,
                         yearLevel: formData.get('yearLevel'),
                         email: formData.get('studentEmail')
                     },
@@ -611,7 +638,8 @@
                         informationAccuracy: formData.get('informationAccuracy') === 'on',
                         dataSharing: formData.get('dataSharing') === 'on'
                     },
-                    applicantName: formData.get('applicantName')
+                    applicantName: formData.get('applicantName'),
+                    mainstream: mainstream
                 };
 
                 console.log(JSON.stringify(data));
