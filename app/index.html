@@ -200,8 +200,47 @@
 
         .error-message {
             color: #ff0000;
-            font-size: 0.8em;
-            margin-top: 0.2em;
+            font-size: 0.9em;
+            margin-top: 0.5em;
+            padding: 0.5em;
+            background-color: #fff0f0; /* Light red background */
+            border: 1px solid #ffcccc; /* Light red border */
+            border-radius: 4px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Loading overlay styling */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-text {
+            margin-top: 1em;
+            color: #004a87;
+            font-weight: bold;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -453,6 +492,15 @@
 
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg" 
+             alt="Loading..." 
+             class="loading-spinner">
+        <div class="loading-text">Submitting your application... Please wait</div>
+    </div>
+
     <script>
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
@@ -503,30 +551,22 @@
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // Show loading overlay
+            loadingOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
             submitButton.disabled = true;
-            document.getElementById('statusMessage').textContent = 'Submitting...';
             clearExistingErrors();
 
-            const formData = new FormData(event.target);
-            const errors = validateForm(formData);
-
-            if (errors.length > 0) {
-                document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
-                errors.forEach(error => {
-                    const field = document.querySelector(`[name="${error.field}"]`);
-                    if (field) {
-                        field.classList.add('error-highlight');
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error-message';
-                        errorDiv.textContent = error.message;
-                        field.parentNode.insertBefore(errorDiv, field.nextSibling);
-                    }
-                });
-                submitButton.disabled = false;
-                return;
-            }
-
             try {
+                const formData = new FormData(event.target);
+                const errors = validateForm(formData);
+
+                if (errors.length > 0) {
+                    throw new Error('Validation errors');
+                }
+
                 const data = {
                     student: {
                         firstName: formData.get('studentFirstName'),
@@ -590,11 +630,32 @@
                 document.getElementById('thankYouMessage').style.display = 'block';
                 document.getElementById('statusMessage').textContent = '';
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('statusMessage').textContent = 
-                    'Error submitting form. Please try again or contact support.';
-            } finally {
+                // Hide loading overlay on error
+                loadingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
                 submitButton.disabled = false;
+                
+                if (error.message === 'Validation errors') {
+                    document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
+                    errors.forEach(error => {
+                        const field = document.querySelector(`[name="${error.field}"]`);
+                        if (field) {
+                            field.classList.add('error-highlight');
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error-message';
+                            errorDiv.textContent = error.message;
+                            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+                        }
+                    });
+                } else {
+                    console.error('Error:', error);
+                    document.getElementById('statusMessage').textContent = 
+                        'Error submitting form. Please try again or contact support.';
+                }
+                return;
+            } finally {
+                loadingOverlay.style.display = 'none';
+                document.body.style.overflow = '';
             }
         });
     </script>
