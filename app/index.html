@@ -521,6 +521,12 @@
     </div>
 
     <script>
+        function clearExistingErrors() {
+            // Remove all error messages
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            // Remove error highlights from fields
+            document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
+        }
         // Fetch schools and populate datalist
         document.addEventListener('DOMContentLoaded', function() {
             fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
