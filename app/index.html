@@ -4,254 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parramatta Arabic School Enrollment Form</title>
-    <style>
-        /* Reset and base styles */
-        .pas-form * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-        }
+<style>
+    /* Reset and base styles */
+    .pas-form * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+    }
 
-        .pas-form {
-            background: #fcfcfc;
-            color: #333;
-            padding: 1.5em;
-            max-width: 100%;
-            overflow: auto;
-        }
+    .pas-form {
+        background: #fcfcfc;
+        color: #333;
+        padding: 1.5em;
+        max-width: 100%;
+        overflow: auto;
+    }
 
-        /* Typography */
-        .pas-form h1 {
-            color: #981c1c;
-            margin-bottom: 1em;
-            font-size: 1.8em;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.8em;
-        }
+    /* Typography */
+    .pas-form h1 {
+        color: #981c1c;
+        margin-bottom: 1em;
+        font-size: 1.8em;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.8em;
+    }
 
-        .pas-form legend {
-            font-size: 1.2em;
-            padding: 0 0.8em;
-            font-weight: 700;
-            color: #981c1c;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+    .pas-form legend {
+        font-size: 1.2em;
+        padding: 0 0.8em;
+        font-weight: 700;
+        color: #981c1c;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
 
-        /* Form elements consistency */
-        .pas-form input,
-        .pas-form select,
-        .pas-form textarea {
-            font-size: 0.95em;
-            padding: 0.8em;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
+    /* Form elements consistency */
+    .pas-form input,
+    .pas-form select,
+    .pas-form textarea {
+        font-size: 0.95em;
+        padding: 0.8em;
+        border: 1px solid #ccc;
+        border-radius: 10px; /* Rounded corners */
+        transition: all 0.3s ease;
+        width: 100%; /* Ensure inputs and selects fill their container */
+        max-width: 100%; /* Prevent overflow */
+        box-sizing: border-box; /* Include padding and border in width */
+    }
 
-        .pas-form input:focus,
-        .pas-form select:focus,
-        .pas-form textarea:focus {
-            outline: none;
-            border-color: #981c1c;
-            box-shadow: 0 0 0 3px rgba(0,74,135,0.1);
-        }
+    .pas-form input:focus,
+    .pas-form select:focus,
+    .pas-form textarea:focus {
+        outline: none;
+        border-color: #981c1c;
+        box-shadow: 0 0 0 3px rgba(152, 28, 28,0.1);
+    }
 
-        .pas-form textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+    .pas-form textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
 
-        /* Layout adjustments */
-        .pas-form .form-row {
-            display: grid;
-            gap: 1em;
-            margin-bottom: 1.2em;
-            align-items: start;
-            grid-template-columns: minmax(150px, 200px) 1fr;
-        }
+    /* Layout adjustments */
+    .pas-form .form-row {
+        display: flex;
+        flex-direction: column; /* Stack label and field vertically */
+        gap: 0.5em; /* Add spacing between label and field */
+        margin-bottom: 1.2em;
+    }
 
-        /* Ensure full-width elements */
-        .pas-form .form-row > .checkbox-group,
-        .pas-form .form-row > .radio-group,
-        .pas-form .form-row > .instruction-text,
-        .pas-form .form-row > textarea {
-            grid-column: 1 / -1;
-            width: 100%;
-        }
+    /* Ensure full-width elements */
+    .pas-form .form-row > .checkbox-group,
+    .pas-form .form-row > .radio-group,
+    .pas-form .form-row > .instruction-text,
+    .pas-form .form-row > textarea {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
 
-        /* Adjust for lone elements needing full width */
-        .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
-            grid-column: 1 / -1;
-        }
+    /* Adjust for lone elements needing full width */
+    .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
+        grid-column: 1 / -1;
+    }
 
-        .pas-form fieldset {
-            margin: 1.5em 0;
-            padding: 1.5em;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: #f8f9fa;
-        }
+    .pas-form fieldset {
+        margin: 1.5em 0;
+        padding: 1.5em;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #f8f9fa;
+    }
 
+    /* Inline group for State, Suburb, and Post Code */
+    .pas-form .inline-group {
+        display: flex;
+        gap: 1em;
+        margin: 1em 0;
+        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    }
+
+    .pas-form .inline-group .form-row {
+        flex: 1 1 100%; /* Full width by default */
+        min-width: 150px; /* Minimum width for each field */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
         .pas-form .inline-group {
-            display: flex;
-            gap: 1em;
-            margin: 1em 0;
+            flex-direction: column; /* Stack fields vertically on small screens */
+            gap: 0.5em; /* Reduce gap for smaller screens */
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 600px) {
-            .pas-form .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .pas-form .inline-group {
-                flex-direction: column;
-            }
+        .pas-form .inline-group .form-row {
+            flex: 1 1 100%; /* Each field takes full width */
         }
+    }
 
-        /* Consistent interactive elements */
-        .pas-form button {
-            background: #981c1c;
-            color: #fff;
-            padding: 1em 2em;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 1.5em 0;
-            transition: all 0.3s ease;
-        }
+    /* Consistent interactive elements */
+    .pas-form button {
+        background: #981c1c;
+        color: #fff;
+        padding: 1em 2em;
+        border: none;
+        border-radius: 10px; /* Rounded corners */
+        cursor: pointer;
+        font-size: 1em;
+        margin: 1.5em 0;
+        transition: all 0.3s ease;
+    }
 
-        .pas-form button:hover {
-            background: #003366;
-            transform: translateY(-1px);
-        }
+    .pas-form button:hover {
+        background: #003366;
+        transform: translateY(-1px);
+    }
 
-        .pas-form input[type="radio"],
-        .pas-form input[type="checkbox"] {
-            width: auto;
-            height: 1.1em;
-            margin-right: 0.5em;
-        }
+    .pas-form input[type="radio"],
+    .pas-form input[type="checkbox"] {
+        width: auto;
+        height: 1.1em;
+        margin-right: 0.5em;
+    }
 
-        .pas-form .checkbox-group label,
-        .pas-form .radio-group label {
-            display: flex;
-            align-items: center;
-            margin: 0.5em 0;
-        }
+    .pas-form .checkbox-group label,
+    .pas-form .radio-group label {
+        display: flex;
+        align-items: center;
+        margin: 0.5em 0;
+    }
 
-        /* Enhanced iframe compatibility */
-        .pas-form {
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+    /* Enhanced iframe compatibility */
+    .pas-form {
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
 
-        .pas-form .instruction-text {
-            font-size: 0.9em;
-            margin: 1em 0;
-            padding: 1em;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            background: #f8f9fa;
-            color: #555;
-        }
+    .pas-form .instruction-text {
+        font-size: 0.9em;
+        margin: 1em 0;
+        padding: 1em;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        background: #f8f9fa;
+        color: #555;
+    }
 
-        /* Required field styling */
-        .pas-form .required {
-            font-weight: 600;
-        }
+    /* Required field styling */
+    .pas-form .required {
+        font-weight: 600;
+    }
 
-        .pas-form .required::after {
-            content: "*";
-            color: #e00;
-            margin-left: 4px;
-            display: inline-block;
-        }
+    .pas-form .required::after {
+        content: "*";
+        color: #e00;
+        margin-left: 4px;
+        display: inline-block;
+    }
 
-        /* Fix for content shifts */
-        .pas-form select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.8em center;
-            background-size: 1em;
-        }
+    /* Fix for content shifts */
+    .pas-form select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.8em center;
+        background-size: 1em;
+    }
 
-        /* Consistent spacing */
-        .pas-form h3 {
-            margin: 1.5em 0 1em;
-            color: #444;
-            font-size: 1.1em;
-            padding-top: 0.5em;
-            border-top: 1px solid #eee;
-        }
+    /* Consistent spacing */
+    .pas-form h3 {
+        margin: 1.5em 0 1em;
+        color: #444;
+        font-size: 1.1em;
+        padding-top: 0.5em;
+        border-top: 1px solid #eee;
+    }
 
-        /* Error styling */
-        .error-highlight {
-            border-color: #ff0000 !important;
-            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
-        }
+    /* Error styling */
+    .error-highlight {
+        border-color: #ff0000 !important;
+        box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+    }
 
-        .error-message {
-            color: #ff0000;
-            font-size: 0.9em;
-            margin-top: 0.5em;
-            padding: 0.5em;
-            background-color: #fff0f0;
-            border: 1px solid #ffcccc;
-            border-radius: 4px;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .error-message {
+        color: #ff0000;
+        font-size: 0.9em;
+        margin-top: 0.5em;
+        padding: 0.5em;
+        background-color: #fff0f0;
+        border: 1px solid #ffcccc;
+        border-radius: 4px;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+    }
 
-        /* Loading overlay styling */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 1000;
-        }
+    /* Loading overlay styling */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1000;
+    }
 
-        .loading-spinner {
-            width: 80px;
-            height: 80px;
-            animation: spin 1s linear infinite;
-        }
+    .loading-spinner {
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+    }
 
-        .loading-text {
-            margin-top: 1em;
-            color: #981c1c;
-            font-weight: bold;
-        }
+    .loading-text {
+        margin-top: 1em;
+        color: #981c1c;
+        font-weight: bold;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 
-        /* New styles for datalist */
-        .pas-form datalist {
-            position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 0 0 4px 4px;
-            width: 100%;
-        }
-    </style>
+    /* New styles for datalist */
+    .pas-form datalist {
+        position: absolute;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 0 0 4px 4px;
+        width: 100%;
+    }
+</style>
 </head>
 <body>
     <div class="pas-form">
