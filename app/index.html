@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parramatta Arabic School Enrollment Form</title>
 <style>
-    /* Reset and base styles */
     .pas-form * {
         box-sizing: border-box;
         margin: 0;
@@ -22,7 +21,6 @@
         overflow: auto;
     }
 
-    /* Typography */
     .pas-form h1 {
         color: #981c1c;
         margin-bottom: 1em;
@@ -41,18 +39,17 @@
         border-radius: 4px;
     }
 
-    /* Form elements consistency */
     .pas-form input,
     .pas-form select,
     .pas-form textarea {
         font-size: 0.95em;
         padding: 0.8em;
         border: 1px solid #ccc;
-        border-radius: 10px; /* Rounded corners */
+        border-radius: 10px;
         transition: all 0.3s ease;
-        width: 100%; /* Ensure inputs and selects fill their container */
-        max-width: 100%; /* Prevent overflow */
-        box-sizing: border-box; /* Include padding and border in width */
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .pas-form input:focus,
@@ -68,15 +65,13 @@
         min-height: 100px;
     }
 
-    /* Layout adjustments */
     .pas-form .form-row {
         display: flex;
-        flex-direction: column; /* Stack label and field vertically */
-        gap: 0.5em; /* Add spacing between label and field */
+        flex-direction: column;
+        gap: 0.5em;
         margin-bottom: 1.2em;
     }
 
-    /* Ensure full-width elements */
     .pas-form .form-row > .checkbox-group,
     .pas-form .form-row > .radio-group,
     .pas-form .form-row > .instruction-text,
@@ -85,7 +80,6 @@
         width: 100%;
     }
 
-    /* Adjust for lone elements needing full width */
     .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
         grid-column: 1 / -1;
     }
@@ -98,38 +92,35 @@
         background: #f8f9fa;
     }
 
-    /* Inline group for State, Suburb, and Post Code */
     .pas-form .inline-group {
         display: flex;
         gap: 1em;
         margin: 1em 0;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        flex-wrap: wrap;
     }
 
     .pas-form .inline-group .form-row {
-        flex: 1 1 100%; /* Full width by default */
-        min-width: 150px; /* Minimum width for each field */
+        flex: 1 1 100%;
+        min-width: 150px;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 600px) {
         .pas-form .inline-group {
-            flex-direction: column; /* Stack fields vertically on small screens */
-            gap: 0.5em; /* Reduce gap for smaller screens */
+            flex-direction: column;
+            gap: 0.5em;
         }
 
         .pas-form .inline-group .form-row {
-            flex: 1 1 100%; /* Each field takes full width */
+            flex: 1 1 100%;
         }
     }
 
-    /* Consistent interactive elements */
     .pas-form button {
         background: #981c1c;
         color: #fff;
         padding: 1em 2em;
         border: none;
-        border-radius: 10px; /* Rounded corners */
+        border-radius: 10px;
         cursor: pointer;
         font-size: 1em;
         margin: 1.5em 0;
@@ -137,7 +128,7 @@
     }
 
     .pas-form button:hover {
-        background: #003366;
+        background: #981c1c;
         transform: translateY(-1px);
     }
 
@@ -155,7 +146,6 @@
         margin: 0.5em 0;
     }
 
-    /* Enhanced iframe compatibility */
     .pas-form {
         min-height: 100vh;
         box-sizing: border-box;
@@ -171,7 +161,6 @@
         color: #555;
     }
 
-    /* Required field styling */
     .pas-form .required {
         font-weight: 600;
     }
@@ -183,7 +172,6 @@
         display: inline-block;
     }
 
-    /* Fix for content shifts */
     .pas-form select {
         appearance: none;
         background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -192,7 +180,6 @@
         background-size: 1em;
     }
 
-    /* Consistent spacing */
     .pas-form h3 {
         margin: 1.5em 0 1em;
         color: #444;
@@ -201,10 +188,13 @@
         border-top: 1px solid #eee;
     }
 
-    /* Error styling */
     .error-highlight {
         border-color: #ff0000 !important;
         box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+    }
+
+    .ques-description {
+        color: #666;
     }
 
     .error-message {
@@ -220,7 +210,6 @@
         box-sizing: border-box;
     }
 
-    /* Loading overlay styling */
     .loading-overlay {
         position: fixed;
         top: 0;
@@ -252,7 +241,6 @@
         100% { transform: rotate(360deg); }
     }
 
-    /* New styles for datalist */
     .pas-form datalist {
         position: absolute;
         background: white;
@@ -264,13 +252,11 @@
 </head>
 <body>
     <div class="pas-form">
-        <h1>Student Expression of Interest</h1>
         <form id="enrollmentForm">
-            <!-- Student Details Section -->
             <fieldset>
                 <legend>Student Details</legend>
                 <div class="instruction-text">
-                    <p>* Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</p>
+                    <p>Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</p>
                 </div>
 
                 <div class="form-row">
@@ -296,16 +282,14 @@
                     </div>
                 </div>
 
-                <!-- Updated Mainstream School Name Field -->
                 <div class="form-row">
                     <label class="required">Mainstream School Name</label>
+                    <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
                     <input type="text" name="mainstreamSchoolName" list="schools" required placeholder="Type to search or select 'Other'">
                     <datalist id="schools">
-                        <!-- Options populated by JavaScript -->
                     </datalist>
                 </div>
 
-                <!-- New Conditional Field for "Other" School -->
                 <div class="form-row" id="otherSchoolContainer" style="display: none;">
                     <label class="required">Specify School Name</label>
                     <input type="text" name="otherSchoolName">
@@ -313,6 +297,7 @@
 
                 <div class="form-row">
                     <label class="required">Year Level</label>
+                    <div class="ques-description">In which year is this student enrolled in their day school?</div>
                     <select name="yearLevel" required>
                         <option value="">Select Year Level</option>
                         <option>Kindergarten</option>
@@ -331,32 +316,31 @@
                 
 
                 <label>Does your child have any medical conditions or allergies we should be aware of?</label>
-                <div>Please provide details of any medical conditions, allergies, or specific health needs your child has. If your child requires medication or special assistance, please include this in your response.</div>
+                <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
                 <div class="form-row">
                     <textarea name="medicalInfo" rows="4"></textarea>
                 </div>
 
-
-
-
                 <div class="form-row">
                     <label>Student School Email</label>
+                    <div class="ques-description">Provide your child's email address if they have one. This will be used to invite your child for any online activity.</div>
                     <input type="email" name="studentEmail">
                 </div>
             </fieldset>
 
-            <!-- Family Details Section -->
             <fieldset>
                 <legend>Family Details</legend>
                 
                 <h3>Parent/Carer 1</h3>
                 <div class="form-row">
                     <label class="required">Full Name</label>
+                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
                     <input type="text" name="parent1Name" required>
                 </div>
 
                 <div class="form-row">
                     <label class="required">Relationship to Student</label>
+                    <div class="ques-description">eg Father, Mother, Carer.</div>
                     <input type="text" name="parent1Relationship" placeholder="e.g. Father, Mother, Carer" required>
                 </div>
 
@@ -378,6 +362,7 @@
                 <h3>Parent/Carer 2</h3>
                 <div class="form-row">
                     <label>Full Name</label>
+                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
                     <input type="text" name="parent2Name">
                 </div>
 
@@ -422,7 +407,7 @@
                 <h3>Emergency Contact</h3>
                 <div class="form-row">
                     <label class="required">Full Name</label>
-                    <div style="margin: 2px;">Please provide a different person's details to the one making the application.</div>
+                    <div class="ques-description">Please provide a different person's details to the one making the application.</div>
                     <input type="text" name="emergencyContactName" required>
                 </div>
 
@@ -433,12 +418,11 @@
 
                 <div class="form-row">
                     <label class="required">Emergency Phone Number</label>
-                    <div style="margin: 2px;">Please provide a different number than the one provided for parent one and parent two.</div>
+                    <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
                     <input type="tel" name="emergencyContactPhone" required>
                 </div>
             </fieldset>
 
-            <!-- Program Details Section -->
             <fieldset>
                 <legend>Program Details</legend>
                 <div class="instruction-text">
@@ -448,6 +432,27 @@
 
                 <div class="form-row">
                     <label class="required">Arabic Proficiency Level</label>
+                    <div class="ques-description">Please select the option that best describes your child’s proficiency in Arabic. This information will help us place them in the appropriate class to support their learning.</div>
+                    <select name="proficiencyLevel" required>
+                        <option value="">Select Level</option>
+                        <option>Beginner – My child has little to no exposure to Arabic and is just beginning to learn.</option>
+                        <option>Basic – My child can read and write the alphabet but struggles with understanding and speaking.</option>
+                        <option>Intermediate – My child can speak, read, and write Arabic at a basic level but needs improvement.</option>
+                        <option>Advanced – My child is fluent in Arabic, with strong skills in reading, writing, and speaking.</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+            <fieldset>
+                <legend>Program Details</legend>
+                <div class="instruction-text">
+                    <p>The school serves students of diverse backgrounds, apps, and interests, creating a welcoming environment where they can develop their Arabic language skills. Our program focuses on building skills in reading, writing, speaking, and listening through structured lessons and interactive activities.</p>
+                    <p>This is supplemented by a Quran Program that helps students memorise selected venues and improve recitation, enhancing both literacy and language development. Families who prefer their children to participate in the Arabic program only or have specific preferences are encouraged to indicate these in their application and discuss them with us during the enrolment process.</p>
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Arabic Proficiency Level</label>
+                    <div class="ques-description">Please select the option that best describes your child’s proficiency in Arabic. This information will help us place them in the appropriate class to support their learning.</div>
                     <select name="proficiencyLevel" required>
                         <option value="">Select Level</option>
                         <option>Beginner – My child has little to no exposure to Arabic and is just beginning to learn.</option>
@@ -459,6 +464,7 @@
 
                 <div class="form-row">
                     <label>Areas of Interest</label>
+                    <div class="ques-description">Please select the areas of interest for your child’s learning. If you prefer Arabic Language classes only or have specific requirements, please use the "Others" option and provide details in the notes section. You may select more than one option.</div>
                     <div class="checkbox-group">
                         <label><input type="checkbox" name="interests" value="Arabic Language"> Arabic Language</label>
                         <label><input type="checkbox" name="interests" value="Quran Recitation and Tajweed"> Quran Recitation and Tajweed</label>
@@ -473,7 +479,6 @@
                 </div>
             </fieldset>
 
-            <!-- Consent & Declaration Section -->
             <fieldset>
                 <legend>Consent and Declaration</legend>
                 <div class="instruction-text">
@@ -482,7 +487,7 @@
                 </div>
                 <div class="form-row">
                     <label class="required">Photo Consent</label>
-                    <p class="instruction-text">The school takes photos during classroom activities and events, sharing them through our school app and social media. While we aim to accommodate exclusion requests, this may not always be practical. If you prefer your child not to be included, please discuss this with our management team.</p>
+                    <p class="instruction-text">The school takes photos during classroom activities and events, sharing them through our school app and occasionally on our social media platforms to keep parents informed and celebrate special moments. While we aim to accommodate requests to exclude students, this may not always be practical. If you prefer your child not to be included, please discuss this with our management team during the enrolment process.</p>
                     <div class="checkbox-group">
                         <label><input type="radio" name="photoConsent" value="Yes" required> Yes</label>
                         <label><input type="radio" name="photoConsent" value="No" required> No</label>
@@ -521,7 +526,6 @@
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
 
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg" 
              alt="Loading..." 
@@ -530,13 +534,11 @@
     </div>
 
    <script>
-        // Clear existing error messages and highlights
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
         }
 
-        // Fetch schools and populate datalist
         document.addEventListener('DOMContentLoaded', function() {
             fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
                 .then(response => response.json())
@@ -547,7 +549,6 @@
                         option.value = school;
                         datalist.appendChild(option);
                     });
-                    // Add "Other" option
                     const otherOption = document.createElement('option');
                     otherOption.value = 'Other';
                     datalist.appendChild(otherOption);
@@ -555,7 +556,6 @@
                 .catch(error => console.error('Error fetching schools:', error));
         });
 
-        // Handle "Other" selection
         const schoolInput = document.querySelector('[name="mainstreamSchoolName"]');
         const otherSchoolContainer = document.getElementById('otherSchoolContainer');
 
@@ -569,7 +569,6 @@
             }
         });
 
-        // Modified validation function
         function validateForm(formData) {
             const errors = [];
             const parent1Name = formData.get('parent1Name');
@@ -584,12 +583,10 @@
             const schoolValue = formData.get('mainstreamSchoolName');
             const otherSchoolValue = formData.get('otherSchoolName');
 
-            // Check Emergency Contact vs Parent 1
             if (emergencyName === parent1Name) {
                 errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
             }
 
-            // Check Emergency Contact vs Parent 2
             if (parent2Name && emergencyName === parent2Name) {
                 errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
             }
@@ -602,7 +599,6 @@
                 errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
             }
 
-            // Check Parent 2 vs Parent 1
             if (parent2Phone && parent2Phone === parent1Phone) {
                 errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
             }
@@ -611,12 +607,10 @@
                 errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
             }
 
-            // Check Email Confirmation
             if (parent1Email !== parent1ConfirmEmail) {
                 errors.push({ field: 'parent1ConfirmEmail', message: 'Email addresses do not match.' });
             }
 
-            // Check "Other" School Name
             if (schoolValue === 'Other' && !otherSchoolValue) {
                 errors.push({ field: 'otherSchoolName', message: 'Please specify the school name.' });
             }
@@ -624,13 +618,11 @@
             return errors;
         }
 
-        // Modified submission handler
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
             const loadingOverlay = document.getElementById('loadingOverlay');
             
-            // Show loading overlay
             loadingOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             submitButton.disabled = true;
@@ -644,7 +636,6 @@
                     throw new Error('Validation errors');
                 }
 
-                // Get school value
                 const schoolValue = formData.get('mainstreamSchoolName');
                 const otherSchoolValue = formData.get('otherSchoolName');
                 const mainstream = schoolValue === 'Other' ? otherSchoolValue : schoolValue;
@@ -708,12 +699,10 @@
 
                 if (!response.ok) throw new Error('Network response was not ok');
 
-                // Success handling
                 document.getElementById('enrollmentForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
                 document.getElementById('statusMessage').textContent = '';
             } catch (error) {
-                // Hide loading overlay on error
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
                 submitButton.disabled = false;
