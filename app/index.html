@@ -248,6 +248,10 @@
         border-radius: 0 0 4px 4px;
         width: 100%;
     }
+
+    .pas-form label {
+        font-weight: bold;
+    }
 </style>
 </head>
 <body>
@@ -395,8 +399,15 @@
 
                 <h3>Address</h3>
                 <div class="form-row">
+                    <label>Unit/Apartment Number</label>
+                    <div class="ques-description">If applicable, e.g. Unit 5, Apt 10B (optional)</div>
+                    <input type="text" name="unitNumber">
+                </div>
+                
+                <div class="form-row">
                     <label class="required">Street Address</label>
-                    <input type="text" name="streetAddress" required>
+                    <div class="ques-description">Include street number and street name (e.g., 123 Main St)</div>
+                    <input type="text" name="streetName" required>
                 </div>
 
                 <div class="inline-group">
@@ -408,6 +419,13 @@
                         <label class="required">State</label>
                         <select name="state" required>
                             <option>NSW</option>
+                            <option>VIC</option>
+                            <option>QLD</option>
+                            <option>SA</option>
+                            <option>WA</option>
+                            <option>TAS</option>
+                            <option>NT</option>
+                            <option>ACT</option>
                         </select>
                     </div>
                     <div class="form-row" style="flex:1">
@@ -419,7 +437,6 @@
                 <h3>Emergency Contact</h3>
                 <div class="form-row">
                     <label class="required">Full Name</label>
-                    <div class="ques-description">Please provide a different person's details to the one making the application.</div>
                     <input type="text" name="emergencyContactName" required>
                 </div>
 
@@ -506,9 +523,12 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-row" id="applicantNameContainer" style="display: none;">
                     <label class="required">Applicant's Full Name</label>
-                    <input type="text" name="applicantName" required>
+                    <div class="radio-group" id="applicantNameGroup">
+                        <label><input type="radio" name="applicantName" value="" required checked> <span id="parent1NameOption"></span></label>
+                        <label id="parent2NameLabel" style="display: none;"><input type="radio" name="applicantName" value=""> <span id="parent2NameOption"></span></label>
+                    </div>
                 </div>
             </fieldset>
 
@@ -614,6 +634,10 @@
             }
 
             // Check Parent 2 vs Parent 1
+            if (parent2Name && parent2Name === parent1Name) {
+                errors.push({ field: 'parent2Name', message: 'Parent/Carer 2 name cannot match Parent/Carer 1.' });
+            }
+
             if (parent2Phone && parent2Phone === parent1Phone) {
                 errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
             }
@@ -665,6 +689,74 @@
                 const errors = validateForm(formData);
 
                 if (errors.length > 0) {
+                    // Handle validation errors
+                    errors.forEach(error => {
+                        const field = document.querySelector(`[name="${error.field}"]`);
+                        if (field) {
+                            // Add error highlight class
+                            field.classList.add('error-highlight');
+                            
+                            // Create error message element
+                            const errorDiv = document.createElement('div');
+                            errorDiv.className = 'error-message';
+                            errorDiv.textContent = error.message;
+                            
+                            // For email match error, highlight both fields
+                            if (error.field === 'parent1ConfirmEmail' && error.message === 'Email addresses do not match.') {
+                                const emailField = document.querySelector('[name="parent1Email"]');
+                                if (emailField) {
+                                    emailField.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            // For phone number duplication errors, highlight both fields
+                            if (error.field === 'emergencyContactPhone' && error.message.includes('same as Parent/Carer 1')) {
+                                const parentPhone = document.querySelector('[name="parent1Phone"]');
+                                if (parentPhone) {
+                                    parentPhone.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            if (error.field === 'emergencyContactPhone' && error.message.includes('same as Parent/Carer 2')) {
+                                const parentPhone = document.querySelector('[name="parent2Phone"]');
+                                if (parentPhone) {
+                                    parentPhone.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            if (error.field === 'parent2Phone' && error.message.includes('match Parent/Carer 1')) {
+                                const parentPhone = document.querySelector('[name="parent1Phone"]');
+                                if (parentPhone) {
+                                    parentPhone.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            // For name duplication errors, highlight both fields
+                            if (error.field === 'emergencyContactName' && error.message.includes('same as Parent/Carer 1')) {
+                                const parentName = document.querySelector('[name="parent1Name"]');
+                                if (parentName) {
+                                    parentName.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            if (error.field === 'emergencyContactName' && error.message.includes('same as Parent/Carer 2')) {
+                                const parentName = document.querySelector('[name="parent2Name"]');
+                                if (parentName) {
+                                    parentName.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            if (error.field === 'parent2Name' && error.message.includes('match Parent/Carer 1')) {
+                                const parentName = document.querySelector('[name="parent1Name"]');
+                                if (parentName) {
+                                    parentName.classList.add('error-highlight');
+                                }
+                            }
+                            
+                            // Insert error message after field
+                            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+                        }
+                    });
                     throw new Error('Validation errors');
                 }
 
@@ -677,6 +769,18 @@
                 const parent1Relationship = formData.get('parent1Relationship') === 'Other' ? formData.get('parent1OtherRelationship') : formData.get('parent1Relationship');
                 const parent2Relationship = formData.get('parent2Relationship') === 'Other' ? formData.get('parent2OtherRelationship') : formData.get('parent2Relationship');
                 const emergencyRelationship = formData.get('emergencyContactRelationship') === 'Other' ? formData.get('emergencyOtherRelationship') : formData.get('emergencyContactRelationship');
+
+                // Combine address components into standard address format
+                const unitNumber = formData.get('unitNumber');
+                const streetName = formData.get('streetName');
+                
+                // Format: [Unit/Apt (if present)], [Street Address]
+                let streetAddress = '';
+                if (unitNumber) {
+                    streetAddress = `${unitNumber}, ${streetName}`;
+                } else {
+                    streetAddress = streetName;
+                }
 
                 const data = {
                     student: {
@@ -701,7 +805,7 @@
                         email: formData.get('parent2Email')
                     },
                     address: {
-                        street: formData.get('streetAddress'),
+                        street: streetAddress,
                         suburb: formData.get('suburb'),
                         state: formData.get('state'),
                         postCode: formData.get('postCode')
@@ -793,6 +897,94 @@
                 otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
                 otherInput.required = this.value === 'Other';
             });
+        });
+
+        // Populate applicant name options
+        document.querySelector('[name="parent1Name"]').addEventListener('input', function() {
+            document.getElementById('parent1NameOption').textContent = this.value;
+            document.querySelector('input[name="applicantName"][value=""]').value = this.value;
+        });
+
+        document.querySelector('[name="parent2Name"]').addEventListener('input', function() {
+            const parent2NameLabel = document.getElementById('parent2NameLabel');
+            const parent2NameOption = document.getElementById('parent2NameOption');
+            if (this.value) {
+                parent2NameLabel.style.display = 'block';
+                parent2NameOption.textContent = this.value;
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = this.value;
+            } else {
+                parent2NameLabel.style.display = 'none';
+                parent2NameOption.textContent = '';
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+            }
+        });
+
+        function updateApplicantNameOptions() {
+            const parent1Name = document.querySelector('[name="parent1Name"]').value;
+            const parent2Name = document.querySelector('[name="parent2Name"]').value;
+            const applicantNameContainer = document.getElementById('applicantNameContainer');
+            const parent1NameOption = document.getElementById('parent1NameOption');
+            const parent2NameLabel = document.getElementById('parent2NameLabel');
+            const parent2NameOption = document.getElementById('parent2NameOption');
+
+            if (parent1Name) {
+                parent1NameOption.textContent = parent1Name;
+                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                parent1Radio.value = parent1Name;
+                parent1Radio.checked = true;
+                applicantNameContainer.style.display = 'block';
+            } else {
+                applicantNameContainer.style.display = 'none';
+            }
+
+            if (parent2Name) {
+                parent2NameLabel.style.display = 'block';
+                parent2NameOption.textContent = parent2Name;
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
+            } else {
+                parent2NameLabel.style.display = 'none';
+                parent2NameOption.textContent = '';
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+            }
+        }
+
+        document.querySelector('[name="parent1Name"]').addEventListener('input', updateApplicantNameOptions);
+        document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
+
+        // Initialize form on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch schools and populate datalist
+            fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
+                .then(response => response.json())
+                .then(schools => {
+                    const datalist = document.getElementById('schools');
+                    schools.forEach(school => {
+                        const option = document.createElement('option');
+                        option.value = school;
+                        datalist.appendChild(option);
+                    });
+                    // Add "Other" option
+                    const otherOption = document.createElement('option');
+                    otherOption.value = 'Other';
+                    datalist.appendChild(otherOption);
+                })
+                .catch(error => console.error('Error fetching schools:', error));
+            
+            // Show applicant name container by default
+            document.getElementById('applicantNameContainer').style.display = 'block';
+            
+            // Set up parent name event listeners
+            const parent1NameInput = document.querySelector('[name="parent1Name"]');
+            parent1NameInput.addEventListener('input', updateApplicantNameOptions);
+            document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
+            
+            // Set initial parent1 name if provided (for form reloads)
+            if (parent1NameInput.value) {
+                document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
+                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                parent1Radio.value = parent1NameInput.value;
+                parent1Radio.checked = true;
+            }
         });
     </script>
 </body>
