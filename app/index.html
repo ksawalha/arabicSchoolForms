@@ -341,7 +341,13 @@
                 <div class="form-row">
                     <label class="required">Relationship to Student</label>
                     <div class="ques-description">eg Father, Mother, Carer.</div>
-                    <input type="text" name="parent1Relationship" placeholder="e.g. Father, Mother, Carer" required>
+                    <div class="radio-group">
+                        <label><input type="radio" name="parent1Relationship" value="Father" required> Father</label>
+                        <label><input type="radio" name="parent1Relationship" value="Mother" required> Mother</label>
+                        <label><input type="radio" name="parent1Relationship" value="Carer" required> Carer</label>
+                        <label><input type="radio" name="parent1Relationship" value="Other" required> Other</label>
+                    </div>
+                    <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
                 </div>
 
                 <div class="form-row">
@@ -368,7 +374,13 @@
 
                 <div class="form-row">
                     <label>Relationship to Student</label>
-                    <input type="text" name="parent2Relationship" placeholder="e.g. Father, Mother, Carer">
+                    <div class="radio-group">
+                        <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
+                        <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
+                        <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
+                        <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
+                    </div>
+                    <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
                 </div>
 
                 <div class="form-row">
@@ -413,7 +425,13 @@
 
                 <div class="form-row">
                     <label class="required">Relationship</label>
-                    <input type="text" name="emergencyContactRelationship" placeholder="e.g. neighbour, aunt, uncle" required>
+                    <div class="radio-group">
+                        <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
+                    </div>
+                    <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
                 </div>
 
                 <div class="form-row">
@@ -727,6 +745,30 @@
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
             }
+        });
+
+        document.querySelectorAll('input[name="parent1Relationship"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherInput = document.querySelector('input[name="parent1OtherRelationship"]');
+                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                otherInput.required = this.value === 'Other';
+            });
+        });
+
+        document.querySelectorAll('input[name="parent2Relationship"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherInput = document.querySelector('input[name="parent2OtherRelationship"]');
+                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                otherInput.required = this.value === 'Other';
+            });
+        });
+
+        document.querySelectorAll('input[name="emergencyContactRelationship"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherInput = document.querySelector('input[name="emergencyOtherRelationship"]');
+                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                otherInput.required = this.value === 'Other';
+            });
         });
     </script>
 </body>
