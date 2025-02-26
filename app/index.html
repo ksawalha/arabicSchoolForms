@@ -128,7 +128,7 @@
     }
 
     .pas-form button:hover {
-        background: #981c1c;
+        background: #003366;
         transform: translateY(-1px);
     }
 
@@ -443,6 +443,7 @@
                 </div>
 
                 <div class="form-row">
+            <!-- Program Details Section -->
             <fieldset>
                 <legend>Program Details</legend>
                 <div class="instruction-text">
@@ -479,6 +480,7 @@
                 </div>
             </fieldset>
 
+            <!-- Consent & Declaration Section -->
             <fieldset>
                 <legend>Consent and Declaration</legend>
                 <div class="instruction-text">
@@ -526,6 +528,7 @@
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
 
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg" 
              alt="Loading..." 
@@ -534,11 +537,13 @@
     </div>
 
    <script>
+        // Clear existing error messages and highlights
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
         }
 
+        // Fetch schools and populate datalist
         document.addEventListener('DOMContentLoaded', function() {
             fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
                 .then(response => response.json())
@@ -549,6 +554,7 @@
                         option.value = school;
                         datalist.appendChild(option);
                     });
+                    // Add "Other" option
                     const otherOption = document.createElement('option');
                     otherOption.value = 'Other';
                     datalist.appendChild(otherOption);
@@ -556,6 +562,7 @@
                 .catch(error => console.error('Error fetching schools:', error));
         });
 
+        // Handle "Other" selection
         const schoolInput = document.querySelector('[name="mainstreamSchoolName"]');
         const otherSchoolContainer = document.getElementById('otherSchoolContainer');
 
@@ -569,6 +576,7 @@
             }
         });
 
+        // Modified validation function
         function validateForm(formData) {
             const errors = [];
             const parent1Name = formData.get('parent1Name');
@@ -583,10 +591,12 @@
             const schoolValue = formData.get('mainstreamSchoolName');
             const otherSchoolValue = formData.get('otherSchoolName');
 
+            // Check Emergency Contact vs Parent 1
             if (emergencyName === parent1Name) {
                 errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
             }
 
+            // Check Emergency Contact vs Parent 2
             if (parent2Name && emergencyName === parent2Name) {
                 errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
             }
@@ -599,6 +609,7 @@
                 errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
             }
 
+            // Check Parent 2 vs Parent 1
             if (parent2Phone && parent2Phone === parent1Phone) {
                 errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
             }
@@ -607,10 +618,12 @@
                 errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
             }
 
+            // Check Email Confirmation
             if (parent1Email !== parent1ConfirmEmail) {
                 errors.push({ field: 'parent1ConfirmEmail', message: 'Email addresses do not match.' });
             }
 
+            // Check "Other" School Name
             if (schoolValue === 'Other' && !otherSchoolValue) {
                 errors.push({ field: 'otherSchoolName', message: 'Please specify the school name.' });
             }
@@ -618,11 +631,13 @@
             return errors;
         }
 
+        // Modified submission handler
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
             const loadingOverlay = document.getElementById('loadingOverlay');
             
+            // Show loading overlay
             loadingOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             submitButton.disabled = true;
@@ -636,6 +651,7 @@
                     throw new Error('Validation errors');
                 }
 
+                // Get school value
                 const schoolValue = formData.get('mainstreamSchoolName');
                 const otherSchoolValue = formData.get('otherSchoolName');
                 const mainstream = schoolValue === 'Other' ? otherSchoolValue : schoolValue;
@@ -699,10 +715,12 @@
 
                 if (!response.ok) throw new Error('Network response was not ok');
 
+                // Success handling
                 document.getElementById('enrollmentForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
                 document.getElementById('statusMessage').textContent = '';
             } catch (error) {
+                // Hide loading overlay on error
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
                 submitButton.disabled = false;
