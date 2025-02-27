@@ -478,11 +478,10 @@
 
                         <div class="form-row">
                             <label class="required">What is the status of your Working with Children Check?</label>
-                            <select name="wwccStatus" required>
-                                <option value="">Select Status</option>
-                                <option>Volunteer</option>
-                                <option>Paid</option>
-                            </select>
+                            <div class="radio-group">
+                                <label><input type="radio" name="wwccStatus" value="Paid" required> Paid</label>
+                                <label><input type="radio" name="wwccStatus" value="Volunteer" required> Volunteer</label>
+                            </div>
                         </div>
 
                         <div class="form-row">
