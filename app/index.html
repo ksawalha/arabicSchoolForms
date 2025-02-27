@@ -820,7 +820,7 @@
             return errors;
         }
 
-        // Modified submission handler
+        // Modified submission handler to scroll to first error field
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
@@ -838,9 +838,16 @@
 
                 if (errors.length > 0) {
                     // Handle validation errors
+                    let firstErrorField = null;
+                    
                     errors.forEach(error => {
                         const field = document.querySelector(`[name="${error.field}"]`);
                         if (field) {
+                            // Keep track of first error field for scrolling
+                            if (!firstErrorField) {
+                                firstErrorField = field;
+                            }
+                            
                             // Add error highlight class
                             field.classList.add('error-highlight');
                             
@@ -905,6 +912,20 @@
                             field.parentNode.insertBefore(errorDiv, field.nextSibling);
                         }
                     });
+                    
+                    // Scroll to the first error field to help user see the issue
+                    if (firstErrorField) {
+                        setTimeout(() => {
+                            // Use a small timeout to ensure DOM updates are complete
+                            firstErrorField.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            firstErrorField.focus();
+                        }, 100);
+                    }
+                    
+                    document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
                     throw new Error('Validation errors');
                 }
 
