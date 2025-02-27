@@ -1098,8 +1098,25 @@
 
         document.querySelector('[name="parent1Name"]').addEventListener('input', updateApplicantNameOptions);
         document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
+       
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+            
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+            
+        });
 
-        // Initialize form on load
         document.addEventListener('DOMContentLoaded', function() {
             // Fetch schools and populate datalist
             fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
