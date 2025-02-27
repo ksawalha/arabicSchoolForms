@@ -252,10 +252,158 @@
     .pas-form label {
         font-weight: bold;
     }
+        .enrollment-guidelines {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1.5em;
+        margin-bottom: 2em;
+        line-height: 1.6;
+    }
+    
+    .enrollment-guidelines h2 {
+        color: #981c1c;
+        margin-bottom: 0.5em;
+        font-size: 1.5em;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5em;
+    }
+    
+    .enrollment-guidelines p {
+        margin-bottom: 1em;
+    }
+
+    .faq-accordion {
+        margin-bottom: 2em;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: transparent;
+    }
+
+    .faq-accordion h2 {
+        color: #333;
+        margin-bottom: 0;
+        font-size: 1.2em;
+        padding: 0.5em 1.2em;
+        border-bottom: 1px solid #ddd;
+        background-color: transparent;
+    }
+
+    .accordion-item {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .accordion-item:last-child {
+        border-bottom: none;
+    }
+
+    .accordion-button {
+        background-color: #fff !important;
+        color: #333 !important;
+        cursor: pointer !important;
+        padding: 0.5em 1.3em !important;
+        width: 100% !important;
+        text-align: left !important;
+        border: 0.8 !important;
+        border-color: #981c1c !important;
+        border-bottom: 1px solid #eee !important;
+        outline: none !important;
+        transition: 0.2s !important;
+        font-weight: bold !important;
+        font-size: 0.9em !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin: 0 !important;
+    }
+
+    .accordion-button:hover {
+        background-color: #fafafa;
+    }
+
+    .accordion-button.active {
+        background-color: #fff;
+        border-bottom: none;
+    }
+
+    .accordion-button:after {
+        content: '+';
+        font-size: 1em;
+        color: #555;
+        margin-left: 5px;
+    }
+
+    .accordion-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: transparent;
+        border-top: none;
+    }
+
+    .accordion-content-inner {
+        padding: 0.8em 1.2em;
+        color: #555;
+        font-size: 0.9em;
+        border-top: 1px solid #eee;
+    }
+
+    .accordion-content p {
+        margin-bottom: 0.8em;
+    }
+
+    .accordion-content p:last-child {
+        margin-bottom: 0;
+    }
 </style>
 </head>
 <body>
     <div class="pas-form">
+        <div class="enrollment-guidelines">
+            <h2>Enrollment Guidelines</h2>
+            <p>To enrol your child at Parramatta Arabic School, please complete our expression of interest form and bring your child for assessment. The information you provide will be used to finalise your child's enrolment.</p>
+            <p>We organise an assessment day at the start of Term 1 each year and will notify you via email if your application is received in time for this day. If you submit your application after the start of Term 1, you can bring your child for an assessment on any Saturday during school terms between 9:30 am and 12:30 pm.</p>
+            <p>We will try our best to accommodate your child in one of our classes. However, due to the high demand for our beginner classes and the limited spaces available, we cannot guarantee placement. Intermediate and advanced classes are generally available throughout the year.</p>
+            <p>For the latest updates on our school activities, follow our <a style="color: #981c1c;" href="https://www.facebook.com/parramattaarabic" target="_blank">Facebook page</a> and join our <a style="color: #981c1c;" href="https://chat.whatsapp.com/LsXTM517PUH71cndoR6Bqy" target="_blank">WhatsApp group</a>.</p>
+        </div>
+
+        <div class="faq-accordion">
+            <h2 style="color: #981c1c;">Frequently Asked Questions</h2>
+            
+            <div class="accordion-item">
+                <button class="accordion-button">What is the length of the program and attendance requirements?</button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>Our programs are designed to be delivered over a full year, and commitment to the yearly schedule is essential for children to gain the maximum benefit. If you're seeking short-term courses, our program may not align with your needs.</p>
+                        <p>Since our classes are only held once a week, it is important that students attend all sessions to maximise their learning potential. Education is a sequential process, and missing even one class can result in students missing important stages in the progression of topics, making it harder for them to keep up.</p>
+                        <p>Our programs are coordinated with the NSW Department of Education, and students who attend at least 70% of classes will be eligible for a Certificate of Attendance issued by the Department. The certificate is only available to students who participate from the start of the year.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-button">How much do I need to pay?</button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>The annual fee for our program is $800 ($200 per term), billed semi-annually at $400 per semester inclusive of books and GST. A sibling discount is available: 5% off the total fee for two enrolled students, and 10% for three or more children. We accept Creative Kids vouchers issued by Service NSW.</p>
+                        <p>As a non-profit organisation, the school uses the tuition fees to pay for rent, books, learning materials, gifts and awards, teachers' salaries, and general administration. Upon acceptance and fee payment, a seat will be reserved for your child, and the fee becomes non-refundable. Please ensure your child can commit to the full program before applying, to avoid any misunderstandings.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <button class="accordion-button">Do you provide tahfiz (Quran memorisation) programs?</button>
+                <div class="accordion-content">
+                    <div class="accordion-content-inner">
+                        <p>No, we don't offer tahfiz programs. At Parramatta Arabic School, our programs focus on teaching the Arabic language, which aids in improving students' abilities to read and memorise on their own.</p>
+                        <p>We offer a light Quranic program alongside our Arabic program, giving a great opportunity for those interested in practising Quran memorisation and learning correct recitation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <form id="enrollmentForm">
             <fieldset>
                 <legend>Student Details</legend>
