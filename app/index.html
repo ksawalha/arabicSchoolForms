@@ -1114,26 +1114,6 @@
                 });
             });
 
-            // Parent name event handlers for applicant name options
-            document.querySelector('[name="parent1Name"]').addEventListener('input', function() {
-                document.getElementById('parent1NameOption').textContent = this.value;
-                document.querySelector('input[name="applicantName"][value=""]').value = this.value;
-            });
-
-            document.querySelector('[name="parent2Name"]').addEventListener('input', function() {
-                const parent2NameLabel = document.getElementById('parent2NameLabel');
-                const parent2NameOption = document.getElementById('parent2NameOption');
-                if (this.value) {
-                    parent2NameLabel.style.display = 'block';
-                    parent2NameOption.textContent = this.value;
-                    parent2NameLabel.querySelector('input[name="applicantName"]').value = this.value;
-                } else {
-                    parent2NameLabel.style.display = 'none';
-                    parent2NameOption.textContent = '';
-                    parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
-                }
-            });
-        });
 
         // Update applicant name options based on parent names
         function updateApplicantNameOptions() {
@@ -1505,14 +1485,13 @@
                 this.dataset.lastValue = this.value;
             });
         }
-        function sendHeight() {
-            const height = document.body.scrollHeight;
-            window.parent.postMessage({ height: height }, 'https://arabicschool.org.au');
+        function sendHeightToParent() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({ height: height }, "*");
         }
-    
-        window.addEventListener('load', sendHeight);
-        window.addEventListener('resize', sendHeight);
-        setInterval(sendHeight, 500);
+            
+        window.addEventListener("load", sendHeightToParent);
+        window.addEventListener("resize", sendHeightToParent);
     </script>
 </body>
 </html>
