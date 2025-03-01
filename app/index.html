@@ -1485,22 +1485,17 @@
             }
         });
 
-            function sendHeightToParent() {
+    function sendHeightToParent() {
         const height = document.documentElement.scrollHeight;
         window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
     }
-    const observer = new MutationObserver(sendHeightToParent);
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-    });
-    window.addEventListener('load', () => {
-        sendHeightToParent();
-        setTimeout(sendHeightToParent, 1000);
-    });
-    window.addEventListener('resize', sendHeightToParent);
+    function sendHeight() {
+        const height = document.body.scrollHeight;
+        window.parent.postMessage({ height: height }, 'https://arabicschool.org.au');
+    }
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    setInterval(sendHeight, 500);
     </script>
 </body>
 </html>
