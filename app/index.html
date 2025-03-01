@@ -738,7 +738,7 @@
         <p style="color: #555; font-size: 12px; text-align: left;" id="commit-hash"></p>
     </footer>
    <script>
-        fetch('/.azure/staticwebapps.json')
+        fetch('commit-hash.txt')
             .then(response => response.json())
             .then(data => {
                 const commitHash = data?.deployment?.commit || 'Unknown Commit';
