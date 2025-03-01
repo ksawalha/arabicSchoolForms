@@ -739,12 +739,12 @@
     </footer>
    <script>
         fetch('commit-hash.txt')
-            .then(response => response.json())
-            .then(data => {
-                const commitHash = data?.deployment?.commit || 'Unknown Commit';
-                document.getElementById('commit-hash').textContent = `Deployment Hash: ${commitHash}`;
+            .then(response => response.text())
+            .then(hash => {
+                document.getElementById('commit-hash').textContent = `Deployment Hash: ${hash.trim()}`;
         })
             .catch(error => console.error('Error fetching commit hash:', error));
+       
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
