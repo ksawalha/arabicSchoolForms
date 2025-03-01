@@ -1485,14 +1485,23 @@
             }
         });
 
-        // Google Maps Places Autocomplete for address
-        function sendHeightToParent() {
-            const height = document.documentElement.scrollHeight;
-            window.parent.postMessage({ height: height }, "*");
-        }
-            
-        window.addEventListener("load", sendHeightToParent);
-        window.addEventListener("resize", sendHeightToParent);
+            function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
+    }
+    const observer = new MutationObserver(sendHeightToParent);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+    });
+    window.addEventListener('load', () => {
+        sendHeightToParent();
+        // Extra check for dynamic content
+        setTimeout(sendHeightToParent, 1000);
+    });
+    window.addEventListener('resize', sendHeightToParent);
     </script>
 </body>
 </html>
