@@ -739,7 +739,7 @@
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
    <script>
-        fetch('commit-hash.txt')
+        fetch('https://enrol.arabicschool.org.au/commit-hash.txt')
             .then(response => response.text())
             .then(hash => {
                 document.getElementById('commit-hash').textContent = `${hash.trim()}`;
