@@ -712,11 +712,15 @@
                     </div>
                 </div>
             </fieldset>
-
+            
             <div style="text-align: center">
                 <button type="submit">Submit Application</button>
             </div>
         </form>
+        
+        <div>
+            <p style="color: #555; font-size: 12px; text-align: left; margin-top: 10px;" id="commit-hash"></p>
+        </div>
 
         <div id="thankYouMessage" style="display: none; text-align: center; margin-top: 2em;">
             <h1>Thank You!</h1>
@@ -734,9 +738,6 @@
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
-    <footer>
-        <p style="color: #555; font-size: 12px; text-align: left;" id="commit-hash"></p>
-    </footer>
    <script>
         fetch('commit-hash.txt')
             .then(response => response.text())
