@@ -52,6 +52,40 @@
         box-sizing: border-box;
     }
 
+    /* Add styles for the address suggestions dropdown */
+    .address-suggestions {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        z-index: 100;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none;
+    }
+
+    .address-suggestions .suggestion-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+
+    .address-suggestions .suggestion-item:last-child {
+        border-bottom: none;
+    }
+
+    .address-suggestions .suggestion-item:hover,
+    .address-suggestions .suggestion-item.active {
+        background-color: #f5f5f5;
+    }
+
+    .address-input-container {
+        position: relative;
+    }
+
     .pas-form input:focus,
     .pas-form select:focus,
     .pas-form textarea:focus {
@@ -357,7 +391,73 @@
     .accordion-content p:last-child {
         margin-bottom: 0;
     }
+
+    /* School dropdown styles */
+    .school-dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .school-dropdown-input {
+        width: 100%;
+        padding: 0.8em;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+    }
+    
+    .school-dropdown-list {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 0 0 10px 10px;
+        z-index: 100;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none;
+        margin-top: 2px;
+    }
+    
+    .school-dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .school-dropdown-item:hover,
+    .school-dropdown-item.active {
+        background-color: #f5f5f5;
+    }
+    
+    .school-dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .school-search-box {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        position: sticky;
+        top: 0;
+        background: white;
+    }
+    
+    .school-search-box input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    
+    .no-results {
+        padding: 15px;
+        text-align: center;
+        color: #666;
+    }
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete" async defer></script>
 </head>
 <body>
     <div class="pas-form">
@@ -408,8 +508,7 @@
             <fieldset>
                 <legend>Student Details</legend>
                 <div class="instruction-text">
-                    <p>Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</p>
-                </div>
+                    <p>Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</div>
 
                 <div class="form-row">
                     <label class="required">Student First Name</label>
@@ -437,84 +536,21 @@
                 <div class="form-row">
                     <label class="required">Mainstream School Name</label>
                     <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
-                    <input type="text" name="mainstreamSchoolName" list="schools" required placeholder="Type to search or select 'Other'">
-                    <datalist id="schools">
-                    </datalist>
+                    <div class="school-dropdown-container">
+                        <input type="text" class="school-dropdown-input" readonly placeholder="Click to select a school">
+                        <input type="hidden" name="mainstreamSchoolName" required>
+                        <div class="school-dropdown-list">
+                            <div class="school-search-box">
+                                <input type="text" placeholder="Search for schools..." id="schoolSearchInput">
+                            </div>
+                            <div id="schoolListContainer"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-row" id="otherSchoolContainer" style="display: none;">
-                    <label class="required">Specify School Name</label>
+                    <label class="required">Other School Name</label>
                     <input type="text" name="otherSchoolName">
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Year Level</label>
-                    <div class="ques-description">In which year is this student enrolled in their day school?</div>
-                    <select name="yearLevel" required>
-                        <option value="">Select Year Level</option>
-                        <option>Kindergarten</option>
-                        <option>Year 1</option>
-                        <option>Year 2</option>
-                        <option>Year 3</option>
-                        <option>Year 4</option>
-                        <option>Year 5</option>
-                        <option>Year 6</option>
-                        <option>Year 7</option>
-                        <option>Year 8</option>
-                        <option>Year 9</option>
-                        <option>Year 10</option>
-                    </select>
-                </div>
-                
-
-                <label>Does your child have any medical conditions or allergies we should be aware of?</label>
-                <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
-                <div class="form-row">
-                    <textarea name="medicalInfo" rows="4"></textarea>
-                </div>
-
-                <div class="form-row">
-                    <label>Student School Email</label>
-                    <div class="ques-description">Provide your child's email address if they have one. This will be used to invite your child for any online activity.</div>
-                    <input type="email" name="studentEmail">
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Family Details</legend>
-                
-                <h3>Parent/Carer 1</h3>
-                <div class="form-row">
-                    <label class="required">Full Name</label>
-                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
-                    <input type="text" name="parent1Name" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Relationship to Student</label>
-                    <div class="ques-description">eg Father, Mother, Carer.</div>
-                    <div class="radio-group">
-                        <label><input type="radio" name="parent1Relationship" value="Father" required> Father</label>
-                        <label><input type="radio" name="parent1Relationship" value="Mother" required> Mother</label>
-                        <label><input type="radio" name="parent1Relationship" value="Carer" required> Carer</label>
-                        <label><input type="radio" name="parent1Relationship" value="Other" required> Other</label>
-                    </div>
-                    <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Mobile</label>
-                    <input type="tel" name="parent1Phone" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Email</label>
-                    <input type="email" name="parent1Email" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Confirm Email Address</label>
-                    <input type="email" name="parent1ConfirmEmail" required>
                 </div>
 
                 <h3>Parent/Carer 2</h3>
@@ -547,15 +583,12 @@
 
                 <h3>Address</h3>
                 <div class="form-row">
-                    <label>Unit/Apartment Number</label>
-                    <div class="ques-description">If applicable, e.g. Unit 5, Apt 10B (optional)</div>
-                    <input type="text" name="unitNumber">
-                </div>
-                
-                <div class="form-row">
                     <label class="required">Street Address</label>
-                    <div class="ques-description">Include street number and street name (e.g., 123 Main St)</div>
-                    <input type="text" name="streetName" required>
+                    <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
+                    <div class="address-input-container">
+                        <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
+                        <div class="address-suggestions" id="addressSuggestions"></div>
+                    </div>
                 </div>
 
                 <div class="inline-group">
@@ -701,126 +734,370 @@
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
-
+    <footer>
+        <p style="color: #555; font-size: 12px; text-align: left;" id="commit-hash"></p>
+    </footer>
    <script>
-        // Clear existing error messages and highlights
+        fetch('/.azure/staticwebapps.json')
+            .then(response => response.json())
+            .then(data => {
+                const commitHash = data?.deployment?.commit || 'Unknown Commit';
+                document.getElementById('commit-hash').textContent = `Deployment Hash: ${commitHash}`;
+        })
+            .catch(error => console.error('Error fetching commit hash:', error));
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
         }
 
-        // Fetch schools and populate datalist
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize schools dropdown
+            let schoolsList = [];
+            
+            // Fetch schools data from API
             fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
                 .then(response => response.json())
                 .then(schools => {
-                    const datalist = document.getElementById('schools');
-                    schools.forEach(school => {
-                        const option = document.createElement('option');
-                        option.value = school;
-                        datalist.appendChild(option);
-                    });
-                    // Add "Other" option
-                    const otherOption = document.createElement('option');
-                    otherOption.value = 'Other';
-                    datalist.appendChild(otherOption);
+                    schoolsList = schools;
+                    populateSchoolsList(schoolsList);
                 })
                 .catch(error => console.error('Error fetching schools:', error));
+            
+            // Function to populate schools dropdown list
+            function populateSchoolsList(schools) {
+                const schoolListContainer = document.getElementById('schoolListContainer');
+                schoolListContainer.innerHTML = '';
+                
+                if (schools.length === 0) {
+                    // When no schools match, only show "Enter School Name" option
+                    // without the "No schools found" message
+                    const otherItem = document.createElement('div');
+                    otherItem.className = 'school-dropdown-item';
+                    otherItem.textContent = 'Enter School Name';
+                    otherItem.addEventListener('click', function() {
+                        selectSchool('Other');
+                    });
+                    schoolListContainer.appendChild(otherItem);
+                    return;
+                }
+                
+                // Add all school options
+                schools.forEach(school => {
+                    const item = document.createElement('div');
+                    item.className = 'school-dropdown-item';
+                    item.textContent = school;
+                    item.addEventListener('click', function() {
+                        selectSchool(school);
+                    });
+                    schoolListContainer.appendChild(item);
+                });
+                
+                // Only add "Enter School Name" option if it's a search with no exact match
+                const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
+                if (searchValue && !schools.some(school => school.toLowerCase() === searchValue)) {
+                    const otherItem = document.createElement('div');
+                    otherItem.className = 'school-dropdown-item';
+                    otherItem.textContent = 'Enter School Name';
+                    otherItem.addEventListener('click', function() {
+                        selectSchool('Other');
+                    });
+                    schoolListContainer.appendChild(otherItem);
+                }
+            }
+            
+            // Get references to dropdown elements
+            const schoolDropdownInput = document.querySelector('.school-dropdown-input');
+            const schoolNameInput = document.querySelector('input[name="mainstreamSchoolName"]');
+            const schoolSearchInput = document.getElementById('schoolSearchInput');
+            const schoolDropdownList = document.querySelector('.school-dropdown-list');
+            const otherSchoolContainer = document.getElementById('otherSchoolContainer');
+            
+            // Handle school selection
+            function selectSchool(school) {
+                schoolDropdownInput.value = school;
+                schoolNameInput.value = school;
+                schoolDropdownList.style.display = 'none';
+                
+                if (school === 'Other') {
+                    // Update the UI to reflect "Enter School Name" instead of "Other"
+                    schoolDropdownInput.value = document.getElementById('schoolSearchInput').value || 'Enter School Name';
+                    
+                    // Show the other school container
+                    otherSchoolContainer.style.display = 'block';
+                    
+                    // Make sure we have the input element
+                    if (!document.querySelector('[name="otherSchoolName"]')) {
+                        const label = document.createElement('label');
+                        label.className = 'required';
+                        label.textContent = 'School Name';
+                        otherSchoolContainer.appendChild(label);
+                        
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = 'otherSchoolName';
+                        input.required = true;
+                        input.value = document.getElementById('schoolSearchInput').value;
+                        otherSchoolContainer.appendChild(input);
+                    } else {
+                        const otherInput = document.querySelector('[name="otherSchoolName"]');
+                        otherInput.required = true;
+                        otherInput.value = document.getElementById('schoolSearchInput').value;
+                    }
+                } else {
+                    otherSchoolContainer.style.display = 'none';
+                    const otherInput = document.querySelector('[name="otherSchoolName"]');
+                    if (otherInput) {
+                        otherInput.required = false;
+                        otherInput.value = '';
+                    }
+                }
+                
+                // Clear search input
+                schoolSearchInput.value = '';
+            }
+            
+            // Handle dropdown toggle
+            schoolDropdownInput.addEventListener('click', function() {
+                if (schoolDropdownList.style.display === 'block') {
+                    schoolDropdownList.style.display = 'none';
+                } else {
+                    schoolDropdownList.style.display = 'block';
+                    schoolSearchInput.focus();
+                    // Reset search results when opening dropdown
+                    populateSchoolsList(schoolsList);
+                }
+            });
+            
+            // Handle search input
+            schoolSearchInput.addEventListener('input', function() {
+                const searchValue = this.value.toLowerCase();
+                if (searchValue) {
+                    const filteredSchools = schoolsList.filter(school => 
+                        school.toLowerCase().includes(searchValue)
+                    );
+                    populateSchoolsList(filteredSchools);
+                } else {
+                    populateSchoolsList(schoolsList);
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInside = schoolDropdownInput.contains(event.target) || 
+                                    schoolDropdownList.contains(event.target);
+                
+                if (!isClickInside && schoolDropdownList.style.display === 'block') {
+                    schoolDropdownList.style.display = 'none';
+                }
+            });
+            
+            // Prevent default form submission on Enter in search field
+            schoolSearchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    // If no exact match found, treat as "Enter School Name"
+                    const searchValue = this.value.trim().toLowerCase();
+                    const matchedSchool = schoolsList.find(school => 
+                        school.toLowerCase() === searchValue
+                    );
+                    
+                    if (matchedSchool) {
+                        selectSchool(matchedSchool);
+                    } else if (searchValue) {
+                        // Use the "Enter School Name" option with current search value
+                        selectSchool('Other');
+                    }
+                    
+                    return false;
+                }
+            });
+
+            // Initialize accordion functionality
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+            
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+
+            // Initialize applicant name container
+            document.getElementById('applicantNameContainer').style.display = 'block';
+            
+            const parent1NameInput = document.querySelector('[name="parent1Name"]');
+            parent1NameInput.addEventListener('input', updateApplicantNameOptions);
+            document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
+            
+            if (parent1NameInput.value) {
+                document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
+                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                parent1Radio.value = parent1NameInput.value;
+                parent1Radio.checked = true;
+            }
+
+            // Modified validation function
+            function validateForm(formData) {
+                const errors = [];
+                const parent1Name = formData.get('parent1Name');
+                const parent1Phone = formData.get('parent1Phone');
+                const parent1Email = formData.get('parent1Email');
+                const parent1ConfirmEmail = formData.get('parent1ConfirmEmail');
+                const parent2Name = formData.get('parent2Name');
+                const parent2Phone = formData.get('parent2Phone');
+                const parent2Email = formData.get('parent2Email');
+                const emergencyName = formData.get('emergencyContactName');
+                const emergencyPhone = formData.get('emergencyContactPhone');
+                const schoolValue = formData.get('mainstreamSchoolName');
+                const otherSchoolValue = formData.get('otherSchoolName');
+                const parent1Relationship = formData.get('parent1Relationship');
+                const parent1OtherRelationship = formData.get('parent1OtherRelationship');
+                const parent2Relationship = formData.get('parent2Relationship');
+                const parent2OtherRelationship = formData.get('parent2OtherRelationship');
+                const emergencyRelationship = formData.get('emergencyContactRelationship');
+                const emergencyOtherRelationship = formData.get('emergencyOtherRelationship');
+
+                // Check "Other" School Name
+                if (schoolValue === 'Other' && !otherSchoolValue) {
+                    errors.push({ field: 'otherSchoolName', message: 'Please enter the school name.' });
+                }
+
+                // Check Emergency Contact vs Parent 1
+                if (emergencyName === parent1Name) {
+                    errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
+                }
+
+                // Check Emergency Contact vs Parent 2
+                if (parent2Name && emergencyName === parent2Name) {
+                    errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
+                }
+
+                if (emergencyPhone === parent1Phone) {
+                    errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 1.' });
+                }
+
+                if (parent2Phone && emergencyPhone === parent2Phone) {
+                    errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
+                }
+
+                // Check Parent 2 vs Parent 1
+                if (parent2Name && parent2Name === parent1Name) {
+                    errors.push({ field: 'parent2Name', message: 'Parent/Carer 2 name cannot match Parent/Carer 1.' });
+                }
+
+                if (parent2Phone && parent2Phone === parent1Phone) {
+                    errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
+                }
+
+                if (parent2Email && parent2Email === parent1Email) {
+                    errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
+                }
+
+                // Check Email Confirmation
+                if (parent1Email !== parent1ConfirmEmail) {
+                    errors.push({ field: 'parent1ConfirmEmail', message: 'Email addresses do not match.' });
+                }
+
+                // Check "Other" Relationship
+                if (parent1Relationship === 'Other' && !parent1OtherRelationship) {
+                    errors.push({ field: 'parent1OtherRelationship', message: 'Please specify the relationship.' });
+                }
+
+                if (parent2Relationship === 'Other' && !parent2OtherRelationship) {
+                    errors.push({ field: 'parent2OtherRelationship', message: 'Please specify the relationship.' });
+                }
+
+                if (emergencyRelationship === 'Other' && !emergencyOtherRelationship) {
+                    errors.push({ field: 'emergencyOtherRelationship', message: 'Please specify the relationship.' });
+                }
+
+                return errors;
+            }
+
+            // Event handlers for relationship radio buttons
+            document.querySelectorAll('input[name="parent1Relationship"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const otherInput = document.querySelector('input[name="parent1OtherRelationship"]');
+                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                    otherInput.required = this.value === 'Other';
+                });
+            });
+
+            document.querySelectorAll('input[name="parent2Relationship"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const otherInput = document.querySelector('input[name="parent2OtherRelationship"]');
+                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                    otherInput.required = this.value === 'Other';
+                });
+            });
+
+            document.querySelectorAll('input[name="emergencyContactRelationship"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const otherInput = document.querySelector('input[name="emergencyOtherRelationship"]');
+                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
+                    otherInput.required = this.value === 'Other';
+                });
+            });
+
+            // Parent name event handlers for applicant name options
+            document.querySelector('[name="parent1Name"]').addEventListener('input', function() {
+                document.getElementById('parent1NameOption').textContent = this.value;
+                document.querySelector('input[name="applicantName"][value=""]').value = this.value;
+            });
+
+            document.querySelector('[name="parent2Name"]').addEventListener('input', function() {
+                const parent2NameLabel = document.getElementById('parent2NameLabel');
+                const parent2NameOption = document.getElementById('parent2NameOption');
+                if (this.value) {
+                    parent2NameLabel.style.display = 'block';
+                    parent2NameOption.textContent = this.value;
+                    parent2NameLabel.querySelector('input[name="applicantName"]').value = this.value;
+                } else {
+                    parent2NameLabel.style.display = 'none';
+                    parent2NameOption.textContent = '';
+                    parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+                }
+            });
         });
 
-        // Handle "Other" selection
-        const schoolInput = document.querySelector('[name="mainstreamSchoolName"]');
-        const otherSchoolContainer = document.getElementById('otherSchoolContainer');
+        // Update applicant name options based on parent names
+        function updateApplicantNameOptions() {
+            const parent1Name = document.querySelector('[name="parent1Name"]').value;
+            const parent2Name = document.querySelector('[name="parent2Name"]').value;
+            const applicantNameContainer = document.getElementById('applicantNameContainer');
+            const parent1NameOption = document.getElementById('parent1NameOption');
+            const parent2NameLabel = document.getElementById('parent2NameLabel');
+            const parent2NameOption = document.getElementById('parent2NameOption');
 
-        schoolInput.addEventListener('input', function() {
-            if (this.value === 'Other') {
-                otherSchoolContainer.style.display = 'block';
-                document.querySelector('[name="otherSchoolName"]').required = true;
+            if (parent1Name) {
+                parent1NameOption.textContent = parent1Name;
+                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                parent1Radio.value = parent1Name;
+                parent1Radio.checked = true;
+                applicantNameContainer.style.display = 'block';
             } else {
-                otherSchoolContainer.style.display = 'none';
-                document.querySelector('[name="otherSchoolName"]').required = false;
-            }
-        });
-
-        // Modified validation function
-        function validateForm(formData) {
-            const errors = [];
-            const parent1Name = formData.get('parent1Name');
-            const parent1Phone = formData.get('parent1Phone');
-            const parent1Email = formData.get('parent1Email');
-            const parent1ConfirmEmail = formData.get('parent1ConfirmEmail');
-            const parent2Name = formData.get('parent2Name');
-            const parent2Phone = formData.get('parent2Phone');
-            const parent2Email = formData.get('parent2Email');
-            const emergencyName = formData.get('emergencyContactName');
-            const emergencyPhone = formData.get('emergencyContactPhone');
-            const schoolValue = formData.get('mainstreamSchoolName');
-            const otherSchoolValue = formData.get('otherSchoolName');
-            const parent1Relationship = formData.get('parent1Relationship');
-            const parent1OtherRelationship = formData.get('parent1OtherRelationship');
-            const parent2Relationship = formData.get('parent2Relationship');
-            const parent2OtherRelationship = formData.get('parent2OtherRelationship');
-            const emergencyRelationship = formData.get('emergencyContactRelationship');
-            const emergencyOtherRelationship = formData.get('emergencyOtherRelationship');
-
-            // Check Emergency Contact vs Parent 1
-            if (emergencyName === parent1Name) {
-                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
+                applicantNameContainer.style.display = 'none';
             }
 
-            // Check Emergency Contact vs Parent 2
-            if (parent2Name && emergencyName === parent2Name) {
-                errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
+            if (parent2Name) {
+                parent2NameLabel.style.display = 'block';
+                parent2NameOption.textContent = parent2Name;
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
+            } else {
+                parent2NameLabel.style.display = 'none';
+                parent2NameOption.textContent = '';
+                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
             }
-
-            if (emergencyPhone === parent1Phone) {
-                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 1.' });
-            }
-
-            if (parent2Phone && emergencyPhone === parent2Phone) {
-                errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
-            }
-
-            // Check Parent 2 vs Parent 1
-            if (parent2Name && parent2Name === parent1Name) {
-                errors.push({ field: 'parent2Name', message: 'Parent/Carer 2 name cannot match Parent/Carer 1.' });
-            }
-
-            if (parent2Phone && parent2Phone === parent1Phone) {
-                errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
-            }
-
-            if (parent2Email && parent2Email === parent1Email) {
-                errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
-            }
-
-            // Check Email Confirmation
-            if (parent1Email !== parent1ConfirmEmail) {
-                errors.push({ field: 'parent1ConfirmEmail', message: 'Email addresses do not match.' });
-            }
-
-            // Check "Other" School Name
-            if (schoolValue === 'Other' && !otherSchoolValue) {
-                errors.push({ field: 'otherSchoolName', message: 'Please specify the school name.' });
-            }
-
-            // Check "Other" Relationship
-            if (parent1Relationship === 'Other' && !parent1OtherRelationship) {
-                errors.push({ field: 'parent1OtherRelationship', message: 'Please specify the relationship.' });
-            }
-
-            if (parent2Relationship === 'Other' && !parent2OtherRelationship) {
-                errors.push({ field: 'parent2OtherRelationship', message: 'Please specify the relationship.' });
-            }
-
-            if (emergencyRelationship === 'Other' && !emergencyOtherRelationship) {
-                errors.push({ field: 'emergencyOtherRelationship', message: 'Please specify the relationship.' });
-            }
-
-            return errors;
         }
 
-        // Modified submission handler to scroll to first error field
+        // Form submission handler
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
@@ -929,21 +1206,17 @@
                     throw new Error('Validation errors');
                 }
 
-                // Get school value
                 const schoolValue = formData.get('mainstreamSchoolName');
                 const otherSchoolValue = formData.get('otherSchoolName');
                 const mainstream = schoolValue === 'Other' ? otherSchoolValue : schoolValue;
 
-                // Get relationship values
                 const parent1Relationship = formData.get('parent1Relationship') === 'Other' ? formData.get('parent1OtherRelationship') : formData.get('parent1Relationship');
                 const parent2Relationship = formData.get('parent2Relationship') === 'Other' ? formData.get('parent2OtherRelationship') : formData.get('parent2Relationship');
                 const emergencyRelationship = formData.get('emergencyContactRelationship') === 'Other' ? formData.get('emergencyOtherRelationship') : formData.get('emergencyContactRelationship');
 
-                // Combine address components into standard address format
                 const unitNumber = formData.get('unitNumber');
                 const streetName = formData.get('streetName');
                 
-                // Format: [Unit/Apt (if present)], [Street Address]
                 let streetAddress = '';
                 if (unitNumber) {
                     streetAddress = `${unitNumber}, ${streetName}`;
@@ -974,7 +1247,7 @@
                         email: formData.get('parent2Email')
                     },
                     address: {
-                        street: streetAddress,
+                        street: formData.get('streetName'),
                         suburb: formData.get('suburb'),
                         state: formData.get('state'),
                         postCode: formData.get('postCode')
@@ -1010,168 +1283,146 @@
 
                 if (!response.ok) throw new Error('Network response was not ok');
 
-                // Success handling
                 document.getElementById('enrollmentForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
                 document.getElementById('statusMessage').textContent = '';
             } catch (error) {
-                // Hide loading overlay on error
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
                 submitButton.disabled = false;
                 
                 if (error.message === 'Validation errors') {
                     document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
-                    errors.forEach(error => {
-                        const field = document.querySelector(`[name="${error.field}"]`);
-                        if (field) {
-                            field.classList.add('error-highlight');
-                            const errorDiv = document.createElement('div');
-                            errorDiv.className = 'error-message';
-                            errorDiv.textContent = error.message;
-                            field.parentNode.insertBefore(errorDiv, field.nextSibling);
-                        }
-                    });
                 } else {
                     console.error('Error:', error);
                     document.getElementById('statusMessage').textContent = 
                         'Error submitting form. Please try again or contact support.';
                 }
-                return;
             } finally {
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
+                submitButton.disabled = false;
             }
         });
 
-        document.querySelectorAll('input[name="parent1Relationship"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const otherInput = document.querySelector('input[name="parent1OtherRelationship"]');
-                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                otherInput.required = this.value === 'Other';
-            });
-        });
-
-        document.querySelectorAll('input[name="parent2Relationship"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const otherInput = document.querySelector('input[name="parent2OtherRelationship"]');
-                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                otherInput.required = this.value === 'Other';
-            });
-        });
-
-        document.querySelectorAll('input[name="emergencyContactRelationship"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const otherInput = document.querySelector('input[name="emergencyOtherRelationship"]');
-                otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                otherInput.required = this.value === 'Other';
-            });
-        });
-
-        // Populate applicant name options
-        document.querySelector('[name="parent1Name"]').addEventListener('input', function() {
-            document.getElementById('parent1NameOption').textContent = this.value;
-            document.querySelector('input[name="applicantName"][value=""]').value = this.value;
-        });
-
-        document.querySelector('[name="parent2Name"]').addEventListener('input', function() {
-            const parent2NameLabel = document.getElementById('parent2NameLabel');
-            const parent2NameOption = document.getElementById('parent2NameOption');
-            if (this.value) {
-                parent2NameLabel.style.display = 'block';
-                parent2NameOption.textContent = this.value;
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = this.value;
-            } else {
-                parent2NameLabel.style.display = 'none';
-                parent2NameOption.textContent = '';
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
-            }
-        });
-
-        function updateApplicantNameOptions() {
-            const parent1Name = document.querySelector('[name="parent1Name"]').value;
-            const parent2Name = document.querySelector('[name="parent2Name"]').value;
-            const applicantNameContainer = document.getElementById('applicantNameContainer');
-            const parent1NameOption = document.getElementById('parent1NameOption');
-            const parent2NameLabel = document.getElementById('parent2NameLabel');
-            const parent2NameOption = document.getElementById('parent2NameOption');
-
-            if (parent1Name) {
-                parent1NameOption.textContent = parent1Name;
-                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                parent1Radio.value = parent1Name;
-                parent1Radio.checked = true;
-                applicantNameContainer.style.display = 'block';
-            } else {
-                applicantNameContainer.style.display = 'none';
-            }
-
-            if (parent2Name) {
-                parent2NameLabel.style.display = 'block';
-                parent2NameOption.textContent = parent2Name;
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
-            } else {
-                parent2NameLabel.style.display = 'none';
-                parent2NameOption.textContent = '';
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
-            }
-        }
-
-        document.querySelector('[name="parent1Name"]').addEventListener('input', updateApplicantNameOptions);
-        document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
-       
-        document.addEventListener('DOMContentLoaded', function() {
-            const accordionButtons = document.querySelectorAll('.accordion-button');
+        // Google Maps Places Autocomplete for address
+        function initAutocomplete() {
+            const addressInput = document.querySelector('[name="streetName"]');
+            const suburbInput = document.querySelector('[name="suburb"]');
+            const stateInput = document.querySelector('[name="state"]');
+            const postCodeInput = document.querySelector('[name="postCode"]');
             
-            accordionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const content = this.nextElementSibling;
+            const stateMapping = {
+                'New South Wales': 'NSW',
+                'Victoria': 'VIC',
+                'Queensland': 'QLD',
+                'South Australia': 'SA',
+                'Western Australia': 'WA',
+                'Tasmania': 'TAS',
+                'Northern Territory': 'NT',
+                'Australian Capital Territory': 'ACT'
+            };
+            
+            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                componentRestrictions: { country: 'au' },
+                types: ['address']
+            });
+            
+            addressInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) return;
+                
+                const originalValue = addressInput.value;
+                
+                const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
+                const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
+                
+                const ausMatch = ausStyleRegex.exec(originalValue);
+                const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
+                
+                let apartmentInfo = '';
+                
+                if (ausMatch && ausMatch[0]) {
+                    apartmentInfo = ausMatch[0].trim();
+                } else if (apartmentMatch && apartmentMatch[0]) {
+                    apartmentInfo = apartmentMatch[0].trim();
+                }
+                
+                suburbInput.value = '';
+                stateInput.value = 'NSW';
+                postCodeInput.value = '';
+                
+                let streetNumber = '';
+                let streetName = '';
+                let suburb = '';
+                let state = '';
+                let postCode = '';
+                
+                for (const component of place.address_components) {
+                    const type = component.types[0];
                     
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
+                    switch(type) {
+                        case 'street_number':
+                            streetNumber = component.long_name;
+                            break;
+                        case 'route':
+                            streetName = component.long_name;
+                            break;
+                        case 'locality':
+                        case 'sublocality':
+                        case 'sublocality_level_1':
+                            suburb = component.long_name;
+                            break;
+                        case 'administrative_area_level_1':
+                            state = component.long_name;
+                            break;
+                        case 'postal_code':
+                            postCode = component.long_name;
+                            break;
                     }
-                });
+                }
+                
+                if (apartmentInfo) {
+                    if (ausMatch) {
+                        const unitPart = ausMatch[1]; 
+                        const streetPart = ausMatch[2]; 
+                        
+                        if (streetPart === streetNumber) {
+                            addressInput.value = originalValue;
+                        } else {
+                            addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
+                        }
+                    } else {
+                        const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
+                        addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
+                    }
+                } else {
+                    addressInput.value = streetNumber + ' ' + streetName;
+                }
+                
+                suburbInput.value = suburb;
+                
+                if (state && stateMapping[state]) {
+                    stateInput.value = stateMapping[state];
+                } else if (state) {
+                    stateInput.value = state;
+                }
+                
+                postCodeInput.value = postCode;
             });
             
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fetch schools and populate datalist
-            fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
-                .then(response => response.json())
-                .then(schools => {
-                    const datalist = document.getElementById('schools');
-                    schools.forEach(school => {
-                        const option = document.createElement('option');
-                        option.value = school;
-                        datalist.appendChild(option);
-                    });
-                    // Add "Other" option
-                    const otherOption = document.createElement('option');
-                    otherOption.value = 'Other';
-                    datalist.appendChild(otherOption);
-                })
-                .catch(error => console.error('Error fetching schools:', error));
-            
-            // Show applicant name container by default
-            document.getElementById('applicantNameContainer').style.display = 'block';
-            
-            // Set up parent name event listeners
-            const parent1NameInput = document.querySelector('[name="parent1Name"]');
-            parent1NameInput.addEventListener('input', updateApplicantNameOptions);
-            document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
-            
-            // Set initial parent1 name if provided (for form reloads)
-            if (parent1NameInput.value) {
-                document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
-                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                parent1Radio.value = parent1NameInput.value;
-                parent1Radio.checked = true;
-            }
-        });
+            addressInput.addEventListener('input', function(e) {
+                if (!this.value || !suburbInput.value) return;
+                this.dataset.lastValue = this.value;
+            });
+        }
     </script>
 </body>
 </html>
