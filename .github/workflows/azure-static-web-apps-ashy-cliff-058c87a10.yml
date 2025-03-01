@@ -31,8 +31,8 @@ jobs:
         id: idtoken
         with:
           script: |
-            const core = require('@actions/core')
-            return await core.getIDToken()
+            // Inline the require call to avoid redeclaring "core"
+            return await require('@actions/core').getIDToken()
           result-encoding: string
 
       - name: Write commit hash to file in app folder
