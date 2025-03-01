@@ -741,7 +741,7 @@
         fetch('commit-hash.txt')
             .then(response => response.text())
             .then(hash => {
-                document.getElementById('commit-hash').textContent = `Deployment Hash: ${hash.trim()}`;
+                document.getElementById('commit-hash').textContent = `${hash.trim()}`;
         })
             .catch(error => console.error('Error fetching commit hash:', error));
        
@@ -930,19 +930,99 @@
             });
 
             // Initialize applicant name container
-            document.getElementById('applicantNameContainer').style.display = 'block';
+            const applicantNameContainer = document.getElementById('applicantNameContainer');
+            applicantNameContainer.style.display = 'none'; // Initially hidden
             
+            // Get references to parent information fields
             const parent1NameInput = document.querySelector('[name="parent1Name"]');
-            parent1NameInput.addEventListener('input', updateApplicantNameOptions);
-            document.querySelector('[name="parent2Name"]').addEventListener('input', updateApplicantNameOptions);
-            
-            if (parent1NameInput.value) {
-                document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
-                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                parent1Radio.value = parent1NameInput.value;
-                parent1Radio.checked = true;
+            const parent1PhoneInput = document.querySelector('[name="parent1Phone"]');
+            const parent1EmailInput = document.querySelector('[name="parent1Email"]');
+            const parent2NameInput = document.querySelector('[name="parent2Name"]');
+            const parent2PhoneInput = document.querySelector('[name="parent2Phone"]');
+            const parent2EmailInput = document.querySelector('[name="parent2Email"]');
+
+            // Function to check if parent info is complete
+            function checkParentInfo() {
+                // Check if parent1 info is complete
+                const parent1Complete = parent1NameInput && parent1NameInput.value && 
+                                      parent1PhoneInput && parent1PhoneInput.value && 
+                                      parent1EmailInput && parent1EmailInput.value;
+                
+                // Check if parent2 info is complete (all fields must be filled if name is provided)
+                const parent2Complete = parent2NameInput && parent2NameInput.value && 
+                                      parent2PhoneInput && parent2PhoneInput.value && 
+                                      parent2EmailInput && parent2EmailInput.value;
+                
+                // Show applicant name section if either parent has complete information
+                if (parent1Complete || parent2Complete) {
+                    applicantNameContainer.style.display = 'block';
+                    
+                    // Set parent1 as default
+                    if (parent1Complete) {
+                        document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
+                        const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                        parent1Radio.value = parent1NameInput.value;
+                        parent1Radio.checked = true;
+                    }
+                    
+                    // Add parent2 as option if complete
+                    if (parent2Complete) {
+                        const parent2NameLabel = document.getElementById('parent2NameLabel');
+                        const parent2NameOption = document.getElementById('parent2NameOption');
+                        parent2NameLabel.style.display = 'block';
+                        parent2NameOption.textContent = parent2NameInput.value;
+                        parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2NameInput.value;
+                    } else {
+                        const parent2NameLabel = document.getElementById('parent2NameLabel');
+                        parent2NameLabel.style.display = 'none';
+                    }
+                } else {
+                    // Hide if neither parent has complete info
+                    applicantNameContainer.style.display = 'none';
+                }
             }
 
+            // Add input event listeners to all parent fields
+            [parent1NameInput, parent1PhoneInput, parent1EmailInput, 
+             parent2NameInput, parent2PhoneInput, parent2EmailInput].forEach(input => {
+                if (input) {
+                    input.addEventListener('input', checkParentInfo);
+                }
+            });
+            
+            // Modified updateApplicantNameOptions function
+            function updateApplicantNameOptions() {
+                const parent1Name = parent1NameInput.value;
+                const parent2Name = parent2NameInput.value;
+                const parent1NameOption = document.getElementById('parent1NameOption');
+                const parent2NameLabel = document.getElementById('parent2NameLabel');
+                const parent2NameOption = document.getElementById('parent2NameOption');
+
+                if (parent1Name) {
+                    parent1NameOption.textContent = parent1Name;
+                    const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
+                    parent1Radio.value = parent1Name;
+                    parent1Radio.checked = true;
+                }
+
+                if (parent2Name) {
+                    parent2NameLabel.style.display = 'block';
+                    parent2NameOption.textContent = parent2Name;
+                    parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
+                } else {
+                    parent2NameLabel.style.display = 'none';
+                    parent2NameOption.textContent = '';
+                    parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+                }
+                
+                // Run the parent info check
+                checkParentInfo();
+            }
+
+            // Set up initial event listeners for parent name fields
+            parent1NameInput.addEventListener('input', updateApplicantNameOptions);
+            parent2NameInput.addEventListener('input', updateApplicantNameOptions);
+            
             // Modified validation function
             function validateForm(formData) {
                 const errors = [];
@@ -1075,15 +1155,22 @@
             const parent1NameOption = document.getElementById('parent1NameOption');
             const parent2NameLabel = document.getElementById('parent2NameLabel');
             const parent2NameOption = document.getElementById('parent2NameOption');
+            
+            // Check if parent1 info is complete
+            const parent1Phone = document.querySelector('[name="parent1Phone"]')?.value || '';
+            const parent1Email = document.querySelector('[name="parent1Email"]')?.value || '';
+            const parent1Complete = parent1Name && parent1Phone && parent1Email;
+            
+            // Check if parent2 info is complete
+            const parent2Phone = document.querySelector('[name="parent2Phone"]')?.value || '';
+            const parent2Email = document.querySelector('[name="parent2Email"]')?.value || '';
+            const parent2Complete = parent2Name && parent2Phone && parent2Email;
 
             if (parent1Name) {
                 parent1NameOption.textContent = parent1Name;
                 const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
                 parent1Radio.value = parent1Name;
                 parent1Radio.checked = true;
-                applicantNameContainer.style.display = 'block';
-            } else {
-                applicantNameContainer.style.display = 'none';
             }
 
             if (parent2Name) {
@@ -1094,6 +1181,13 @@
                 parent2NameLabel.style.display = 'none';
                 parent2NameOption.textContent = '';
                 parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+            }
+            
+            // Only show the applicant name section if at least one parent has complete info
+            if (parent1Complete || parent2Complete) {
+                applicantNameContainer.style.display = 'block';
+            } else {
+                applicantNameContainer.style.display = 'none';
             }
         }
 
@@ -1426,3 +1520,4 @@
     </script>
 </body>
 </html>
+
