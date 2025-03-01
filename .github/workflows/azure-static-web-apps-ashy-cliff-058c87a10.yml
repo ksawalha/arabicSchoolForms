@@ -51,8 +51,8 @@ jobs:
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
 
-      - name: Upload commit-hash.txt
-        run: mv commit-hash.txt /app # Ensure commit hash file is in the correct output location
+      - name: Move commit-hash.txt to output directory
+        run: mv commit-hash.txt ./app/build/ # Adjust 'build' to your actual output directory
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
