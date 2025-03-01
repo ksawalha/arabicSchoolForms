@@ -736,554 +736,309 @@
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
-   <script>       
-        function clearExistingErrors() {
-            document.querySelectorAll('.error-message').forEach(el => el.remove());
-            document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
-        }
+<script>
+    // Height Reporting Functions
+    function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
+    }
 
-               function initAutocomplete() {
-            const addressInput = document.querySelector('[name="streetName"]');
-            const suburbInput = document.querySelector('[name="suburb"]');
-            const stateInput = document.querySelector('[name="state"]');
-            const postCodeInput = document.querySelector('[name="postCode"]');
-            
-            const stateMapping = {
-                'New South Wales': 'NSW',
-                'Victoria': 'VIC',
-                'Queensland': 'QLD',
-                'South Australia': 'SA',
-                'Western Australia': 'WA',
-                'Tasmania': 'TAS',
-                'Northern Territory': 'NT',
-                'Australian Capital Territory': 'ACT'
-            };
-            
-            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                componentRestrictions: { country: 'au' },
-                types: ['address']
-            });
-            
-            addressInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) return;
-                
-                const originalValue = addressInput.value;
-                
-                const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
-                const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
-                
-                const ausMatch = ausStyleRegex.exec(originalValue);
-                const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
-                
-                let apartmentInfo = '';
-                
-                if (ausMatch && ausMatch[0]) {
-                    apartmentInfo = ausMatch[0].trim();
-                } else if (apartmentMatch && apartmentMatch[0]) {
-                    apartmentInfo = apartmentMatch[0].trim();
-                }
-                
-                suburbInput.value = '';
-                stateInput.value = 'NSW';
-                postCodeInput.value = '';
-                
-                let streetNumber = '';
-                let streetName = '';
-                let suburb = '';
-                let state = '';
-                let postCode = '';
-                
-                for (const component of place.address_components) {
-                    const type = component.types[0];
-                    
-                    switch(type) {
-                        case 'street_number':
-                            streetNumber = component.long_name;
-                            break;
-                        case 'route':
-                            streetName = component.long_name;
-                            break;
-                        case 'locality':
-                        case 'sublocality':
-                        case 'sublocality_level_1':
-                            suburb = component.long_name;
-                            break;
-                        case 'administrative_area_level_1':
-                            state = component.long_name;
-                            break;
-                        case 'postal_code':
-                            postCode = component.long_name;
-                            break;
-                    }
-                }
-                
-                if (apartmentInfo) {
-                    if (ausMatch) {
-                        const unitPart = ausMatch[1]; 
-                        const streetPart = ausMatch[2]; 
-                        
-                        if (streetPart === streetNumber) {
-                            addressInput.value = originalValue;
-                        } else {
-                            addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
-                        }
-                    } else {
-                        const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
-                        addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
-                    }
-                } else {
-                    addressInput.value = streetNumber + ' ' + streetName;
-                }
-                
-                suburbInput.value = suburb;
-                
-                if (state && stateMapping[state]) {
-                    stateInput.value = stateMapping[state];
-                } else if (state) {
-                    stateInput.value = state;
-                }
-                
-                postCodeInput.value = postCode;
-            });
-            
-            addressInput.addEventListener('input', function(e) {
-                if (!this.value || !suburbInput.value) return;
-                this.dataset.lastValue = this.value;
-            });
-        }
+    const observer = new MutationObserver(sendHeightToParent);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+    });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize schools dropdown
-            let schoolsList = [];
+    window.addEventListener('load', () => {
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 1000);
+    });
+
+    window.addEventListener('resize', sendHeightToParent);
+
+    // Existing Functions
+    function clearExistingErrors() {
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
+        document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
+    }
+
+    function initAutocomplete() {
+        const addressInput = document.querySelector('[name="streetName"]');
+        const suburbInput = document.querySelector('[name="suburb"]');
+        const stateInput = document.querySelector('[name="state"]');
+        const postCodeInput = document.querySelector('[name="postCode"]');
+        
+        const stateMapping = {
+            'New South Wales': 'NSW',
+            'Victoria': 'VIC',
+            'Queensland': 'QLD',
+            'South Australia': 'SA',
+            'Western Australia': 'WA',
+            'Tasmania': 'TAS',
+            'Northern Territory': 'NT',
+            'Australian Capital Territory': 'ACT'
+        };
+        
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            componentRestrictions: { country: 'au' },
+            types: ['address']
+        });
+        
+        addressInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) return;
             
-            // Fetch schools data from API
-            fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
-                .then(response => response.json())
-                .then(schools => {
-                    schoolsList = schools;
-                    populateSchoolsList(schoolsList);
-                })
-                .catch(error => console.error('Error fetching schools:', error));
+            const originalValue = addressInput.value;
+            const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
+            const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
+            const ausMatch = ausStyleRegex.exec(originalValue);
+            const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
+            let apartmentInfo = '';
             
-            // Function to populate schools dropdown list
-            function populateSchoolsList(schools) {
-                const schoolListContainer = document.getElementById('schoolListContainer');
-                schoolListContainer.innerHTML = '';
+            if (ausMatch && ausMatch[0]) {
+                apartmentInfo = ausMatch[0].trim();
+            } else if (apartmentMatch && apartmentMatch[0]) {
+                apartmentInfo = apartmentMatch[0].trim();
+            }
+            
+            suburbInput.value = '';
+            stateInput.value = 'NSW';
+            postCodeInput.value = '';
+            
+            let streetNumber = '';
+            let streetName = '';
+            let suburb = '';
+            let state = '';
+            let postCode = '';
+            
+            for (const component of place.address_components) {
+                const type = component.types[0];
                 
-                if (schools.length === 0) {
-                    // When no schools match, only show "Enter School Name" option
-                    // without the "No schools found" message
-                    const otherItem = document.createElement('div');
-                    otherItem.className = 'school-dropdown-item';
-                    otherItem.textContent = 'Enter School Name';
-                    otherItem.addEventListener('click', function() {
-                        selectSchool('Other');
-                    });
-                    schoolListContainer.appendChild(otherItem);
-                    return;
-                }
-                
-                // Add all school options
-                schools.forEach(school => {
-                    const item = document.createElement('div');
-                    item.className = 'school-dropdown-item';
-                    item.textContent = school;
-                    item.addEventListener('click', function() {
-                        selectSchool(school);
-                    });
-                    schoolListContainer.appendChild(item);
-                });
-                
-                // Only add "Enter School Name" option if it's a search with no exact match
-                const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
-                if (searchValue && !schools.some(school => school.toLowerCase() === searchValue)) {
-                    const otherItem = document.createElement('div');
-                    otherItem.className = 'school-dropdown-item';
-                    otherItem.textContent = 'Enter School Name';
-                    otherItem.addEventListener('click', function() {
-                        selectSchool('Other');
-                    });
-                    schoolListContainer.appendChild(otherItem);
+                switch(type) {
+                    case 'street_number':
+                        streetNumber = component.long_name;
+                        break;
+                    case 'route':
+                        streetName = component.long_name;
+                        break;
+                    case 'locality':
+                    case 'sublocality':
+                    case 'sublocality_level_1':
+                        suburb = component.long_name;
+                        break;
+                    case 'administrative_area_level_1':
+                        state = component.long_name;
+                        break;
+                    case 'postal_code':
+                        postCode = component.long_name;
+                        break;
                 }
             }
             
-            // Get references to dropdown elements
-            const schoolDropdownInput = document.querySelector('.school-dropdown-input');
-            const schoolNameInput = document.querySelector('input[name="mainstreamSchoolName"]');
-            const schoolSearchInput = document.getElementById('schoolSearchInput');
-            const schoolDropdownList = document.querySelector('.school-dropdown-list');
-            const otherSchoolContainer = document.getElementById('otherSchoolContainer');
-            
-            // Handle school selection
-            function selectSchool(school) {
-                schoolDropdownInput.value = school;
-                schoolNameInput.value = school;
-                schoolDropdownList.style.display = 'none';
-                
-                if (school === 'Other') {
-                    // Update the UI to reflect "Enter School Name" instead of "Other"
-                    schoolDropdownInput.value = document.getElementById('schoolSearchInput').value || 'Enter School Name';
+            if (apartmentInfo) {
+                if (ausMatch) {
+                    const unitPart = ausMatch[1]; 
+                    const streetPart = ausMatch[2]; 
                     
-                    // Show the other school container
-                    otherSchoolContainer.style.display = 'block';
-                    
-                    // Make sure we have the input element
-                    if (!document.querySelector('[name="otherSchoolName"]')) {
-                        const label = document.createElement('label');
-                        label.className = 'required';
-                        label.textContent = 'School Name';
-                        otherSchoolContainer.appendChild(label);
-                        
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = 'otherSchoolName';
-                        input.required = true;
-                        input.value = document.getElementById('schoolSearchInput').value;
-                        otherSchoolContainer.appendChild(input);
+                    if (streetPart === streetNumber) {
+                        addressInput.value = originalValue;
                     } else {
-                        const otherInput = document.querySelector('[name="otherSchoolName"]');
-                        otherInput.required = true;
-                        otherInput.value = document.getElementById('schoolSearchInput').value;
+                        addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
                     }
                 } else {
-                    otherSchoolContainer.style.display = 'none';
+                    const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
+                    addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
+                }
+            } else {
+                addressInput.value = streetNumber + ' ' + streetName;
+            }
+            
+            suburbInput.value = suburb;
+            
+            if (state && stateMapping[state]) {
+                stateInput.value = stateMapping[state];
+            } else if (state) {
+                stateInput.value = state;
+            }
+            
+            postCodeInput.value = postCode;
+        });
+        
+        addressInput.addEventListener('input', function(e) {
+            if (!this.value || !suburbInput.value) return;
+            this.dataset.lastValue = this.value;
+        });
+    }
+
+    // School Dropdown Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        let schoolsList = [];
+        
+        fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
+            .then(response => response.json())
+            .then(schools => {
+                schoolsList = schools;
+                populateSchoolsList(schoolsList);
+            })
+            .catch(error => console.error('Error fetching schools:', error));
+        
+        function populateSchoolsList(schools) {
+            const schoolListContainer = document.getElementById('schoolListContainer');
+            schoolListContainer.innerHTML = '';
+            
+            if (schools.length === 0) {
+                const otherItem = document.createElement('div');
+                otherItem.className = 'school-dropdown-item';
+                otherItem.textContent = 'Enter School Name';
+                otherItem.addEventListener('click', function() {
+                    selectSchool('Other');
+                });
+                schoolListContainer.appendChild(otherItem);
+                return;
+            }
+            
+            schools.forEach(school => {
+                const item = document.createElement('div');
+                item.className = 'school-dropdown-item';
+                item.textContent = school;
+                item.addEventListener('click', function() {
+                    selectSchool(school);
+                });
+                schoolListContainer.appendChild(item);
+            });
+            
+            const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
+            if (searchValue && !schools.some(school => school.toLowerCase() === searchValue)) {
+                const otherItem = document.createElement('div');
+                otherItem.className = 'school-dropdown-item';
+                otherItem.textContent = 'Enter School Name';
+                otherItem.addEventListener('click', function() {
+                    selectSchool('Other');
+                });
+                schoolListContainer.appendChild(otherItem);
+            }
+        }
+        
+        const schoolDropdownInput = document.querySelector('.school-dropdown-input');
+        const schoolNameInput = document.querySelector('input[name="mainstreamSchoolName"]');
+        const schoolSearchInput = document.getElementById('schoolSearchInput');
+        const schoolDropdownList = document.querySelector('.school-dropdown-list');
+        const otherSchoolContainer = document.getElementById('otherSchoolContainer');
+        
+        function selectSchool(school) {
+            schoolDropdownInput.value = school;
+            schoolNameInput.value = school;
+            schoolDropdownList.style.display = 'none';
+            
+            if (school === 'Other') {
+                schoolDropdownInput.value = document.getElementById('schoolSearchInput').value || 'Enter School Name';
+                otherSchoolContainer.style.display = 'block';
+                
+                if (!document.querySelector('[name="otherSchoolName"]')) {
+                    const label = document.createElement('label');
+                    label.className = 'required';
+                    label.textContent = 'School Name';
+                    otherSchoolContainer.appendChild(label);
+                    
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = 'otherSchoolName';
+                    input.required = true;
+                    input.value = document.getElementById('schoolSearchInput').value;
+                    otherSchoolContainer.appendChild(input);
+                } else {
                     const otherInput = document.querySelector('[name="otherSchoolName"]');
-                    if (otherInput) {
-                        otherInput.required = false;
-                        otherInput.value = '';
-                    }
+                    otherInput.required = true;
+                    otherInput.value = document.getElementById('schoolSearchInput').value;
                 }
-                
-                // Clear search input
-                schoolSearchInput.value = '';
-            }
-            
-            // Handle dropdown toggle
-            schoolDropdownInput.addEventListener('click', function() {
-                if (schoolDropdownList.style.display === 'block') {
-                    schoolDropdownList.style.display = 'none';
-                } else {
-                    schoolDropdownList.style.display = 'block';
-                    schoolSearchInput.focus();
-                    // Reset search results when opening dropdown
-                    populateSchoolsList(schoolsList);
-                }
-            });
-            
-            // Handle search input
-            schoolSearchInput.addEventListener('input', function() {
-                const searchValue = this.value.toLowerCase();
-                if (searchValue) {
-                    const filteredSchools = schoolsList.filter(school => 
-                        school.toLowerCase().includes(searchValue)
-                    );
-                    populateSchoolsList(filteredSchools);
-                } else {
-                    populateSchoolsList(schoolsList);
-                }
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                const isClickInside = schoolDropdownInput.contains(event.target) || 
-                                    schoolDropdownList.contains(event.target);
-                
-                if (!isClickInside && schoolDropdownList.style.display === 'block') {
-                    schoolDropdownList.style.display = 'none';
-                }
-            });
-            
-            // Prevent default form submission on Enter in search field
-            schoolSearchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    
-                    // If no exact match found, treat as "Enter School Name"
-                    const searchValue = this.value.trim().toLowerCase();
-                    const matchedSchool = schoolsList.find(school => 
-                        school.toLowerCase() === searchValue
-                    );
-                    
-                    if (matchedSchool) {
-                        selectSchool(matchedSchool);
-                    } else if (searchValue) {
-                        // Use the "Enter School Name" option with current search value
-                        selectSchool('Other');
-                    }
-                    
-                    return false;
-                }
-            });
-
-            // Initialize accordion functionality
-            const accordionButtons = document.querySelectorAll('.accordion-button');
-            
-            accordionButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const content = this.nextElementSibling;
-                    
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                    }
-                });
-            });
-
-            // Initialize applicant name container
-            const applicantNameContainer = document.getElementById('applicantNameContainer');
-            applicantNameContainer.style.display = 'none'; // Initially hidden
-            
-            // Get references to parent information fields
-            const parent1NameInput = document.querySelector('[name="parent1Name"]');
-            const parent1PhoneInput = document.querySelector('[name="parent1Phone"]');
-            const parent1EmailInput = document.querySelector('[name="parent1Email"]');
-            const parent2NameInput = document.querySelector('[name="parent2Name"]');
-            const parent2PhoneInput = document.querySelector('[name="parent2Phone"]');
-            const parent2EmailInput = document.querySelector('[name="parent2Email"]');
-
-            // Function to check if parent info is complete
-            function checkParentInfo() {
-                // Check if parent1 info is complete
-                const parent1Complete = parent1NameInput && parent1NameInput.value && 
-                                      parent1PhoneInput && parent1PhoneInput.value && 
-                                      parent1EmailInput && parent1EmailInput.value;
-                
-                // Check if parent2 info is complete (all fields must be filled if name is provided)
-                const parent2Complete = parent2NameInput && parent2NameInput.value && 
-                                      parent2PhoneInput && parent2PhoneInput.value && 
-                                      parent2EmailInput && parent2EmailInput.value;
-                
-                // Show applicant name section if either parent has complete information
-                if (parent1Complete || parent2Complete) {
-                    applicantNameContainer.style.display = 'block';
-                    
-                    // Set parent1 as default
-                    if (parent1Complete) {
-                        document.getElementById('parent1NameOption').textContent = parent1NameInput.value;
-                        const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                        parent1Radio.value = parent1NameInput.value;
-                        parent1Radio.checked = true;
-                    }
-                    
-                    // Add parent2 as option if complete
-                    if (parent2Complete) {
-                        const parent2NameLabel = document.getElementById('parent2NameLabel');
-                        const parent2NameOption = document.getElementById('parent2NameOption');
-                        parent2NameLabel.style.display = 'block';
-                        parent2NameOption.textContent = parent2NameInput.value;
-                        parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2NameInput.value;
-                    } else {
-                        const parent2NameLabel = document.getElementById('parent2NameLabel');
-                        parent2NameLabel.style.display = 'none';
-                    }
-                } else {
-                    // Hide if neither parent has complete info
-                    applicantNameContainer.style.display = 'none';
-                }
-            }
-
-            // Add input event listeners to all parent fields
-            [parent1NameInput, parent1PhoneInput, parent1EmailInput, 
-             parent2NameInput, parent2PhoneInput, parent2EmailInput].forEach(input => {
-                if (input) {
-                    input.addEventListener('input', checkParentInfo);
-                }
-            });
-            
-            // Modified updateApplicantNameOptions function
-            function updateApplicantNameOptions() {
-                const parent1Name = parent1NameInput.value;
-                const parent2Name = parent2NameInput.value;
-                const parent1NameOption = document.getElementById('parent1NameOption');
-                const parent2NameLabel = document.getElementById('parent2NameLabel');
-                const parent2NameOption = document.getElementById('parent2NameOption');
-
-                if (parent1Name) {
-                    parent1NameOption.textContent = parent1Name;
-                    const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                    parent1Radio.value = parent1Name;
-                    parent1Radio.checked = true;
-                }
-
-                if (parent2Name) {
-                    parent2NameLabel.style.display = 'block';
-                    parent2NameOption.textContent = parent2Name;
-                    parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
-                } else {
-                    parent2NameLabel.style.display = 'none';
-                    parent2NameOption.textContent = '';
-                    parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
-                }
-                
-                // Run the parent info check
-                checkParentInfo();
-            }
-            
-            // Modified validation function
-            function validateForm(formData) {
-                const errors = [];
-                const parent1Name = formData.get('parent1Name');
-                const parent1Phone = formData.get('parent1Phone');
-                const parent1Email = formData.get('parent1Email');
-                const parent1ConfirmEmail = formData.get('parent1ConfirmEmail');
-                const parent2Name = formData.get('parent2Name');
-                const parent2Phone = formData.get('parent2Phone');
-                const parent2Email = formData.get('parent2Email');
-                const emergencyName = formData.get('emergencyContactName');
-                const emergencyPhone = formData.get('emergencyContactPhone');
-                const schoolValue = formData.get('mainstreamSchoolName');
-                const otherSchoolValue = formData.get('otherSchoolName');
-                const parent1Relationship = formData.get('parent1Relationship');
-                const parent1OtherRelationship = formData.get('parent1OtherRelationship');
-                const parent2Relationship = formData.get('parent2Relationship');
-                const parent2OtherRelationship = formData.get('parent2OtherRelationship');
-                const emergencyRelationship = formData.get('emergencyContactRelationship');
-                const emergencyOtherRelationship = formData.get('emergencyOtherRelationship');
-
-                // Check "Other" School Name
-                if (schoolValue === 'Other' && !otherSchoolValue) {
-                    errors.push({ field: 'otherSchoolName', message: 'Please enter the school name.' });
-                }
-
-                // Check Emergency Contact vs Parent 1
-                if (emergencyName === parent1Name) {
-                    errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 1.' });
-                }
-
-                // Check Emergency Contact vs Parent 2
-                if (parent2Name && emergencyName === parent2Name) {
-                    errors.push({ field: 'emergencyContactName', message: 'Emergency Contact name cannot be the same as Parent/Carer 2.' });
-                }
-
-                if (emergencyPhone === parent1Phone) {
-                    errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 1.' });
-                }
-
-                if (parent2Phone && emergencyPhone === parent2Phone) {
-                    errors.push({ field: 'emergencyContactPhone', message: 'Emergency Contact phone cannot be the same as Parent/Carer 2.' });
-                }
-
-                // Check Parent 2 vs Parent 1
-                if (parent2Name && parent2Name === parent1Name) {
-                    errors.push({ field: 'parent2Name', message: 'Parent/Carer 2 name cannot match Parent/Carer 1.' });
-                }
-
-                if (parent2Phone && parent2Phone === parent1Phone) {
-                    errors.push({ field: 'parent2Phone', message: 'Parent/Carer 2 phone cannot match Parent/Carer 1.' });
-                }
-
-                if (parent2Email && parent2Email === parent1Email) {
-                    errors.push({ field: 'parent2Email', message: 'Parent/Carer 2 email cannot match Parent/Carer 1.' });
-                }
-
-                // Check Email Confirmation
-                if (parent1Email !== parent1ConfirmEmail) {
-                    errors.push({ field: 'parent1ConfirmEmail', message: 'Email addresses do not match.' });
-                }
-
-                // Check "Other" Relationship
-                if (parent1Relationship === 'Other' && !parent1OtherRelationship) {
-                    errors.push({ field: 'parent1OtherRelationship', message: 'Please specify the relationship.' });
-                }
-
-                if (parent2Relationship === 'Other' && !parent2OtherRelationship) {
-                    errors.push({ field: 'parent2OtherRelationship', message: 'Please specify the relationship.' });
-                }
-
-                if (emergencyRelationship === 'Other' && !emergencyOtherRelationship) {
-                    errors.push({ field: 'emergencyOtherRelationship', message: 'Please specify the relationship.' });
-                }
-
-                return errors;
-            }
-
-            // Event handlers for relationship radio buttons
-            document.querySelectorAll('input[name="parent1Relationship"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const otherInput = document.querySelector('input[name="parent1OtherRelationship"]');
-                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                    otherInput.required = this.value === 'Other';
-                });
-            });
-
-            document.querySelectorAll('input[name="parent2Relationship"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const otherInput = document.querySelector('input[name="parent2OtherRelationship"]');
-                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                    otherInput.required = this.value === 'Other';
-                });
-            });
-
-            document.querySelectorAll('input[name="emergencyContactRelationship"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const otherInput = document.querySelector('input[name="emergencyOtherRelationship"]');
-                    otherInput.style.display = this.value === 'Other' ? 'block' : 'none';
-                    otherInput.required = this.value === 'Other';
-                });
-            });
-
-
-        // Update applicant name options based on parent names
-        function updateApplicantNameOptions() {
-            const parent1Name = document.querySelector('[name="parent1Name"]').value;
-            const parent2Name = document.querySelector('[name="parent2Name"]').value;
-            const applicantNameContainer = document.getElementById('applicantNameContainer');
-            const parent1NameOption = document.getElementById('parent1NameOption');
-            const parent2NameLabel = document.getElementById('parent2NameLabel');
-            const parent2NameOption = document.getElementById('parent2NameOption');
-            
-            // Check if parent1 info is complete
-            const parent1Phone = document.querySelector('[name="parent1Phone"]')?.value || '';
-            const parent1Email = document.querySelector('[name="parent1Email"]')?.value || '';
-            const parent1Complete = parent1Name && parent1Phone && parent1Email;
-            
-            // Check if parent2 info is complete
-            const parent2Phone = document.querySelector('[name="parent2Phone"]')?.value || '';
-            const parent2Email = document.querySelector('[name="parent2Email"]')?.value || '';
-            const parent2Complete = parent2Name && parent2Phone && parent2Email;
-
-            if (parent1Name) {
-                parent1NameOption.textContent = parent1Name;
-                const parent1Radio = document.querySelector('input[name="applicantName"][value=""]');
-                parent1Radio.value = parent1Name;
-                parent1Radio.checked = true;
-            }
-
-            if (parent2Name) {
-                parent2NameLabel.style.display = 'block';
-                parent2NameOption.textContent = parent2Name;
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = parent2Name;
             } else {
-                parent2NameLabel.style.display = 'none';
-                parent2NameOption.textContent = '';
-                parent2NameLabel.querySelector('input[name="applicantName"]').value = '';
+                otherSchoolContainer.style.display = 'none';
+                const otherInput = document.querySelector('[name="otherSchoolName"]');
+                if (otherInput) {
+                    otherInput.required = false;
+                    otherInput.value = '';
+                }
             }
             
-            // Only show the applicant name section if at least one parent has complete info
-            if (parent1Complete || parent2Complete) {
-                applicantNameContainer.style.display = 'block';
-            } else {
-                applicantNameContainer.style.display = 'none';
-            }
+            schoolSearchInput.value = '';
         }
+        
+        schoolDropdownInput.addEventListener('click', function() {
+            if (schoolDropdownList.style.display === 'block') {
+                schoolDropdownList.style.display = 'none';
+            } else {
+                schoolDropdownList.style.display = 'block';
+                schoolSearchInput.focus();
+                populateSchoolsList(schoolsList);
+            }
+        });
+        
+        schoolSearchInput.addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+            if (searchValue) {
+                const filteredSchools = schoolsList.filter(school => 
+                    school.toLowerCase().includes(searchValue)
+                );
+                populateSchoolsList(filteredSchools);
+            } else {
+                populateSchoolsList(schoolsList);
+            }
+        });
+        
+        document.addEventListener('click', function(event) {
+            const isClickInside = schoolDropdownInput.contains(event.target) || 
+                                schoolDropdownList.contains(event.target);
+            
+            if (!isClickInside && schoolDropdownList.style.display === 'block') {
+                schoolDropdownList.style.display = 'none';
+            }
+        });
+        
+        schoolSearchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const searchValue = this.value.trim().toLowerCase();
+                const matchedSchool = schoolsList.find(school => 
+                    school.toLowerCase() === searchValue
+                );
+                
+                if (matchedSchool) {
+                    selectSchool(matchedSchool);
+                } else if (searchValue) {
+                    selectSchool('Other');
+                }
+                return false;
+            }
+        });
 
-        // Form submission handler
+        // Accordion Functionality
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+
+        // Form Submission Handler
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const submitButton = event.target.querySelector('button[type="submit"]');
             const loadingOverlay = document.getElementById('loadingOverlay');
-            
-            // Show loading overlay
             loadingOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
             submitButton.disabled = true;
@@ -1294,86 +1049,23 @@
                 const errors = validateForm(formData);
 
                 if (errors.length > 0) {
-                    // Handle validation errors
                     let firstErrorField = null;
-                    
                     errors.forEach(error => {
                         const field = document.querySelector(`[name="${error.field}"]`);
                         if (field) {
-                            // Keep track of first error field for scrolling
                             if (!firstErrorField) {
                                 firstErrorField = field;
                             }
-                            
-                            // Add error highlight class
                             field.classList.add('error-highlight');
-                            
-                            // Create error message element
                             const errorDiv = document.createElement('div');
                             errorDiv.className = 'error-message';
                             errorDiv.textContent = error.message;
-                            
-                            // For email match error, highlight both fields
-                            if (error.field === 'parent1ConfirmEmail' && error.message === 'Email addresses do not match.') {
-                                const emailField = document.querySelector('[name="parent1Email"]');
-                                if (emailField) {
-                                    emailField.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            // For phone number duplication errors, highlight both fields
-                            if (error.field === 'emergencyContactPhone' && error.message.includes('same as Parent/Carer 1')) {
-                                const parentPhone = document.querySelector('[name="parent1Phone"]');
-                                if (parentPhone) {
-                                    parentPhone.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            if (error.field === 'emergencyContactPhone' && error.message.includes('same as Parent/Carer 2')) {
-                                const parentPhone = document.querySelector('[name="parent2Phone"]');
-                                if (parentPhone) {
-                                    parentPhone.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            if (error.field === 'parent2Phone' && error.message.includes('match Parent/Carer 1')) {
-                                const parentPhone = document.querySelector('[name="parent1Phone"]');
-                                if (parentPhone) {
-                                    parentPhone.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            // For name duplication errors, highlight both fields
-                            if (error.field === 'emergencyContactName' && error.message.includes('same as Parent/Carer 1')) {
-                                const parentName = document.querySelector('[name="parent1Name"]');
-                                if (parentName) {
-                                    parentName.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            if (error.field === 'emergencyContactName' && error.message.includes('same as Parent/Carer 2')) {
-                                const parentName = document.querySelector('[name="parent2Name"]');
-                                if (parentName) {
-                                    parentName.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            if (error.field === 'parent2Name' && error.message.includes('match Parent/Carer 1')) {
-                                const parentName = document.querySelector('[name="parent1Name"]');
-                                if (parentName) {
-                                    parentName.classList.add('error-highlight');
-                                }
-                            }
-                            
-                            // Insert error message after field
                             field.parentNode.insertBefore(errorDiv, field.nextSibling);
                         }
                     });
                     
-                    // Scroll to the first error field to help user see the issue
                     if (firstErrorField) {
                         setTimeout(() => {
-                            // Use a small timeout to ensure DOM updates are complete
                             firstErrorField.scrollIntoView({
                                 behavior: 'smooth',
                                 block: 'center'
@@ -1396,13 +1088,7 @@
 
                 const unitNumber = formData.get('unitNumber');
                 const streetName = formData.get('streetName');
-                
-                let streetAddress = '';
-                if (unitNumber) {
-                    streetAddress = `${unitNumber}, ${streetName}`;
-                } else {
-                    streetAddress = streetName;
-                }
+                let streetAddress = unitNumber ? `${unitNumber}, ${streetName}` : streetName;
 
                 const data = {
                     student: {
@@ -1484,19 +1170,16 @@
                 submitButton.disabled = false;
             }
         });
-
-    function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
-    }
+    });
     function sendHeight() {
         const height = document.body.scrollHeight;
         window.parent.postMessage({ height: height }, 'https://arabicschool.org.au');
     }
+
     window.addEventListener('load', sendHeight);
     window.addEventListener('resize', sendHeight);
     setInterval(sendHeight, 500);
-    </script>
+</script>
 </body>
 </html>
 
