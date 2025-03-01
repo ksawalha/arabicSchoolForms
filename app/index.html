@@ -1171,9 +1171,12 @@
             }
         });
     });
+    let lastHeight = 0;
     function sendHeight() {
         const height = document.body.scrollHeight;
+        if(height !== lastHeight){
         window.parent.postMessage({ height: height }, 'https://arabicschool.org.au');
+        }
     }
 
     window.addEventListener('load', sendHeight);
@@ -1182,4 +1185,3 @@
 </script>
 </body>
 </html>
-
