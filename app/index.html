@@ -742,6 +742,124 @@
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
         }
 
+               function initAutocomplete() {
+            const addressInput = document.querySelector('[name="streetName"]');
+            const suburbInput = document.querySelector('[name="suburb"]');
+            const stateInput = document.querySelector('[name="state"]');
+            const postCodeInput = document.querySelector('[name="postCode"]');
+            
+            const stateMapping = {
+                'New South Wales': 'NSW',
+                'Victoria': 'VIC',
+                'Queensland': 'QLD',
+                'South Australia': 'SA',
+                'Western Australia': 'WA',
+                'Tasmania': 'TAS',
+                'Northern Territory': 'NT',
+                'Australian Capital Territory': 'ACT'
+            };
+            
+            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                componentRestrictions: { country: 'au' },
+                types: ['address']
+            });
+            
+            addressInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) return;
+                
+                const originalValue = addressInput.value;
+                
+                const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
+                const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
+                
+                const ausMatch = ausStyleRegex.exec(originalValue);
+                const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
+                
+                let apartmentInfo = '';
+                
+                if (ausMatch && ausMatch[0]) {
+                    apartmentInfo = ausMatch[0].trim();
+                } else if (apartmentMatch && apartmentMatch[0]) {
+                    apartmentInfo = apartmentMatch[0].trim();
+                }
+                
+                suburbInput.value = '';
+                stateInput.value = 'NSW';
+                postCodeInput.value = '';
+                
+                let streetNumber = '';
+                let streetName = '';
+                let suburb = '';
+                let state = '';
+                let postCode = '';
+                
+                for (const component of place.address_components) {
+                    const type = component.types[0];
+                    
+                    switch(type) {
+                        case 'street_number':
+                            streetNumber = component.long_name;
+                            break;
+                        case 'route':
+                            streetName = component.long_name;
+                            break;
+                        case 'locality':
+                        case 'sublocality':
+                        case 'sublocality_level_1':
+                            suburb = component.long_name;
+                            break;
+                        case 'administrative_area_level_1':
+                            state = component.long_name;
+                            break;
+                        case 'postal_code':
+                            postCode = component.long_name;
+                            break;
+                    }
+                }
+                
+                if (apartmentInfo) {
+                    if (ausMatch) {
+                        const unitPart = ausMatch[1]; 
+                        const streetPart = ausMatch[2]; 
+                        
+                        if (streetPart === streetNumber) {
+                            addressInput.value = originalValue;
+                        } else {
+                            addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
+                        }
+                    } else {
+                        const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
+                        addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
+                    }
+                } else {
+                    addressInput.value = streetNumber + ' ' + streetName;
+                }
+                
+                suburbInput.value = suburb;
+                
+                if (state && stateMapping[state]) {
+                    stateInput.value = stateMapping[state];
+                } else if (state) {
+                    stateInput.value = state;
+                }
+                
+                postCodeInput.value = postCode;
+            });
+            
+            addressInput.addEventListener('input', function(e) {
+                if (!this.value || !suburbInput.value) return;
+                this.dataset.lastValue = this.value;
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize schools dropdown
             let schoolsList = [];
@@ -1368,123 +1486,6 @@
         });
 
         // Google Maps Places Autocomplete for address
-        function initAutocomplete() {
-            const addressInput = document.querySelector('[name="streetName"]');
-            const suburbInput = document.querySelector('[name="suburb"]');
-            const stateInput = document.querySelector('[name="state"]');
-            const postCodeInput = document.querySelector('[name="postCode"]');
-            
-            const stateMapping = {
-                'New South Wales': 'NSW',
-                'Victoria': 'VIC',
-                'Queensland': 'QLD',
-                'South Australia': 'SA',
-                'Western Australia': 'WA',
-                'Tasmania': 'TAS',
-                'Northern Territory': 'NT',
-                'Australian Capital Territory': 'ACT'
-            };
-            
-            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                componentRestrictions: { country: 'au' },
-                types: ['address']
-            });
-            
-            addressInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (!place.geometry) return;
-                
-                const originalValue = addressInput.value;
-                
-                const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
-                const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
-                
-                const ausMatch = ausStyleRegex.exec(originalValue);
-                const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
-                
-                let apartmentInfo = '';
-                
-                if (ausMatch && ausMatch[0]) {
-                    apartmentInfo = ausMatch[0].trim();
-                } else if (apartmentMatch && apartmentMatch[0]) {
-                    apartmentInfo = apartmentMatch[0].trim();
-                }
-                
-                suburbInput.value = '';
-                stateInput.value = 'NSW';
-                postCodeInput.value = '';
-                
-                let streetNumber = '';
-                let streetName = '';
-                let suburb = '';
-                let state = '';
-                let postCode = '';
-                
-                for (const component of place.address_components) {
-                    const type = component.types[0];
-                    
-                    switch(type) {
-                        case 'street_number':
-                            streetNumber = component.long_name;
-                            break;
-                        case 'route':
-                            streetName = component.long_name;
-                            break;
-                        case 'locality':
-                        case 'sublocality':
-                        case 'sublocality_level_1':
-                            suburb = component.long_name;
-                            break;
-                        case 'administrative_area_level_1':
-                            state = component.long_name;
-                            break;
-                        case 'postal_code':
-                            postCode = component.long_name;
-                            break;
-                    }
-                }
-                
-                if (apartmentInfo) {
-                    if (ausMatch) {
-                        const unitPart = ausMatch[1]; 
-                        const streetPart = ausMatch[2]; 
-                        
-                        if (streetPart === streetNumber) {
-                            addressInput.value = originalValue;
-                        } else {
-                            addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
-                        }
-                    } else {
-                        const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
-                        addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
-                    }
-                } else {
-                    addressInput.value = streetNumber + ' ' + streetName;
-                }
-                
-                suburbInput.value = suburb;
-                
-                if (state && stateMapping[state]) {
-                    stateInput.value = stateMapping[state];
-                } else if (state) {
-                    stateInput.value = state;
-                }
-                
-                postCodeInput.value = postCode;
-            });
-            
-            addressInput.addEventListener('input', function(e) {
-                if (!this.value || !suburbInput.value) return;
-                this.dataset.lastValue = this.value;
-            });
-        }
         function sendHeightToParent() {
             const height = document.documentElement.scrollHeight;
             window.parent.postMessage({ height: height }, "*");
