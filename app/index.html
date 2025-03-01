@@ -738,14 +738,7 @@
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
-   <script>
-        fetch('https://enrol.arabicschool.org.au/commit-hash.txt')
-            .then(response => response.text())
-            .then(hash => {
-                document.getElementById('commit-hash').textContent = `${hash.trim()}`;
-        })
-            .catch(error => console.error('Error fetching commit hash:', error));
-       
+   <script>       
         function clearExistingErrors() {
             document.querySelectorAll('.error-message').forEach(el => el.remove());
             document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
