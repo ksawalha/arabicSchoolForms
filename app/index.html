@@ -1498,7 +1498,6 @@
     });
     window.addEventListener('load', () => {
         sendHeightToParent();
-        // Extra check for dynamic content
         setTimeout(sendHeightToParent, 1000);
     });
     window.addEventListener('resize', sendHeightToParent);
