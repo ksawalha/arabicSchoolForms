@@ -1,1334 +1,1757 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        .pas-form * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-        }
+      .pas-form * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        line-height: 1.6;
+      }
 
-        .pas-form {
-            background: #fcfcfc;
-            color: #333;
-            padding: 0.5em;
-            max-width: 100%;
-            overflow: auto;
-        }
+      .pas-form {
+        background: #fcfcfc;
+        color: #333;
+        padding: 0.5em;
+        max-width: 100%;
+        overflow: auto;
+      }
 
-        .pas-form h1 {
-            color: #981c1c;
-            margin-bottom: 1em;
-            font-size: 1.8em;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.8em;
-        }
+      .pas-form h1 {
+        color: #981c1c;
+        margin-bottom: 1em;
+        font-size: 1.8em;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 0.8em;
+      }
 
-        .pas-form legend {
-            font-size: 1.2em;
-            padding: 0 0.8em;
-            font-weight: 700;
-            color: #981c1c;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+      .pas-form legend {
+        font-size: 1.2em;
+        padding: 0 0.8em;
+        font-weight: 700;
+        color: #981c1c;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
 
-        .pas-form input,
-        .pas-form select,
-        .pas-form textarea {
-            font-size: 0.95em;
-            padding: 0.8em;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
+      .pas-form input,
+      .pas-form select,
+      .pas-form textarea {
+        font-size: 0.95em;
+        padding: 0.8em;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
 
-        .address-suggestions {
-            position: absolute;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ccc;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: none;
-        }
+      .address-suggestions {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        z-index: 100;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+      }
 
-        .address-suggestions .suggestion-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
+      .address-suggestions .suggestion-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
 
-        .address-suggestions .suggestion-item:last-child {
-            border-bottom: none;
-        }
+      .address-suggestions .suggestion-item:last-child {
+        border-bottom: none;
+      }
 
-        .address-suggestions .suggestion-item:hover,
-        .address-suggestions .suggestion-item.active {
-            background-color: #f5f5f5;
-        }
+      .address-suggestions .suggestion-item:hover,
+      .address-suggestions .suggestion-item.active {
+        background-color: #f5f5f5;
+      }
 
-        .address-input-container {
-            position: relative;
-        }
+      .address-input-container {
+        position: relative;
+      }
 
-        .pas-form input:focus,
-        .pas-form select:focus,
-        .pas-form textarea:focus {
-            outline: none;
-            border-color: #981c1c;
-            box-shadow: 0 0 0 3px rgba(152, 28, 28,0.1);
-        }
+      .pas-form input:focus,
+      .pas-form select:focus,
+      .pas-form textarea:focus {
+        outline: none;
+        border-color: #981c1c;
+        box-shadow: 0 0 0 3px rgba(152, 28, 28, 0.1);
+      }
 
-        .pas-form textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+      .pas-form textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
 
-        .pas-form .form-row {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5em;
-            margin-bottom: 1.2em;
-        }
+      .pas-form .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        margin-bottom: 1.2em;
+      }
 
-        .pas-form .form-row > .checkbox-group,
-        .pas-form .form-row > .radio-group,
-        .pas-form .form-row > .instruction-text,
-        .pas-form .form-row > textarea {
-            grid-column: 1 / -1;
-            width: 100%;
-        }
+      .pas-form .form-row > .checkbox-group,
+      .pas-form .form-row > .radio-group,
+      .pas-form .form-row > .instruction-text,
+      .pas-form .form-row > textarea {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
 
-        .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
-            grid-column: 1 / -1;
-        }
+      .pas-form
+        .form-row
+        > :not(label):not(:first-child):last-child:not(input):not(select) {
+        grid-column: 1 / -1;
+      }
 
-        .pas-form fieldset {
-            margin: 1.5em 0;
-            padding: 1.5em;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: #f8f9fa;
-        }
+      .pas-form fieldset {
+        margin: 1.5em 0;
+        padding: 1.5em;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #f8f9fa;
+      }
 
+      .pas-form .inline-group {
+        display: flex;
+        gap: 1em;
+        margin: 1em 0;
+        flex-wrap: wrap;
+      }
+
+      .pas-form .inline-group .form-row {
+        flex: 1 1 100%;
+        min-width: 150px;
+      }
+
+      @media (max-width: 600px) {
         .pas-form .inline-group {
-            display: flex;
-            gap: 1em;
-            margin: 1em 0;
-            flex-wrap: wrap;
+          flex-direction: column;
+          gap: 0.5em;
         }
 
         .pas-form .inline-group .form-row {
-            flex: 1 1 100%;
-            min-width: 150px;
+          flex: 1 1 100%;
         }
+      }
 
-        @media (max-width: 600px) {
-            .pas-form .inline-group {
-                flex-direction: column;
-                gap: 0.5em;
-            }
+      .pas-form button {
+        background: #981c1c;
+        color: #fff;
+        padding: 1em 2em;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1em;
+        margin: 1.5em 0;
+        transition: all 0.3s ease;
+      }
 
-            .pas-form .inline-group .form-row {
-                flex: 1 1 100%;
-            }
+      .pas-form button:hover {
+        background: #003366;
+        transform: translateY(-1px);
+      }
+
+      .pas-form input[type="radio"],
+      .pas-form input[type="checkbox"] {
+        width: auto;
+        height: 1.1em;
+        margin-right: 0.5em;
+      }
+
+      .pas-form .checkbox-group label,
+      .pas-form .radio-group label {
+        display: flex;
+        align-items: center;
+        margin: 0.5em 0;
+      }
+
+      .pas-form {
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+
+      .pas-form .instruction-text {
+        font-size: 0.9em;
+        margin: 1em 0;
+        padding: 1em;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        background: #f8f9fa;
+        color: #555;
+      }
+
+      .pas-form .required {
+        font-weight: 600;
+      }
+
+      .pas-form .required::after {
+        content: "*";
+        color: #e00;
+        margin-left: 4px;
+        display: inline-block;
+      }
+
+      .pas-form select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.8em center;
+        background-size: 1em;
+      }
+
+      .pas-form h3 {
+        margin: 1.5em 0 1em;
+        color: #444;
+        font-size: 1.1em;
+        padding-top: 0.5em;
+        border-top: 1px solid #eee;
+      }
+
+      .error-highlight {
+        border-color: #ff0000 !important;
+        box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+      }
+
+      .ques-description {
+        color: #666;
+      }
+
+      .error-message {
+        color: #ff0000;
+        font-size: 0.9em;
+        margin-top: 0.5em;
+        padding: 0.5em;
+        background-color: #fff0f0;
+        border: 1px solid #ffcccc;
+        border-radius: 4px;
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1000;
+      }
+
+      .loading-spinner {
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-text {
+        margin-top: 1em;
+        color: #981c1c;
+        font-weight: bold;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
-
-        .pas-form button {
-            background: #981c1c;
-            color: #fff;
-            padding: 1em 2em;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 1.5em 0;
-            transition: all 0.3s ease;
+        100% {
+          transform: rotate(360deg);
         }
+      }
 
-        .pas-form button:hover {
-            background: #003366;
-            transform: translateY(-1px);
-        }
+      .pas-form datalist {
+        position: absolute;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 0 0 4px 4px;
+        width: 100%;
+      }
 
-        .pas-form input[type="radio"],
-        .pas-form input[type="checkbox"] {
-            width: auto;
-            height: 1.1em;
-            margin-right: 0.5em;
-        }
+      .pas-form label {
+        font-weight: bold;
+      }
 
-        .pas-form .checkbox-group label,
-        .pas-form .radio-group label {
-            display: flex;
-            align-items: center;
-            margin: 0.5em 0;
-        }
+      .enrollment-guidelines {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 1.5em;
+        margin-bottom: 2em;
+        line-height: 1.6;
+      }
 
-        .pas-form {
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+      .enrollment-guidelines h2 {
+        color: #981c1c;
+        margin-bottom: 0.5em;
+        font-size: 1.5em;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.5em;
+      }
 
-        .pas-form .instruction-text {
-            font-size: 0.9em;
-            margin: 1em 0;
-            padding: 1em;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            background: #f8f9fa;
-            color: #555;
-        }
+      .enrollment-guidelines p {
+        margin-bottom: 1em;
+      }
 
-        .pas-form .required {
-            font-weight: 600;
-        }
+      .faq-accordion {
+        margin-bottom: 2em;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
+        background-color: transparent;
+      }
 
-        .pas-form .required::after {
-            content: "*";
-            color: #e00;
-            margin-left: 4px;
-            display: inline-block;
-        }
+      .faq-accordion h2 {
+        color: #333;
+        margin-bottom: 0;
+        font-size: 1.2em;
+        padding: 0.5em 1.2em;
+        border-bottom: 1px solid #ddd;
+        background-color: transparent;
+      }
 
-        .pas-form select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.8em center;
-            background-size: 1em;
-        }
+      .accordion-item {
+        border-bottom: 1px solid #ddd;
+      }
 
-        .pas-form h3 {
-            margin: 1.5em 0 1em;
-            color: #444;
-            font-size: 1.1em;
-            padding-top: 0.5em;
-            border-top: 1px solid #eee;
-        }
+      .accordion-item:last-child {
+        border-bottom: none;
+      }
 
-        .error-highlight {
-            border-color: #ff0000 !important;
-            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
-        }
+      .accordion-button {
+        background-color: #f8f9fa !important;
+        color: #333 !important;
+        cursor: pointer !important;
+        padding: 0.5em 1.3em !important;
+        width: 100% !important;
+        text-align: left !important;
+        border: 0.8 !important;
+        border-color: #f8f9fa !important;
+        border-bottom: 0.8px solid #f8f9fa !important;
+        outline: none !important;
+        transition: 0.2s !important;
+        font-weight: bold !important;
+        font-size: 0.9em !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin: 0 !important;
+      }
 
-        .ques-description {
-            color: #666;
-        }
+      .accordion-button:hover {
+        background-color: #fafafa;
+      }
 
-        .error-message {
-            color: #ff0000;
-            font-size: 0.9em;
-            margin-top: 0.5em;
-            padding: 0.5em;
-            background-color: #fff0f0;
-            border: 1px solid #ffcccc;
-            border-radius: 4px;
-            display: inline-block;
-            width: 100%;
-            box-sizing: border-box;
-        }
+      .accordion-button.active {
+        background-color: #fff;
+        border-bottom: none;
+      }
 
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 1000;
-        }
+      .accordion-button:after {
+        content: "+";
+        font-size: 1em;
+        color: #555;
+        margin-left: 5px;
+      }
 
-        .loading-spinner {
-            width: 80px;
-            height: 80px;
-            animation: spin 1s linear infinite;
-        }
+      .accordion-content {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background-color: transparent;
+        border-top: none;
+      }
 
-        .loading-text {
-            margin-top: 1em;
-            color: #981c1c;
-            font-weight: bold;
-        }
+      .accordion-content-inner {
+        padding: 0.8em 1.2em;
+        color: #555;
+        font-size: 0.9em;
+        border-top: 1px solid #eee;
+      }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+      .accordion-content p {
+        margin-bottom: 0.8em;
+      }
 
-        .pas-form datalist {
-            position: absolute;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 0 0 4px 4px;
-            width: 100%;
-        }
+      .accordion-content p:last-child {
+        margin-bottom: 0;
+      }
 
-        .pas-form label {
-            font-weight: bold;
-        }
+      .school-dropdown-container {
+        position: relative;
+        width: 100%;
+      }
 
-        .enrollment-guidelines {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 1.5em;
-            margin-bottom: 2em;
-            line-height: 1.6;
-        }
+      .school-dropdown-input {
+        width: 100%;
+        padding: 0.8em;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+      }
 
-        .enrollment-guidelines h2 {
-            color: #981c1c;
-            margin-bottom: 0.5em;
-            font-size: 1.5em;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5em;
-        }
+      .school-dropdown-list {
+        position: absolute;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 0 0 10px 10px;
+        z-index: 100;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: none;
+        margin-top: 2px;
+      }
 
-        .enrollment-guidelines p {
-            margin-bottom: 1em;
-        }
+      .school-dropdown-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+      }
 
-        .faq-accordion {
-            margin-bottom: 2em;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            overflow: hidden;
-            background-color: transparent;
-        }
+      .school-dropdown-item:hover,
+      .school-dropdown-item.active {
+        background-color: #f5f5f5;
+      }
 
-        .faq-accordion h2 {
-            color: #333;
-            margin-bottom: 0;
-            font-size: 1.2em;
-            padding: 0.5em 1.2em;
-            border-bottom: 1px solid #ddd;
-            background-color: transparent;
-        }
+      .school-dropdown-item:last-child {
+        border-bottom: none;
+      }
 
-        .accordion-item {
-            border-bottom: 1px solid #ddd;
-        }
+      .school-search-box {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        position: sticky;
+        top: 0;
+        background: white;
+      }
 
-        .accordion-item:last-child {
-            border-bottom: none;
-        }
+      .school-search-box input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
 
-        .accordion-button {
-            background-color: #f8f9fa !important;
-            color: #333 !important;
-            cursor: pointer !important;
-            padding: 0.5em 1.3em !important;
-            width: 100% !important;
-            text-align: left !important;
-            border: 0.8 !important;
-            border-color: #f8f9fa !important;
-            border-bottom: 0.8px solid #f8f9fa !important;
-            outline: none !important;
-            transition: 0.2s !important;
-            font-weight: bold !important;
-            font-size: 0.9em !important;
-            display: flex !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            margin: 0 !important;
-        }
-
-        .accordion-button:hover {
-            background-color: #fafafa;
-        }
-
-        .accordion-button.active {
-            background-color: #fff;
-            border-bottom: none;
-        }
-
-        .accordion-button:after {
-            content: '+';
-            font-size: 1em;
-            color: #555;
-            margin-left: 5px;
-        }
-
-        .accordion-content {
-            padding: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background-color: transparent;
-            border-top: none;
-        }
-
-        .accordion-content-inner {
-            padding: 0.8em 1.2em;
-            color: #555;
-            font-size: 0.9em;
-            border-top: 1px solid #eee;
-        }
-
-        .accordion-content p {
-            margin-bottom: 0.8em;
-        }
-
-        .accordion-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .school-dropdown-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .school-dropdown-input {
-            width: 100%;
-            padding: 0.8em;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-        }
-
-        .school-dropdown-list {
-            position: absolute;
-            width: 100%;
-            max-height: 200px;
-            overflow-y: auto;
-            background: white;
-            border: 1px solid #ccc;
-            border-radius: 0 0 10px 10px;
-            z-index: 100;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: none;
-            margin-top: 2px;
-        }
-
-        .school-dropdown-item {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-
-        .school-dropdown-item:hover,
-        .school-dropdown-item.active {
-            background-color: #f5f5f5;
-        }
-
-        .school-dropdown-item:last-child {
-            border-bottom: none;
-        }
-
-        .school-search-box {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            position: sticky;
-            top: 0;
-            background: white;
-        }
-
-        .school-search-box input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .no-results {
-            padding: 15px;
-            text-align: center;
-            color: #666;
-        }
+      .no-results {
+        padding: 15px;
+        text-align: center;
+        color: #666;
+      }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete" async defer></script>
-</head>
-<body>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete"
+      async
+      defer
+    ></script>
+  </head>
+  <body>
     <div class="pas-form">
-        <div class="enrollment-guidelines">
-            <h2>Expression of Interest</h2>
-            <p>To enrol your child at Parramatta Arabic School, please complete our expression of interest form and bring your child for assessment. The information you provide will be used to finalise your child's enrolment.</p>
-            <p>We organise an assessment day at the start of Term 1 each year and will notify you via email if your application is received in time for this day. If you submit your application after the start of Term 1, you can bring your child for an assessment on any Saturday during school terms between 9:30 am and 12:30 pm.</p>
-            <p>We will try our best to accommodate your child in one of our classes. However, due to the high demand for our beginner classes and the limited spaces available, we cannot guarantee placement. Intermediate and advanced classes are generally available throughout the year.</p>
-            <p>For the latest updates on our school activities, follow our <a style="color: #981c1c;" href="https://www.facebook.com/parramattaarabic" target="_blank">Facebook page</a> and join our <a style="color: #981c1c;" href="https://chat.whatsapp.com/LsXTM517PUH71cndoR6Bqy" target="_blank">WhatsApp group</a>.</p>
+      <div class="enrollment-guidelines">
+        <h2>Expression of Interest</h2>
+        <p>
+          To enrol your child at Parramatta Arabic School, please complete our
+          expression of interest form and bring your child for assessment. The
+          information you provide will be used to finalise your child's
+          enrolment.
+        </p>
+        <p>
+          We organise an assessment day at the start of Term 1 each year and
+          will notify you via email if your application is received in time for
+          this day. If you submit your application after the start of Term 1,
+          you can bring your child for an assessment on any Saturday during
+          school terms between 9:30 am and 12:30 pm.
+        </p>
+        <p>
+          We will try our best to accommodate your child in one of our classes.
+          However, due to the high demand for our beginner classes and the
+          limited spaces available, we cannot guarantee placement. Intermediate
+          and advanced classes are generally available throughout the year.
+        </p>
+        <p>
+          For the latest updates on our school activities, follow our
+          <a
+            style="color: #981c1c"
+            href="https://www.facebook.com/parramattaarabic"
+            target="_blank"
+            >Facebook page</a
+          >
+          and join our
+          <a
+            style="color: #981c1c"
+            href="https://chat.whatsapp.com/LsXTM517PUH71cndoR6Bqy"
+            target="_blank"
+            >WhatsApp group</a
+          >.
+        </p>
+      </div>
+
+      <div class="faq-accordion">
+        <h2 style="color: #981c1c">Frequently Asked Questions</h2>
+
+        <div class="accordion-item">
+          <button class="accordion-button">
+            What is the length of the program and attendance requirements?
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>
+                Our programs are designed to be delivered over a full year, and
+                commitment to the yearly schedule is essential for children to
+                gain the maximum benefit. If you're seeking short-term courses,
+                our program may not align with your needs.
+              </p>
+              <p>
+                Since our classes are only held once a week, it is important
+                that students attend all sessions to maximise their learning
+                potential. Education is a sequential process, and missing even
+                one class can result in students missing important stages in the
+                progression of topics, making it harder for them to keep up.
+              </p>
+              <p>
+                Our programs are coordinated with the NSW Department of
+                Education, and students who attend at least 70% of classes will
+                be eligible for a Certificate of Attendance issued by the
+                Department. The certificate is only available to students who
+                participate from the start of the year.
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div class="faq-accordion">
-            <h2 style="color: #981c1c;">Frequently Asked Questions</h2>
-
-            <div class="accordion-item">
-                <button class="accordion-button">What is the length of the program and attendance requirements?</button>
-                <div class="accordion-content">
-                    <div class="accordion-content-inner">
-                        <p>Our programs are designed to be delivered over a full year, and commitment to the yearly schedule is essential for children to gain the maximum benefit. If you're seeking short-term courses, our program may not align with your needs.</p>
-                        <p>Since our classes are only held once a week, it is important that students attend all sessions to maximise their learning potential. Education is a sequential process, and missing even one class can result in students missing important stages in the progression of topics, making it harder for them to keep up.</p>
-                        <p>Our programs are coordinated with the NSW Department of Education, and students who attend at least 70% of classes will be eligible for a Certificate of Attendance issued by the Department. The certificate is only available to students who participate from the start of the year.</p>
-                    </div>
-                </div>
+        <div class="accordion-item">
+          <button class="accordion-button">How much do I need to pay?</button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>
+                The annual fee for our program is $800 ($200 per term), billed
+                semi-annually at $400 per semester inclusive of books and GST. A
+                sibling discount is available: 5% off the total fee for two
+                enrolled students, and 10% for three or more children. We accept
+                Creative Kids vouchers issued by Service NSW.
+              </p>
+              <p>
+                As a non-profit organisation, the school uses the tuition fees
+                to pay for rent, books, learning materials, gifts and awards,
+                teachers' salaries, and general administration. Upon acceptance
+                and fee payment, a seat will be reserved for your child, and the
+                fee becomes non-refundable. Please ensure your child can commit
+                to the full program before applying, to avoid any
+                misunderstandings.
+              </p>
             </div>
-
-            <div class="accordion-item">
-                <button class="accordion-button">How much do I need to pay?</button>
-                <div class="accordion-content">
-                    <div class="accordion-content-inner">
-                        <p>The annual fee for our program is $800 ($200 per term), billed semi-annually at $400 per semester inclusive of books and GST. A sibling discount is available: 5% off the total fee for two enrolled students, and 10% for three or more children. We accept Creative Kids vouchers issued by Service NSW.</p>
-                        <p>As a non-profit organisation, the school uses the tuition fees to pay for rent, books, learning materials, gifts and awards, teachers' salaries, and general administration. Upon acceptance and fee payment, a seat will be reserved for your child, and the fee becomes non-refundable. Please ensure your child can commit to the full program before applying, to avoid any misunderstandings.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <button class="accordion-button">Do you provide tahfiz (Quran memorisation) programs?</button>
-                <div class="accordion-content">
-                    <div class="accordion-content-inner">
-                        <p>No, we don't offer tahfiz programs. At Parramatta Arabic School, our programs focus on teaching the Arabic language, which aids in improving students' abilities to read and memorise on their own.</p>
-                        <p>We offer a light Quranic program alongside our Arabic program, giving a great opportunity for those interested in practising Quran memorisation and learning correct recitation.</p>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
 
-        <form id="enrollmentForm">
-            <fieldset>
-                <legend>Student Details</legend>
-                <div class="instruction-text">
-                    <p>Please complete the form carefully, select the program you wish to apply for and provide your child's details as provided to their mainstream school.</div>
-
-                <div class="form-row">
-                    <label class="required">Student First Name</label>
-                    <input type="text" name="studentFirstName" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Student Last Name</label>
-                    <input type="text" name="studentLastName" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Student Birth Date</label>
-                    <input type="date" name="studentBirthDate" placeholder="DD/MM/YYYY" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Gender</label>
-                    <div class="checkbox-group">
-                        <label><input type="radio" name="gender" value="Male" required> Male</label>
-                        <label><input type="radio" name="gender" value="Female" required> Female</label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Mainstream School Name</label>
-                    <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
-                    <div class="school-dropdown-container">
-                        <input type="text" class="school-dropdown-input" readonly placeholder="Click to select a school">
-                        <input type="hidden" name="mainstreamSchoolName" required>
-                        <div class="school-dropdown-list">
-                            <div class="school-search-box">
-                                <input type="text" placeholder="Search for schools..." id="schoolSearchInput">
-                            </div>
-                            <div id="schoolListContainer"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <label class="required">Year Level</label>
-                    <select name="yearLevel" required>
-                        <option value="">Select Year Level</option>
-                        <option>Kindergarten</option>
-                        <option>Year 1</option>
-                        <option>Year 2</option>
-                        <option>Year 3</option>
-                        <option>Year 4</option>
-                        <option>Year 5</option>
-                        <option>Year 6</option>
-                        <option>Year 7</option>
-                        <option>Year 8</option>
-                        <option>Year 9</option>
-                        <option>Year 10</option>
-                    </select>
-                </div>
-                
-                <div class="form-row" id="otherSchoolContainer" style="display: none;">
-                    <label class="required">Other School Name</label>
-                    <input type="text" name="otherSchoolName">
-                </div>
-
-                <div class="form-row">
-                    <label>Does your child have any medical conditions or allergies we should be aware of?</label>
-                    <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
-                    <textarea name="medicalInfo" rows="4"></textarea>
-                </div>
-
-                <div class="form-row">
-                    <label>Student School Email</label>
-                    <div class="ques-description">Provide your child's email address if they have one. This will be used to invite your child for any online activity.</div>
-                    <input type="email" name="studentEmail">
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Family Details</legend>
-
-                <h3>Parent/Carer 1</h3>
-                <div class="form-row">
-                    <label class="required">Full Name</label>
-                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
-                    <input type="text" name="parent1Name" required>
-                </div>
-
-                <div class="form-row">
-                    <label>Relationship to Student</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="parent1Relationship" value="Father"> Father</label>
-                        <label><input type="radio" name="parent1Relationship" value="Mother"> Mother</label>
-                        <label><input type="radio" name="parent1Relationship" value="Carer"> Carer</label>
-                        <label><input type="radio" name="parent1Relationship" value="Other"> Other</label>
-                    </div>
-                    <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Mobile</label>
-                    <input type="tel" name="parent1Phone" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Email</label>
-                    <input type="email" name="parent1Email" required>
-                </div>
-
-                <h3>Parent/Carer 2</h3>
-                <div class="form-row">
-                    <label>Full Name</label>
-                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
-                    <input type="text" name="parent2Name">
-                </div>
-
-                <div class="form-row">
-                    <label>Relationship to Student</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
-                        <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
-                        <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
-                        <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
-                    </div>
-                    <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
-
-                <div class="form-row">
-                    <label>Mobile</label>
-                    <input type="tel" name="parent2Phone">
-                </div>
-
-                <div class="form-row">
-                    <label>Email Address</label>
-                    <input type="email" name="parent2Email">
-                </div>
-
-                <h3>Address</h3>
-                <div class="form-row">
-                    <label class="required">Street Address</label>
-                    <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
-                    <div class="address-input-container">
-                        <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
-                        <div class="address-suggestions" id="addressSuggestions"></div>
-                    </div>
-                </div>
-
-                <div class="inline-group">
-                    <div class="form-row" style="flex:1">
-                        <label class="required">Suburb</label>
-                        <input type="text" name="suburb" required>
-                    </div>
-                    <div class="form-row" style="flex:1">
-                        <label class="required">State</label>
-                        <select name="state" required>
-                            <option>NSW</option>
-                            <option>VIC</option>
-                            <option>QLD</option>
-                            <option>SA</option>
-                            <option>WA</option>
-                            <option>TAS</option>
-                            <option>NT</option>
-                            <option>ACT</option>
-                        </select>
-                    </div>
-                    <div class="form-row" style="flex:1">
-                        <label class="required">Post Code</label>
-                        <input type="number" name="postCode" required>
-                    </div>
-                </div>
-
-                <h3>Emergency Contact</h3>
-                <div class="form-row">
-                    <label class="required">Full Name</label>
-                    <input type="text" name="emergencyContactName" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Relationship</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
-                    </div>
-                    <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Emergency Phone Number</label>
-                    <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
-                    <input type="tel" name="emergencyContactPhone" required>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Program Details</legend>
-                <div class="instruction-text">
-                    <p>The school serves students from diverse backgrounds, ages, and interests, creating a welcoming environment where they can develop their Arabic language skills. Our program focuses on building skills in reading, writing, speaking, and listening through structured lessons and interactive activities.</p>
-                    <p>This is supplemented by a Quran Program that helps students memorise selected verses and improve their recitation, enhancing both literacy and language development. Families who prefer their children to participate in the Arabic program only or have specific preferences are encouraged to indicate these in their application and discuss them with us during the enrolment process.</p>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Arabic Proficiency Level</label>
-                    <div class="ques-description">Please select the option that best describes your child’s proficiency in Arabic. This information will help us place them in the appropriate class to support their learning.</div>
-                    <select name="proficiencyLevel" required>
-                        <option value="">Select Level</option>
-                        <option>Beginner – My child has little to no exposure to Arabic and is just beginning to learn.</option>
-                        <option>Basic – My child can read and write the alphabet but struggles with understanding and speaking.</option>
-                        <option>Intermediate – My child can speak, read, and write Arabic at a basic level but needs improvement.</option>
-                        <option>Advanced – My child is fluent in Arabic, with strong skills in reading, writing, and speaking.</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <label>Areas of Interest</label>
-                    <div class="ques-description">Please select the areas of interest for your child’s learning. If you prefer Arabic Language classes only or have specific requirements, please use the "Others" option and provide details in the notes section. You may select more than one option.</div>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="interests" value="Arabic Language"> Arabic Language</label>
-                        <label><input type="checkbox" name="interests" value="Quran Recitation and Tajweed"> Quran Recitation and Tajweed</label>
-                        <label><input type="checkbox" name="interests" value="Quran Memorization"> Quran Memorization</label>
-                        <label><input type="checkbox" name="interests" value="Others"> Others (please specify in the notes)</label>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <label>Notes/Suggestions/Comments</label>
-                    <textarea name="notes" rows="4"></textarea>
-                </div>
-            </fieldset>   
-
-            <fieldset>
-                <legend>Consent and Declaration</legend>
-                <div class="instruction-text">
-                    <p>The personal information collected on this information form is for purposes directly related to your child's attendance at Parramatta Arabic School, including the processing of applications for the NSW Community Languages Schools Program, administered by the NSW Department of Education.</p>
-                    <p>Any information provided to the Department of Education will be used, disclosed and stored consistent with the NSW privacy laws. Certain information is required by the Department of Education to meet its obligations in relation to data collection, reporting and the payment of grants.</p>
-                </div>
-                <div class="form-row">
-                    <label class="required">Photo Consent</label>
-                    <p class="instruction-text">The school takes photos during classroom activities and events, sharing them through our school app and occasionally on our social media platforms to keep parents informed and celebrate special moments. While we aim to accommodate requests to exclude students, this may not always be practical. If you prefer your child not to be included, please discuss this with our management team during the enrolment process.</p>
-                    <div class="checkbox-group">
-                        <label><input type="radio" name="photoConsent" value="Yes" required> Yes</label>
-                        <label><input type="radio" name="photoConsent" value="No" required> No</label>
-                    </div>
-                </div>
-
-                <div class="instruction-text">
-                    <p>I consent to providing information contained on this form to the Department of Education and to confirm the accuracy of the information with other organisations that may also hold information related to the student named.</p>
-                    <p>I have read the information concerning the collection of personal information. I declare that the information provided in this enrolment form is accurate and complete to the best of my knowledge.</p>
-                </div>
-
-                <div class="form-row">
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="informationAccuracy" required> I have accurately provided information related to the student in this form</label>
-                        <label><input type="checkbox" name="dataSharing" required> I consent to information sharing as described above</label>
-                    </div>
-                </div>
-
-                <div class="form-row" id="applicantNameContainer" style="display: none;">
-                    <label class="required">Applicant's Full Name</label>
-                    <div class="radio-group" id="applicantNameGroup">
-                        <label>
-                            <input type="radio" name="applicantName" id="parent1Radio" required checked> 
-                            <span id="parent1NameOption"></span>
-                        </label>
-                        <label id="parent2NameLabel" style="display: none;">
-                            <input type="radio" name="applicantName" id="parent2Radio"> 
-                            <span id="parent2NameOption"></span>
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
-
-            <div style="text-align: center">
-                <button type="submit">Submit Application</button>
+        <div class="accordion-item">
+          <button class="accordion-button">
+            Do you provide tahfiz (Quran memorisation) programs?
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-content-inner">
+              <p>
+                No, we don't offer tahfiz programs. At Parramatta Arabic School,
+                our programs focus on teaching the Arabic language, which aids
+                in improving students' abilities to read and memorise on their
+                own.
+              </p>
+              <p>
+                We offer a light Quranic program alongside our Arabic program,
+                giving a great opportunity for those interested in practising
+                Quran memorisation and learning correct recitation.
+              </p>
             </div>
-        </form>
-        <div>
-            <p style="color: #555; font-size: 12px; text-align: left; margin-top: 10px;" id="commit-hash"></p>
+          </div>
         </div>
+      </div>
 
-        <div id="thankYouMessage" style="display: none; text-align: center; margin-top: 2em;">
-            <h1>Thank You!</h1>
-            <p>Your application has been submitted successfully.</p>
-            <p>We will review your application and contact you soon.</p>
+      <form id="enrollmentForm">
+        <fieldset>
+          <legend>Student Details</legend>
+          <div class="instruction-text">
+            <p>
+              Please complete the form carefully, select the program you wish to
+              apply for and provide your child's details as provided to their
+              mainstream school.
+            </p>
+          </div>
+
+          <div class="form-row">
+            <label class="required">Student First Name</label>
+            <input type="text" name="studentFirstName" required />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Student Last Name</label>
+            <input type="text" name="studentLastName" required />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Student Birth Date</label>
+            <input
+              type="date"
+              name="studentBirthDate"
+              placeholder="DD/MM/YYYY"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Gender</label>
+            <div class="checkbox-group">
+              <label
+                ><input type="radio" name="gender" value="Male" required />
+                Male</label
+              >
+              <label
+                ><input type="radio" name="gender" value="Female" required />
+                Female</label
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="required">Mainstream School Name</label>
+            <div class="ques-description">
+              Please provide details of the day school where the student is
+              currently enrolled.
+            </div>
+            <div class="school-dropdown-container">
+              <input
+                type="text"
+                class="school-dropdown-input"
+                readonly
+                placeholder="Click to select a school"
+              />
+              <input type="hidden" name="mainstreamSchoolName" required />
+              <div class="school-dropdown-list">
+                <div class="school-search-box">
+                  <input
+                    type="text"
+                    placeholder="Search for schools..."
+                    id="schoolSearchInput"
+                  />
+                </div>
+                <div id="schoolListContainer"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="required">Year Level</label>
+            <select name="yearLevel" required>
+              <option value="">Select Year Level</option>
+              <option>Kindergarten</option>
+              <option>Year 1</option>
+              <option>Year 2</option>
+              <option>Year 3</option>
+              <option>Year 4</option>
+              <option>Year 5</option>
+              <option>Year 6</option>
+              <option>Year 7</option>
+              <option>Year 8</option>
+              <option>Year 9</option>
+              <option>Year 10</option>
+            </select>
+          </div>
+
+          <div class="form-row" id="otherSchoolContainer" style="display: none">
+            <label class="required">Other School Name</label>
+            <input type="text" name="otherSchoolName" />
+          </div>
+
+          <div class="form-row">
+            <label
+              >Does your child have any medical conditions or allergies we
+              should be aware of?</label
+            >
+            <div class="ques-description">
+              Please provide details of any medical conditions, allergies, or
+              specific health needs your child has. This information will help
+              us ensure their safety and well-being during school activities. If
+              your child requires medication or special assistance, please
+              include this in your response.
+            </div>
+            <textarea name="medicalInfo" rows="4"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label>Student School Email</label>
+            <div class="ques-description">
+              Provide your child's email address if they have one. This will be
+              used to invite your child for any online activity.
+            </div>
+            <input type="email" name="studentEmail" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Family Details</legend>
+
+          <h3>Parent/Carer 1</h3>
+          <div class="form-row">
+            <label class="required">Full Name</label>
+            <div class="ques-description">
+              Please provide the first and last name of the parent/carer to
+              contact first.
+            </div>
+            <input type="text" name="parent1Name" required />
+          </div>
+
+          <div class="form-row">
+            <label>Relationship to Student</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="parent1Relationship"
+                  value="Father"
+                />
+                Father</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="parent1Relationship"
+                  value="Mother"
+                />
+                Mother</label
+              >
+              <label
+                ><input type="radio" name="parent1Relationship" value="Carer" />
+                Carer</label
+              >
+              <label
+                ><input type="radio" name="parent1Relationship" value="Other" />
+                Other</label
+              >
+            </div>
+            <input
+              type="text"
+              name="parent1OtherRelationship"
+              placeholder="Please specify"
+              style="display: none"
+            />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Mobile</label>
+            <input type="tel" name="parent1Phone" required />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Email</label>
+            <input type="email" name="parent1Email" required />
+          </div>
+
+          <h3>Parent/Carer 2</h3>
+          <div class="form-row">
+            <label>Full Name</label>
+            <div class="ques-description">
+              Please provide the first and last name of the parent/carer to
+              contact second.
+            </div>
+            <input type="text" name="parent2Name" />
+          </div>
+
+          <div class="form-row">
+            <label>Relationship to Student</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="parent2Relationship"
+                  value="Father"
+                />
+                Father</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="parent2Relationship"
+                  value="Mother"
+                />
+                Mother</label
+              >
+              <label
+                ><input type="radio" name="parent2Relationship" value="Carer" />
+                Carer</label
+              >
+              <label
+                ><input type="radio" name="parent2Relationship" value="Other" />
+                Other</label
+              >
+            </div>
+            <input
+              type="text"
+              name="parent2OtherRelationship"
+              placeholder="Please specify"
+              style="display: none"
+            />
+          </div>
+
+          <div class="form-row">
+            <label>Mobile</label>
+            <input type="tel" name="parent2Phone" />
+          </div>
+
+          <div class="form-row">
+            <label>Email Address</label>
+            <input type="email" name="parent2Email" />
+          </div>
+
+          <h3>Address</h3>
+          <div class="form-row">
+            <label class="required">Street Address</label>
+            <div class="ques-description">
+              Include apartment/unit number (if applicable), street number and
+              street name
+            </div>
+            <div class="address-input-container">
+              <input
+                type="text"
+                name="streetName"
+                required
+                placeholder="Start typing to search for address"
+                autocomplete="off"
+              />
+              <div class="address-suggestions" id="addressSuggestions"></div>
+            </div>
+          </div>
+
+          <div class="inline-group">
+            <div class="form-row" style="flex: 1">
+              <label class="required">Suburb</label>
+              <input type="text" name="suburb" required />
+            </div>
+            <div class="form-row" style="flex: 1">
+              <label class="required">State</label>
+              <select name="state" required>
+                <option>NSW</option>
+                <option>VIC</option>
+                <option>QLD</option>
+                <option>SA</option>
+                <option>WA</option>
+                <option>TAS</option>
+                <option>NT</option>
+                <option>ACT</option>
+              </select>
+            </div>
+            <div class="form-row" style="flex: 1">
+              <label class="required">Post Code</label>
+              <input type="number" name="postCode" required />
+            </div>
+          </div>
+
+          <h3>Emergency Contact</h3>
+          <div class="form-row">
+            <label class="required">Full Name</label>
+            <input type="text" name="emergencyContactName" required />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Relationship</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="emergencyContactRelationship"
+                  value="Neighbour"
+                  required
+                />
+                Neighbour</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="emergencyContactRelationship"
+                  value="Aunt"
+                  required
+                />
+                Aunt</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="emergencyContactRelationship"
+                  value="Uncle"
+                  required
+                />
+                Uncle</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="emergencyContactRelationship"
+                  value="Other"
+                  required
+                />
+                Other</label
+              >
+            </div>
+            <input
+              type="text"
+              name="emergencyOtherRelationship"
+              placeholder="Please specify"
+              style="display: none"
+            />
+          </div>
+
+          <div class="form-row">
+            <label class="required">Emergency Phone Number</label>
+            <div style="margin: 2px">
+              Please provide a different number than the one provided above.
+            </div>
+            <input type="tel" name="emergencyContactPhone" required />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Program Details</legend>
+          <div class="instruction-text">
+            <p>
+              The school serves students from diverse backgrounds, ages, and
+              interests, creating a welcoming environment where they can develop
+              their Arabic language skills. Our program focuses on building
+              skills in reading, writing, speaking, and listening through
+              structured lessons and interactive activities.
+            </p>
+            <p>
+              This is supplemented by a Quran Program that helps students
+              memorise selected verses and improve their recitation, enhancing
+              both literacy and language development. Families who prefer their
+              children to participate in the Arabic program only or have
+              specific preferences are encouraged to indicate these in their
+              application and discuss them with us during the enrolment process.
+            </p>
+          </div>
+
+          <div class="form-row">
+            <label class="required">Arabic Proficiency Level</label>
+            <div class="ques-description">
+              Please select the option that best describes your child’s
+              proficiency in Arabic. This information will help us place them in
+              the appropriate class to support their learning.
+            </div>
+            <select name="proficiencyLevel" required>
+              <option value="">Select Level</option>
+              <option>
+                Beginner – My child has little to no exposure to Arabic and is
+                just beginning to learn.
+              </option>
+              <option>
+                Basic – My child can read and write the alphabet but struggles
+                with understanding and speaking.
+              </option>
+              <option>
+                Intermediate – My child can speak, read, and write Arabic at a
+                basic level but needs improvement.
+              </option>
+              <option>
+                Advanced – My child is fluent in Arabic, with strong skills in
+                reading, writing, and speaking.
+              </option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label>Areas of Interest</label>
+            <div class="ques-description">
+              Please select the areas of interest for your child’s learning. If
+              you prefer Arabic Language classes only or have specific
+              requirements, please use the "Others" option and provide details
+              in the notes section. You may select more than one option.
+            </div>
+            <div class="checkbox-group">
+              <label
+                ><input
+                  type="checkbox"
+                  name="interests"
+                  value="Arabic Language"
+                />
+                Arabic Language</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  name="interests"
+                  value="Quran Recitation and Tajweed"
+                />
+                Quran Recitation and Tajweed</label
+              >
+              <label
+                ><input
+                  type="checkbox"
+                  name="interests"
+                  value="Quran Memorization"
+                />
+                Quran Memorization</label
+              >
+              <label
+                ><input type="checkbox" name="interests" value="Others" />
+                Others (please specify in the notes)</label
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label>Notes/Suggestions/Comments</label>
+            <textarea name="notes" rows="4"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Consent and Declaration</legend>
+          <div class="instruction-text">
+            <p>
+              The personal information collected on this information form is for
+              purposes directly related to your child's attendance at Parramatta
+              Arabic School, including the processing of applications for the
+              NSW Community Languages Schools Program, administered by the NSW
+              Department of Education.
+            </p>
+            <p>
+              Any information provided to the Department of Education will be
+              used, disclosed and stored consistent with the NSW privacy laws.
+              Certain information is required by the Department of Education to
+              meet its obligations in relation to data collection, reporting and
+              the payment of grants.
+            </p>
+          </div>
+          <div class="form-row">
+            <label class="required">Photo Consent</label>
+            <p class="instruction-text">
+              The school takes photos during classroom activities and events,
+              sharing them through our school app and occasionally on our social
+              media platforms to keep parents informed and celebrate special
+              moments. While we aim to accommodate requests to exclude students,
+              this may not always be practical. If you prefer your child not to
+              be included, please discuss this with our management team during
+              the enrolment process.
+            </p>
+            <div class="checkbox-group">
+              <label
+                ><input type="radio" name="photoConsent" value="Yes" required />
+                Yes</label
+              >
+              <label
+                ><input type="radio" name="photoConsent" value="No" required />
+                No</label
+              >
+            </div>
+          </div>
+
+          <div class="instruction-text">
+            <p>
+              I consent to providing information contained on this form to the
+              Department of Education and to confirm the accuracy of the
+              information with other organisations that may also hold
+              information related to the student named.
+            </p>
+            <p>
+              I have read the information concerning the collection of personal
+              information. I declare that the information provided in this
+              enrolment form is accurate and complete to the best of my
+              knowledge.
+            </p>
+          </div>
+
+          <div class="form-row">
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" name="informationAccuracy" required /> I
+                have accurately provided information related to the student in
+                this form</label
+              >
+              <label
+                ><input type="checkbox" name="dataSharing" required /> I consent
+                to information sharing as described above</label
+              >
+            </div>
+          </div>
+
+          <div
+            class="form-row"
+            id="applicantNameContainer"
+            style="display: none"
+          >
+            <label class="required">Applicant's Full Name</label>
+            <div class="radio-group" id="applicantNameGroup">
+              <label>
+                <input
+                  type="radio"
+                  name="applicantName"
+                  id="parent1Radio"
+                  required
+                  checked
+                />
+                <span id="parent1NameOption"></span>
+              </label>
+              <label id="parent2NameLabel" style="display: none">
+                <input type="radio" name="applicantName" id="parent2Radio" />
+                <span id="parent2NameOption"></span>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div style="text-align: center">
+          <button type="submit">Submit Application</button>
         </div>
+      </form>
+      <div>
+        <p
+          style="
+            color: #555;
+            font-size: 12px;
+            text-align: left;
+            margin-top: 10px;
+          "
+          id="commit-hash"
+        ></p>
+      </div>
 
-        <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
+      <div
+        id="thankYouMessage"
+        style="display: none; text-align: center; margin-top: 2em"
+      >
+        <h1>Thank You!</h1>
+        <p>Your application has been submitted successfully.</p>
+        <p>We will review your application and contact you soon.</p>
+      </div>
+
+      <div id="statusMessage" style="text-align: center; margin-top: 1em"></div>
     </div>
 
     <div class="loading-overlay" id="loadingOverlay">
-        <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg"
-             alt="Loading..."
-             class="loading-spinner">
-        <div class="loading-text">Submitting your application... Please wait</div>
+      <img
+        src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg"
+        alt="Loading..."
+        class="loading-spinner"
+      />
+      <div class="loading-text">Submitting your application... Please wait</div>
     </div>
 
-<script>
-function clearExistingErrors() {
-  document.querySelectorAll(".error-message").forEach((el) => el.remove());
-  document
-    .querySelectorAll(".error-highlight")
-    .forEach((el) => el.classList.remove("error-highlight"));
-}
-
-const accordionButtons = document.querySelectorAll(".accordion-button");
-accordionButtons.forEach((button) => {
-  button.addEventListener("click", function () {
-    this.classList.toggle("active");
-    const content = this.nextElementSibling;
-    if (content.style.maxHeight) {
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    }
-  });
-});
-
-function initAutocomplete() {
-  const addressInput = document.querySelector('[name="streetName"]');
-  const suburbInput = document.querySelector('[name="suburb"]');
-  const stateInput = document.querySelector('[name="state"]');
-  const postCodeInput = document.querySelector('[name="postCode"]');
-  const stateMapping = {
-    "New South Wales": "NSW",
-    Victoria: "VIC",
-    Queensland: "QLD",
-    "South Australia": "SA",
-    "Western Australia": "WA",
-    Tasmania: "TAS",
-    "Northern Territory": "NT",
-    "Australian Capital Territory": "ACT",
-  };
-
-  const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-    componentRestrictions: { country: "au" },
-    types: ["address"],
-  });
-
-  addressInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter" && document.querySelector(".pac-container:visible")) {
-      e.preventDefault();
-      return false;
-    }
-  });
-
-  autocomplete.addListener("place_changed", function () {
-    const place = autocomplete.getPlace();
-    if (!place.geometry) return;
-
-    const originalValue = addressInput.value;
-    const ausStyleRegex =
-      /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
-    const apartmentRegex =
-      /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
-    const ausMatch = ausStyleRegex.exec(originalValue);
-    const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
-    let apartmentInfo = "";
-
-    if (ausMatch && ausMatch[0]) {
-      apartmentInfo = ausMatch[0].trim();
-    } else if (apartmentMatch && apartmentMatch[0]) {
-      apartmentInfo = apartmentMatch[0].trim();
-    }
-
-    suburbInput.value = "";
-    stateInput.value = "NSW";
-    postCodeInput.value = "";
-
-    let streetNumber = "";
-    let streetName = "";
-    let suburb = "";
-    let state = "";
-    let postCode = "";
-
-    for (const component of place.address_components) {
-      const type = component.types[0];
-      switch (type) {
-        case "street_number":
-          streetNumber = component.long_name;
-          break;
-        case "route":
-          streetName = component.long_name;
-          break;
-        case "locality":
-        case "sublocality":
-        case "sublocality_level_1":
-          suburb = component.long_name;
-          break;
-        case "administrative_area_level_1":
-          state = component.long_name;
-          break;
-        case "postal_code":
-          postCode = component.long_name;
-          break;
+    <script>
+      function clearExistingErrors() {
+        document
+          .querySelectorAll(".error-message")
+          .forEach((el) => el.remove());
+        document
+          .querySelectorAll(".error-highlight")
+          .forEach((el) => el.classList.remove("error-highlight"));
       }
-    }
 
-    if (apartmentInfo) {
-      if (ausMatch) {
-        const unitPart = ausMatch[1];
-        const streetPart = ausMatch[2];
-        addressInput.value =
-          streetPart === streetNumber
-            ? originalValue
-            : `${unitPart}/${streetNumber} ${streetName}`;
-      } else {
-        const separator = apartmentInfo.endsWith(",") ? " " : ", ";
-        addressInput.value =
-          apartmentInfo + separator + streetNumber + " " + streetName;
-      }
-    } else {
-      addressInput.value = streetNumber + " " + streetName;
-    }
-
-    suburbInput.value = suburb;
-    stateInput.value = stateMapping[state] || state;
-    postCodeInput.value = postCode;
-  });
-
-  addressInput.addEventListener("input", function (e) {
-    if (!this.value || !suburbInput.value) return;
-    this.dataset.lastValue = this.value;
-  });
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  let schoolsList = [];
-  const fetchSchools = async () => {
-    try {
-      const response = await fetch(
-        "https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw=="
-      );
-      schoolsList = await response.json();
-      populateSchoolsList(schoolsList);
-    } catch (error) {
-      console.error("Error fetching schools:", error);
-    }
-  };
-
-  function populateSchoolsList(schools) {
-    const schoolListContainer = document.getElementById("schoolListContainer");
-    const searchValue = document
-      .getElementById("schoolSearchInput")
-      .value.trim()
-      .toLowerCase();
-
-    // Filter schools based on search input (partial match)
-    const filteredSchools = schools.filter((school) =>
-      school.toLowerCase().includes(searchValue)
-    );
-
-    schoolListContainer.innerHTML = "";
-
-    if (filteredSchools.length === 0) {
-      const noResults = document.createElement("div");
-      noResults.className = "no-results";
-      noResults.textContent =
-        'No schools found. Select "Other" to enter manually.';
-      schoolListContainer.appendChild(noResults);
-
-      const otherItem = document.createElement("div");
-      otherItem.className = "school-dropdown-item";
-      otherItem.textContent = "Other";
-      otherItem.addEventListener("click", () => selectSchool("Other"));
-      schoolListContainer.appendChild(otherItem);
-    } else {
-      filteredSchools.forEach((school) => {
-        const item = document.createElement("div");
-        item.className = "school-dropdown-item";
-        item.textContent = school;
-        item.addEventListener("click", () => selectSchool(school));
-        schoolListContainer.appendChild(item);
+      schoolDropdownInput.addEventListener("click", function () {
+        schoolDropdownList.style.display =
+          schoolDropdownList.style.display === "block" ? "none" : "block";
+        if (schoolDropdownList.style.display === "block")
+          schoolSearchInput.focus();
+        populateSchoolsList(schoolsList);
       });
-    }
-  }
 
-  schoolSearchInput.addEventListener("input", function () {
-    populateSchoolsList(schoolsList);
-  });
-
-  const parent1NameInput = document.querySelector('[name="parent1Name"]');
-  const parent2NameInput = document.querySelector('[name="parent2Name"]');
-  const applicantContainer = document.getElementById("applicantNameContainer");
-  const parent1NameOption = document.getElementById("parent1NameOption");
-  const parent2NameOption = document.getElementById("parent2NameOption");
-  const parent2NameLabel = document.getElementById("parent2NameLabel");
-  const parent1Radio = document.getElementById("parent1Radio");
-  const parent2Radio = document.getElementById("parent2Radio");
-
-  function updateApplicantVisibility() {
-    const parent1Filled = parent1NameInput.value.trim() !== "";
-    const parent2Filled = parent2NameInput.value.trim() !== "";
-
-    if (parent1Filled || parent2Filled) {
-      applicantContainer.style.display = "block";
-      parent1Radio.value = parent1NameInput.value.trim() || "Parent 1";
-      parent2Radio.value = parent2NameInput.value.trim() || "Parent 2";
-      parent1NameOption.textContent = parent1Radio.value;
-      parent2NameOption.textContent = parent2Radio.value;
-      parent2NameLabel.style.display = parent2Filled ? "block" : "none";
-    } else {
-      applicantContainer.style.display = "none";
-    }
-  }
-
-  parent1NameInput.addEventListener("input", updateApplicantVisibility);
-  parent2NameInput.addEventListener("input", updateApplicantVisibility);
-
-  const schoolDropdownInput = document.querySelector(".school-dropdown-input");
-  const schoolNameInput = document.querySelector(
-    '[name="mainstreamSchoolName"]'
-  );
-  const schoolSearchInput = document.getElementById("schoolSearchInput");
-  const schoolDropdownList = document.querySelector(".school-dropdown-list");
-  const otherSchoolContainer = document.getElementById("otherSchoolContainer");
-  const otherSchoolInput = document.querySelector('[name="otherSchoolName"]');
-
-  function selectSchool(school) {
-    schoolDropdownInput.value = school;
-    schoolNameInput.value = school;
-    schoolDropdownList.style.display = "none";
-
-    if (school === "Other") {
-      otherSchoolContainer.style.display = "block";
-      otherSchoolInput.required = true;
-      schoolDropdownInput.value = "Other - Please specify below";
-    } else {
-      otherSchoolContainer.style.display = "none";
-      otherSchoolInput.required = false;
-      otherSchoolInput.value = "";
-    }
-  }
-
-  schoolDropdownInput.addEventListener("click", function () {
-    schoolDropdownList.style.display =
-      schoolDropdownList.style.display === "block" ? "none" : "block";
-    if (schoolDropdownList.style.display === "block") schoolSearchInput.focus();
-    populateSchoolsList(schoolsList);
-  });
-
-  schoolSearchInput.addEventListener("input", function () {
-    const searchValue = this.value.toLowerCase();
-    const filtered = schoolsList.filter((school) =>
-      school.toLowerCase().includes(searchValue)
-    );
-    populateSchoolsList(filtered);
-  });
-
-  document.addEventListener("click", function (event) {
-    if (!event.target.closest(".school-dropdown-container")) {
-      schoolDropdownList.style.display = "none";
-    }
-  });
-
-  schoolSearchInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const searchValue = this.value.trim();
-      if (schoolsList.includes(searchValue)) {
-        selectSchool(searchValue);
-      } else {
-        selectSchool("Other");
-      }
-    }
-  });
-
-  const initializeRelationshipFields = () => {
-    const handleRelationshipChange = (radioName, textFieldName) => {
-      const radios = document.querySelectorAll(`input[name="${radioName}"]`);
-      const textField = document.querySelector(
-        `input[name="${textFieldName}"]`
-      );
-
-      radios.forEach((radio) => {
-        radio.addEventListener("change", () => {
-          if (radio.value === "Other") {
-            textField.style.display = "block";
-            textField.required = true;
-          } else {
-            textField.style.display = "none";
-            textField.required = false;
-            textField.value = "";
-          }
-        });
+      schoolSearchInput.addEventListener("input", function () {
+        const searchValue = this.value.toLowerCase();
+        const filtered = schoolsList.filter((school) =>
+          school.toLowerCase().includes(searchValue)
+        );
+        populateSchoolsList(filtered);
       });
-    };
 
-    handleRelationshipChange("parent1Relationship", "parent1OtherRelationship");
-    handleRelationshipChange("parent2Relationship", "parent2OtherRelationship");
-    handleRelationshipChange(
-      "emergencyContactRelationship",
-      "emergencyOtherRelationship"
-    );
-  };
-
-  const validateForm = (formData) => {
-    const errors = [];
-    const validateOtherField = (radioValue, otherValue, fieldName) => {
-      if (radioValue === "Other" && !otherValue?.trim()) {
-        errors.push({ field: fieldName, message: "Please specify this field" });
-      }
-    };
-
-    if (
-      formData.get("mainstreamSchoolName") === "Other" &&
-      !formData.get("otherSchoolName")?.trim()
-    ) {
-      errors.push({
-        field: "otherSchoolName",
-        message: "Please specify school name",
-      });
-    }
-
-    validateOtherField(
-      formData.get("parent1Relationship"),
-      formData.get("parent1OtherRelationship"),
-      "parent1OtherRelationship"
-    );
-    validateOtherField(
-      formData.get("parent2Relationship"),
-      formData.get("parent2OtherRelationship"),
-      "parent2OtherRelationship"
-    );
-    validateOtherField(
-      formData.get("emergencyContactRelationship"),
-      formData.get("emergencyOtherRelationship"),
-      "emergencyOtherRelationship"
-    );
-
-    const parent1 = {
-      name: formData.get("parent1Name")?.trim().toLowerCase(),
-      phone: formData.get("parent1Phone")?.trim().toLowerCase(),
-      email: formData.get("parent1Email")?.trim().toLowerCase(),
-    };
-    const parent2 = {
-      name: formData.get("parent2Name")?.trim().toLowerCase(),
-      phone: formData.get("parent2Phone")?.trim().toLowerCase(),
-      email: formData.get("parent2Email")?.trim().toLowerCase(),
-    };
-    const emergency = {
-      name: formData.get("emergencyContactName")?.trim().toLowerCase(),
-      phone: formData.get("emergencyContactPhone")?.trim().toLowerCase(),
-    };
-
-    const checkUniqueness = (source, sourceType, targets) => {
-      const fields =
-        sourceType === "emergency"
-          ? ["name", "phone"]
-          : ["name", "phone", "email"];
-      fields.forEach((field) => {
-        const sourceValue = source[field];
-        if (!sourceValue) return;
-        targets.forEach((target) => {
-          Object.entries(target).forEach(([targetField, targetValue]) => {
-            if (sourceValue === targetValue && targetValue) {
-              errors.push({
-                field: `${sourceType}${
-                  field.charAt(0).toUpperCase() + field.slice(1)
-                }`,
-                message: `${sourceType.replace(
-                  "parent",
-                  "Parent "
-                )} ${field} cannot match ${target.relationType} ${targetField}`,
-              });
-            }
-          });
-        });
-      });
-    };
-
-    checkUniqueness(parent1, "parent1", [
-      { ...parent2, relationType: "Parent 2" },
-      { ...emergency, relationType: "Emergency Contact" },
-    ]);
-    if (parent2.name)
-      checkUniqueness(parent2, "parent2", [
-        { ...parent1, relationType: "Parent 1" },
-        { ...emergency, relationType: "Emergency Contact" },
-      ]);
-    checkUniqueness(emergency, "emergency", [
-      { ...parent1, relationType: "Parent 1" },
-      { ...parent2, relationType: "Parent 2" },
-    ]);
-
-    return errors;
-  };
-
-  document
-    .getElementById("enrollmentForm")
-    .addEventListener("submit", async function (event) {
-      event.preventDefault();
-      const form = event.target;
-      if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-      }
-
-      const loadingOverlay = document.getElementById("loadingOverlay");
-      loadingOverlay.style.display = "flex";
-      document.body.style.overflow = "hidden";
-      clearExistingErrors();
-
-      try {
-        const formData = new FormData(form);
-        const errors = validateForm(formData);
-
-        if (errors.length > 0) {
-          let firstErrorField = null;
-          errors.forEach((error) => {
-            const field = document.querySelector(`[name="${error.field}"]`);
-            if (field) {
-              if (!firstErrorField) firstErrorField = field;
-              field.classList.add("error-highlight");
-              const errorDiv = document.createElement("div");
-              errorDiv.className = "error-message";
-              errorDiv.textContent = error.message;
-              field.parentNode.insertBefore(errorDiv, field.nextSibling);
-            }
-          });
-
-          if (firstErrorField) {
-            setTimeout(() => {
-              firstErrorField.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-              });
-              firstErrorField.focus();
-            }, 100);
-          }
-
-          throw new Error("Validation errors");
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest(".school-dropdown-container")) {
+          schoolDropdownList.style.display = "none";
         }
+      });
 
-        const buildRelationshipData = (prefix) => ({
-          name: formData.get(`${prefix}Name`),
-          relationship:
-            formData.get(`${prefix}Relationship`) === "Other"
-              ? formData.get(`${prefix}OtherRelationship`)
-              : formData.get(`${prefix}Relationship`),
-          phone: formData.get(`${prefix}Phone`),
-          email: formData.get(`${prefix}Email`),
+      schoolSearchInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          const searchValue = this.value.trim();
+          if (schoolsList.includes(searchValue)) {
+            selectSchool(searchValue);
+          } else {
+            selectSchool("Other");
+          }
+        }
+      });
+
+      const accordionButtons = document.querySelectorAll(".accordion-button");
+      accordionButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          this.classList.toggle("active");
+          const content = this.nextElementSibling;
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
         });
+      });
 
-        const data = {
-          student: {
-            firstName: formData.get("studentFirstName"),
-            lastName: formData.get("studentLastName"),
-            birthDate: formData.get("studentBirthDate"),
-            gender: formData.get("gender"),
-            yearLevel: formData.get("yearLevel"),
-            school:
-              formData.get("mainstreamSchoolName") === "Other"
-                ? formData.get("otherSchoolName")
-                : formData.get("mainstreamSchoolName"),
-            email: formData.get("studentEmail"),
-          },
-          parent1: buildRelationshipData("parent1"),
-          parent2: buildRelationshipData("parent2"),
-          address: {
-            street: formData.get("streetName"),
-            suburb: formData.get("suburb"),
-            state: formData.get("state"),
-            postCode: formData.get("postCode"),
-          },
-          emergencyContact: {
-            name: formData.get("emergencyContactName"),
-            relationship:
-              formData.get("emergencyContactRelationship") === "Other"
-                ? formData.get("emergencyOtherRelationship")
-                : formData.get("emergencyContactRelationship"),
-            phone: formData.get("emergencyContactPhone"),
-          },
-          programDetails: {
-            proficiency: formData.get("proficiencyLevel"),
-            interests: formData.getAll("interests"),
-            notes: formData.get("notes"),
-          },
-          medicalInfo: formData.get("medicalInfo") || "None",
-          photoConsent: formData.get("photoConsent"),
-          consent: "I agree to the terms and conditions.",
-          applicantName: formData.get("applicantName"),
+      function initAutocomplete() {
+        const addressInput = document.querySelector('[name="streetName"]');
+        const suburbInput = document.querySelector('[name="suburb"]');
+        const stateInput = document.querySelector('[name="state"]');
+        const postCodeInput = document.querySelector('[name="postCode"]');
+        const stateMapping = {
+          "New South Wales": "NSW",
+          Victoria: "VIC",
+          Queensland: "QLD",
+          "South Australia": "SA",
+          "Western Australia": "WA",
+          Tasmania: "TAS",
+          "Northern Territory": "NT",
+          "Australian Capital Territory": "ACT",
         };
 
-        const response = await fetch(
-          "https://arabicschool.azurewebsites.net/api/student?code=jBJmpUad8UZ03f6ftJkX6l55TrxIFGjvp2khZuZw1Rq6AzFuM_nJ7g==",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+          componentRestrictions: { country: "au" },
+          types: ["address"],
+        });
+
+        addressInput.addEventListener("keydown", function (e) {
+          if (
+            e.key === "Enter" &&
+            document.querySelector(".pac-container:visible")
+          ) {
+            e.preventDefault();
+            return false;
           }
+        });
+
+        autocomplete.addListener("place_changed", function () {
+          const place = autocomplete.getPlace();
+          if (!place.geometry) return;
+
+          const originalValue = addressInput.value;
+          const ausStyleRegex =
+            /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
+          const apartmentRegex =
+            /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
+          const ausMatch = ausStyleRegex.exec(originalValue);
+          const apartmentMatch = ausMatch
+            ? null
+            : apartmentRegex.exec(originalValue);
+          let apartmentInfo = "";
+
+          if (ausMatch && ausMatch[0]) {
+            apartmentInfo = ausMatch[0].trim();
+          } else if (apartmentMatch && apartmentMatch[0]) {
+            apartmentInfo = apartmentMatch[0].trim();
+          }
+
+          suburbInput.value = "";
+          stateInput.value = "NSW";
+          postCodeInput.value = "";
+
+          let streetNumber = "";
+          let streetName = "";
+          let suburb = "";
+          let state = "";
+          let postCode = "";
+
+          for (const component of place.address_components) {
+            const type = component.types[0];
+            switch (type) {
+              case "street_number":
+                streetNumber = component.long_name;
+                break;
+              case "route":
+                streetName = component.long_name;
+                break;
+              case "locality":
+              case "sublocality":
+              case "sublocality_level_1":
+                suburb = component.long_name;
+                break;
+              case "administrative_area_level_1":
+                state = component.long_name;
+                break;
+              case "postal_code":
+                postCode = component.long_name;
+                break;
+            }
+          }
+
+          if (apartmentInfo) {
+            if (ausMatch) {
+              const unitPart = ausMatch[1];
+              const streetPart = ausMatch[2];
+              addressInput.value =
+                streetPart === streetNumber
+                  ? originalValue
+                  : `${unitPart}/${streetNumber} ${streetName}`;
+            } else {
+              const separator = apartmentInfo.endsWith(",") ? " " : ", ";
+              addressInput.value =
+                apartmentInfo + separator + streetNumber + " " + streetName;
+            }
+          } else {
+            addressInput.value = streetNumber + " " + streetName;
+          }
+
+          suburbInput.value = suburb;
+          stateInput.value = stateMapping[state] || state;
+          postCodeInput.value = postCode;
+        });
+
+        addressInput.addEventListener("input", function (e) {
+          if (!this.value || !suburbInput.value) return;
+          this.dataset.lastValue = this.value;
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        let schoolsList = [];
+        const fetchSchools = async () => {
+          try {
+            const response = await fetch(
+              "https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw=="
+            );
+            schoolsList = await response.json();
+            populateSchoolsList(schoolsList);
+          } catch (error) {
+            console.error("Error fetching schools:", error);
+          }
+        };
+
+        function populateSchoolsList(schools) {
+          const schoolListContainer = document.getElementById(
+            "schoolListContainer"
+          );
+          const searchValue = document
+            .getElementById("schoolSearchInput")
+            .value.trim()
+            .toLowerCase();
+
+          // Filter schools based on search input (partial match)
+          const filteredSchools = schools.filter((school) =>
+            school.toLowerCase().includes(searchValue)
+          );
+
+          schoolListContainer.innerHTML = "";
+
+          if (filteredSchools.length === 0) {
+            const noResults = document.createElement("div");
+            noResults.className = "no-results";
+            noResults.textContent =
+              'No schools found. Select "Other" to enter manually.';
+            schoolListContainer.appendChild(noResults);
+
+            const otherItem = document.createElement("div");
+            otherItem.className = "school-dropdown-item";
+            otherItem.textContent = "Other";
+            otherItem.addEventListener("click", () => selectSchool("Other"));
+            schoolListContainer.appendChild(otherItem);
+          } else {
+            filteredSchools.forEach((school) => {
+              const item = document.createElement("div");
+              item.className = "school-dropdown-item";
+              item.textContent = school;
+              item.addEventListener("click", () => selectSchool(school));
+              schoolListContainer.appendChild(item);
+            });
+          }
+        }
+
+        schoolSearchInput.addEventListener("input", function () {
+          populateSchoolsList(schoolsList);
+        });
+
+        const parent1NameInput = document.querySelector('[name="parent1Name"]');
+        const parent2NameInput = document.querySelector('[name="parent2Name"]');
+        const applicantContainer = document.getElementById(
+          "applicantNameContainer"
+        );
+        const parent1NameOption = document.getElementById("parent1NameOption");
+        const parent2NameOption = document.getElementById("parent2NameOption");
+        const parent2NameLabel = document.getElementById("parent2NameLabel");
+        const parent1Radio = document.getElementById("parent1Radio");
+        const parent2Radio = document.getElementById("parent2Radio");
+
+        function updateApplicantVisibility() {
+          const parent1Filled = parent1NameInput.value.trim() !== "";
+          const parent2Filled = parent2NameInput.value.trim() !== "";
+
+          if (parent1Filled || parent2Filled) {
+            applicantContainer.style.display = "block";
+            parent1Radio.value = parent1NameInput.value.trim() || "Parent 1";
+            parent2Radio.value = parent2NameInput.value.trim() || "Parent 2";
+            parent1NameOption.textContent = parent1Radio.value;
+            parent2NameOption.textContent = parent2Radio.value;
+            parent2NameLabel.style.display = parent2Filled ? "block" : "none";
+          } else {
+            applicantContainer.style.display = "none";
+          }
+        }
+
+        parent1NameInput.addEventListener("input", updateApplicantVisibility);
+        parent2NameInput.addEventListener("input", updateApplicantVisibility);
+
+        const schoolDropdownInput = document.querySelector(
+          ".school-dropdown-input"
+        );
+        const schoolNameInput = document.querySelector(
+          '[name="mainstreamSchoolName"]'
+        );
+        const schoolSearchInput = document.getElementById("schoolSearchInput");
+        const schoolDropdownList = document.querySelector(
+          ".school-dropdown-list"
+        );
+        const otherSchoolContainer = document.getElementById(
+          "otherSchoolContainer"
+        );
+        const otherSchoolInput = document.querySelector(
+          '[name="otherSchoolName"]'
         );
 
-        if (!response.ok) throw new Error("Network error");
-        document.getElementById("enrollmentForm").style.display = "none";
-        document.getElementById("statusMessage").textContent = "";
-        document.getElementById("thankYouMessage").style.display = "block";
-      } catch (error) {
-        document.getElementById("statusMessage").textContent =
-          error.message === "Validation errors"
-            ? "Please correct the highlighted errors."
-            : "Error submitting form. Please try again.";
-      } finally {
-        loadingOverlay.style.display = "none";
-        document.body.style.overflow = "";
+        function selectSchool(school) {
+          schoolDropdownInput.value = school;
+          schoolNameInput.value = school;
+          schoolDropdownList.style.display = "none";
+
+          if (school === "Other") {
+            otherSchoolContainer.style.display = "block";
+            otherSchoolInput.required = true;
+            schoolDropdownInput.value = "Other - Please specify below";
+          } else {
+            otherSchoolContainer.style.display = "none";
+            otherSchoolInput.required = false;
+            otherSchoolInput.value = "";
+          }
+        }
+
+        schoolDropdownInput.addEventListener("click", function () {
+          schoolDropdownList.style.display =
+            schoolDropdownList.style.display === "block" ? "none" : "block";
+          if (schoolDropdownList.style.display === "block")
+            schoolSearchInput.focus();
+          populateSchoolsList(schoolsList);
+        });
+
+        schoolSearchInput.addEventListener("input", function () {
+          const searchValue = this.value.toLowerCase();
+          const filtered = schoolsList.filter((school) =>
+            school.toLowerCase().includes(searchValue)
+          );
+          populateSchoolsList(filtered);
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest(".school-dropdown-container")) {
+            schoolDropdownList.style.display = "none";
+          }
+        });
+
+        schoolSearchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const searchValue = this.value.trim();
+            if (schoolsList.includes(searchValue)) {
+              selectSchool(searchValue);
+            } else {
+              selectSchool("Other");
+            }
+          }
+        });
+
+        const initializeRelationshipFields = () => {
+          const handleRelationshipChange = (radioName, textFieldName) => {
+            const radios = document.querySelectorAll(
+              `input[name="${radioName}"]`
+            );
+            const textField = document.querySelector(
+              `input[name="${textFieldName}"]`
+            );
+
+            radios.forEach((radio) => {
+              radio.addEventListener("change", () => {
+                if (radio.value === "Other") {
+                  textField.style.display = "block";
+                  textField.required = true;
+                } else {
+                  textField.style.display = "none";
+                  textField.required = false;
+                  textField.value = "";
+                }
+              });
+            });
+          };
+
+          handleRelationshipChange(
+            "parent1Relationship",
+            "parent1OtherRelationship"
+          );
+          handleRelationshipChange(
+            "parent2Relationship",
+            "parent2OtherRelationship"
+          );
+          handleRelationshipChange(
+            "emergencyContactRelationship",
+            "emergencyOtherRelationship"
+          );
+        };
+
+        const validateForm = (formData) => {
+          const errors = [];
+          const validateOtherField = (radioValue, otherValue, fieldName) => {
+            if (radioValue === "Other" && !otherValue?.trim()) {
+              errors.push({
+                field: fieldName,
+                message: "Please specify this field",
+              });
+            }
+          };
+
+          if (
+            formData.get("mainstreamSchoolName") === "Other" &&
+            !formData.get("otherSchoolName")?.trim()
+          ) {
+            errors.push({
+              field: "otherSchoolName",
+              message: "Please specify school name",
+            });
+          }
+
+          validateOtherField(
+            formData.get("parent1Relationship"),
+            formData.get("parent1OtherRelationship"),
+            "parent1OtherRelationship"
+          );
+          validateOtherField(
+            formData.get("parent2Relationship"),
+            formData.get("parent2OtherRelationship"),
+            "parent2OtherRelationship"
+          );
+          validateOtherField(
+            formData.get("emergencyContactRelationship"),
+            formData.get("emergencyOtherRelationship"),
+            "emergencyOtherRelationship"
+          );
+
+          const parent1 = {
+            name: formData.get("parent1Name")?.trim().toLowerCase(),
+            phone: formData.get("parent1Phone")?.trim().toLowerCase(),
+            email: formData.get("parent1Email")?.trim().toLowerCase(),
+          };
+          const parent2 = {
+            name: formData.get("parent2Name")?.trim().toLowerCase(),
+            phone: formData.get("parent2Phone")?.trim().toLowerCase(),
+            email: formData.get("parent2Email")?.trim().toLowerCase(),
+          };
+          const emergency = {
+            name: formData.get("emergencyContactName")?.trim().toLowerCase(),
+            phone: formData.get("emergencyContactPhone")?.trim().toLowerCase(),
+          };
+
+          const checkUniqueness = (source, sourceType, targets) => {
+            const fields =
+              sourceType === "emergency"
+                ? ["name", "phone"]
+                : ["name", "phone", "email"];
+            fields.forEach((field) => {
+              const sourceValue = source[field];
+              if (!sourceValue) return;
+              targets.forEach((target) => {
+                Object.entries(target).forEach(([targetField, targetValue]) => {
+                  if (sourceValue === targetValue && targetValue) {
+                    errors.push({
+                      field: `${sourceType}${
+                        field.charAt(0).toUpperCase() + field.slice(1)
+                      }`,
+                      message: `${sourceType.replace(
+                        "parent",
+                        "Parent "
+                      )} ${field} cannot match ${
+                        target.relationType
+                      } ${targetField}`,
+                    });
+                  }
+                });
+              });
+            });
+          };
+
+          checkUniqueness(parent1, "parent1", [
+            { ...parent2, relationType: "Parent 2" },
+            { ...emergency, relationType: "Emergency Contact" },
+          ]);
+          if (parent2.name)
+            checkUniqueness(parent2, "parent2", [
+              { ...parent1, relationType: "Parent 1" },
+              { ...emergency, relationType: "Emergency Contact" },
+            ]);
+          checkUniqueness(emergency, "emergency", [
+            { ...parent1, relationType: "Parent 1" },
+            { ...parent2, relationType: "Parent 2" },
+          ]);
+
+          return errors;
+        };
+
+        document
+          .getElementById("enrollmentForm")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            if (!form.checkValidity()) {
+              form.reportValidity();
+              return;
+            }
+
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            loadingOverlay.style.display = "flex";
+            document.body.style.overflow = "hidden";
+            clearExistingErrors();
+
+            try {
+              const formData = new FormData(form);
+              const errors = validateForm(formData);
+
+              if (errors.length > 0) {
+                let firstErrorField = null;
+                errors.forEach((error) => {
+                  const field = document.querySelector(
+                    `[name="${error.field}"]`
+                  );
+                  if (field) {
+                    if (!firstErrorField) firstErrorField = field;
+                    field.classList.add("error-highlight");
+                    const errorDiv = document.createElement("div");
+                    errorDiv.className = "error-message";
+                    errorDiv.textContent = error.message;
+                    field.parentNode.insertBefore(errorDiv, field.nextSibling);
+                  }
+                });
+
+                if (firstErrorField) {
+                  setTimeout(() => {
+                    firstErrorField.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                    firstErrorField.focus();
+                  }, 100);
+                }
+
+                throw new Error("Validation errors");
+              }
+
+              const buildRelationshipData = (prefix) => ({
+                name: formData.get(`${prefix}Name`),
+                relationship:
+                  formData.get(`${prefix}Relationship`) === "Other"
+                    ? formData.get(`${prefix}OtherRelationship`)
+                    : formData.get(`${prefix}Relationship`),
+                phone: formData.get(`${prefix}Phone`),
+                email: formData.get(`${prefix}Email`),
+              });
+
+              const data = {
+                student: {
+                  firstName: formData.get("studentFirstName"),
+                  lastName: formData.get("studentLastName"),
+                  birthDate: formData.get("studentBirthDate"),
+                  gender: formData.get("gender"),
+                  yearLevel: formData.get("yearLevel"),
+                  school:
+                    formData.get("mainstreamSchoolName") === "Other"
+                      ? formData.get("otherSchoolName")
+                      : formData.get("mainstreamSchoolName"),
+                  email: formData.get("studentEmail"),
+                },
+                parent1: buildRelationshipData("parent1"),
+                parent2: buildRelationshipData("parent2"),
+                address: {
+                  street: formData.get("streetName"),
+                  suburb: formData.get("suburb"),
+                  state: formData.get("state"),
+                  postCode: formData.get("postCode"),
+                },
+                emergencyContact: {
+                  name: formData.get("emergencyContactName"),
+                  relationship:
+                    formData.get("emergencyContactRelationship") === "Other"
+                      ? formData.get("emergencyOtherRelationship")
+                      : formData.get("emergencyContactRelationship"),
+                  phone: formData.get("emergencyContactPhone"),
+                },
+                programDetails: {
+                  proficiency: formData.get("proficiencyLevel"),
+                  interests: formData.getAll("interests"),
+                  notes: formData.get("notes"),
+                },
+                medicalInfo: formData.get("medicalInfo") || "None",
+                photoConsent: formData.get("photoConsent"),
+                consent: "I agree to the terms and conditions.",
+                applicantName: formData.get("applicantName"),
+              };
+
+              const response = await fetch(
+                "https://arabicschool.azurewebsites.net/api/student?code=jBJmpUad8UZ03f6ftJkX6l55TrxIFGjvp2khZuZw1Rq6AzFuM_nJ7g==",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                }
+              );
+
+              if (!response.ok) throw new Error("Network error");
+              document.getElementById("enrollmentForm").style.display = "none";
+              document.getElementById("statusMessage").textContent = "";
+              document.getElementById("thankYouMessage").style.display =
+                "block";
+            } catch (error) {
+              document.getElementById("statusMessage").textContent =
+                error.message === "Validation errors"
+                  ? "Please correct the highlighted errors."
+                  : "Error submitting form. Please try again.";
+            } finally {
+              loadingOverlay.style.display = "none";
+              document.body.style.overflow = "";
+            }
+          });
+
+        initializeRelationshipFields();
+        fetchSchools();
+        initAutocomplete();
+      });
+
+      let lastHeight = 0;
+      function sendHeight() {
+        const height = document.body.scrollHeight;
+        if (height !== lastHeight) {
+          window.parent.postMessage({ height }, "https://arabicschool.org.au");
+          lastHeight = height;
+        }
       }
-    });
 
-  initializeRelationshipFields();
-  fetchSchools();
-  initAutocomplete();
-});
-
-let lastHeight = 0;
-function sendHeight() {
-  const height = document.body.scrollHeight;
-  if (height !== lastHeight) {
-    window.parent.postMessage({ height }, "https://arabicschool.org.au");
-    lastHeight = height;
-  }
-}
-
-window.addEventListener("load", sendHeight);
-window.addEventListener("resize", sendHeight);
-setInterval(sendHeight, 500);
-</script>
-</body>
+      window.addEventListener("load", sendHeight);
+      window.addEventListener("resize", sendHeight);
+      setInterval(sendHeight, 500);
+    </script>
+  </body>
 </html>
