@@ -805,6 +805,7 @@
     function clearExistingErrors() {
         document.querySelectorAll('.error-message').forEach(el => el.remove());
         document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
+        
     }
 
     function initAutocomplete() {
@@ -1201,6 +1202,7 @@
 
                 if (!response.ok) throw new Error('Network error');
                 document.getElementById('enrollmentForm').style.display = 'none';
+                document.getElementById('statusMessage').textContent = '';
                 document.getElementById('thankYouMessage').style.display = 'block';
             } catch (error) {
                 document.getElementById('statusMessage').textContent = error.message === 'Validation errors' 
