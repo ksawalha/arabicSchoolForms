@@ -767,27 +767,6 @@
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
 <script>
-    // Height Reporting Functions
-    function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
-    }
-
-    const observer = new MutationObserver(sendHeightToParent);
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-    });
-
-    window.addEventListener('load', () => {
-        sendHeightToParent();
-        setTimeout(sendHeightToParent, 1000);
-    });
-
-    window.addEventListener('resize', sendHeightToParent);
-
     // Existing Functions
     function clearExistingErrors() {
         document.querySelectorAll('.error-message').forEach(el => el.remove());
@@ -1224,6 +1203,74 @@
         toggleOtherRelationshipInput('parent2Relationship', 'parent2OtherRelationship');
         toggleOtherRelationshipInput('emergencyContactRelationship', 'emergencyOtherRelationship');
     });
+
+    function validateForm(formData) {
+        const errors = [];
+
+        // Get trimmed values
+        const getValue = (field) => formData.get(field) ? formData.get(field).trim().toLowerCase() : '';
+        
+        const parent1 = {
+            name: getValue('parent1Name'),
+            phone: getValue('parent1Phone'),
+            email: getValue('parent1Email')
+        };
+
+        const parent2 = {
+            name: getValue('parent2Name'),
+            phone: getValue('parent2Phone'),
+            email: getValue('parent2Email')
+        };
+
+        const emergency = {
+            name: getValue('emergencyContactName'),
+            phone: getValue('emergencyContactPhone')
+        };
+
+        // Check Parent 1 uniqueness
+        checkUniqueness(parent1, 'parent1', [parent2, emergency], errors);
+
+        // Check Parent 2 uniqueness if parent2 name is provided
+        if (parent2.name) {
+            checkUniqueness(parent2, 'parent2', [parent1, emergency], errors);
+        }
+
+        // Check Emergency uniqueness
+        checkUniqueness(emergency, 'emergency', [parent1, parent2], errors);
+
+        return errors;
+    }
+
+    // Helper function to check uniqueness
+    function checkUniqueness(source, sourceType, targets, errors) {
+        const fields = sourceType === 'emergency' ? ['name', 'phone'] : ['name', 'phone', 'email'];
+        
+        fields.forEach(field => {
+            const sourceValue = source[field];
+            if (!sourceValue) return;
+
+            targets.forEach((target, index) => {
+                const targetType = index === 0 ? 
+                    (sourceType === 'parent1' ? 'parent2' : 'parent1') : 
+                    'emergency';
+                    
+                Object.entries(target).forEach(([targetField, targetValue]) => {
+                    if (sourceValue === targetValue && targetValue) {
+                        errors.push({
+                            field: `${sourceType}${field.charAt(0).toUpperCase() + field.slice(1)}`,
+                            message: `${formatSourceType(sourceType)} ${field} cannot match ${formatSourceType(targetType)} ${targetField}`
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    // Format type for error messages
+    function formatSourceType(type) {
+        return type === 'parent1' ? 'Parent 1' : 
+               type === 'parent2' ? 'Parent 2' : 'Emergency Contact';
+    }
     let lastHeight = 0;
     function sendHeight() {
         const height = document.body.scrollHeight;
