@@ -937,6 +937,30 @@
                 schoolListContainer.appendChild(item);
             });
         }
+        
+        const parent1NameInput = document.querySelector('[name="parent1Name"]');
+        const parent2NameInput = document.querySelector('[name="parent2Name"]');
+        const applicantContainer = document.getElementById('applicantNameContainer');
+        const parent1NameOption = document.getElementById('parent1NameOption');
+        const parent2NameOption = document.getElementById('parent2NameOption');
+        const parent2NameLabel = document.getElementById('parent2NameLabel');
+    
+        function updateApplicantVisibility() {
+            const parent1Filled = parent1NameInput.value.trim() !== '';
+            const parent2Filled = parent2NameInput.value.trim() !== '';
+            
+            if(parent1Filled || parent2Filled) {
+                applicantContainer.style.display = 'block';
+                parent1NameOption.textContent = parent1NameInput.value.trim() || 'Parent 1';
+                parent2NameOption.textContent = parent2NameInput.value.trim() || 'Parent 2';
+                parent2NameLabel.style.display = parent2Filled ? 'block' : 'none';
+            } else {
+                applicantContainer.style.display = 'none';
+            }
+        }
+    
+        parent1NameInput.addEventListener('input', updateApplicantVisibility);
+        parent2NameInput.addEventListener('input', updateApplicantVisibility);
 
         const schoolDropdownInput = document.querySelector('.school-dropdown-input');
         const schoolNameInput = document.querySelector('[name="mainstreamSchoolName"]');
