@@ -705,6 +705,14 @@
                 </div>
             </fieldset>
 
+            <fieldset>
+                <legend>Medical Status</legend>
+                <div class="form-row">
+                    <label>Medical Issues</label>
+                    <textarea  type="text" name="medicalInfo" value="None" rows="4"></textarea>
+                </div>
+            </fieldset>
+            
             <!-- Consent & Declaration Section -->
             <fieldset>
                 <legend>Consent and Declaration</legend>
@@ -767,27 +775,6 @@
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
 <script>
-    // Height Reporting Functions
-    function sendHeightToParent() {
-        const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
-    }
-
-    const observer = new MutationObserver(sendHeightToParent);
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-    });
-
-    window.addEventListener('load', () => {
-        sendHeightToParent();
-        setTimeout(sendHeightToParent, 1000);
-    });
-
-    window.addEventListener('resize', sendHeightToParent);
-
     // Existing Functions
     function clearExistingErrors() {
         document.querySelectorAll('.error-message').forEach(el => el.remove());
@@ -1126,7 +1113,7 @@
                         lastName: formData.get('studentLastName'),
                         birthDate: formData.get('studentBirthDate'),
                         gender: formData.get('gender'),
-                        school: schoolValue,
+                        school: mainstream,
                         yearLevel: formData.get('yearLevel'),
                         email: formData.get('studentEmail')
                     },
@@ -1158,12 +1145,9 @@
                         interests: formData.getAll('interests'),
                         notes: formData.get('notes')
                     },
-                    medicalInfo: formData.get('medicalInfo'),
+                    medicalInfo: formData.get('medicalInfo') || 'None',
                     photoConsent: formData.get('photoConsent'),
-                    consent: {
-                        informationAccuracy: formData.get('informationAccuracy') === 'on',
-                        dataSharing: formData.get('dataSharing') === 'on'
-                    },
+                    consent: "I agree to the terms and conditions.",
                     applicantName: formData.get('applicantName'),
                     mainstream: mainstream
                 };
