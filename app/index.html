@@ -1293,7 +1293,7 @@
         window.addEventListener("load", sendHeight);
         window.addEventListener("resize", sendHeight);
         setInterval(sendHeight, 500);
-        
+
         let schoolsList = [];
         const fetchSchools = async () => {
           try {
@@ -1318,40 +1318,6 @@
               content.style.maxHeight = content.scrollHeight + "px";
             }
           });
-        });
-
-        schoolDropdownInput.addEventListener("click", function () {
-          schoolDropdownList.style.display =
-            schoolDropdownList.style.display === "block" ? "none" : "block";
-          if (schoolDropdownList.style.display === "block")
-            schoolSearchInput.focus();
-          populateSchoolsList(schoolsList);
-        });
-
-        schoolSearchInput.addEventListener("input", function () {
-          const searchValue = this.value.toLowerCase();
-          const filtered = schoolsList.filter((school) =>
-            school.toLowerCase().includes(searchValue)
-          );
-          populateSchoolsList(filtered);
-        });
-
-        document.addEventListener("click", function (event) {
-          if (!event.target.closest(".school-dropdown-container")) {
-            schoolDropdownList.style.display = "none";
-          }
-        });
-
-        schoolSearchInput.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            const searchValue = this.value.trim();
-            if (schoolsList.includes(searchValue)) {
-              selectSchool(searchValue);
-            } else {
-              selectSchool("Other");
-            }
-          }
         });
 
         function populateSchoolsList(schools) {
@@ -1395,6 +1361,40 @@
 
         schoolSearchInput.addEventListener("input", function () {
           populateSchoolsList(schoolsList);
+        });
+
+        schoolDropdownInput.addEventListener("click", function () {
+          schoolDropdownList.style.display =
+            schoolDropdownList.style.display === "block" ? "none" : "block";
+          if (schoolDropdownList.style.display === "block")
+            schoolSearchInput.focus();
+          populateSchoolsList(schoolsList);
+        });
+
+        schoolSearchInput.addEventListener("input", function () {
+          const searchValue = this.value.toLowerCase();
+          const filtered = schoolsList.filter((school) =>
+            school.toLowerCase().includes(searchValue)
+          );
+          populateSchoolsList(filtered);
+        });
+
+        document.addEventListener("click", function (event) {
+          if (!event.target.closest(".school-dropdown-container")) {
+            schoolDropdownList.style.display = "none";
+          }
+        });
+
+        schoolSearchInput.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const searchValue = this.value.trim();
+            if (schoolsList.includes(searchValue)) {
+              selectSchool(searchValue);
+            } else {
+              selectSchool("Other");
+            }
+          }
         });
 
         const parent1NameInput = document.querySelector('[name="parent1Name"]');
