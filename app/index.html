@@ -3,460 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    .pas-form * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        line-height: 1.6;
-    }
+    <style>
+        /* Your existing styles */
+        .pas-form * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+        }
 
-    .pas-form {
-        background: #fcfcfc;
-        color: #333;
-        padding: 0.5em;
-        max-width: 100%;
-        overflow: auto;
-    }
+        .pas-form {
+            background: #fcfcfc;
+            color: #333;
+            padding: 0.5em;
+            max-width: 100%;
+            overflow: auto;
+        }
 
-    .pas-form h1 {
-        color: #981c1c;
-        margin-bottom: 1em;
-        font-size: 1.8em;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 0.8em;
-    }
+        .pas-form h1 {
+            color: #981c1c;
+            margin-bottom: 1em;
+            font-size: 1.8em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.8em;
+        }
 
-    .pas-form legend {
-        font-size: 1.2em;
-        padding: 0 0.8em;
-        font-weight: 700;
-        color: #981c1c;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
+        .pas-form legend {
+            font-size: 1.2em;
+            padding: 0 0.8em;
+            font-weight: 700;
+            color: #981c1c;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
 
-    .pas-form input,
-    .pas-form select,
-    .pas-form textarea {
-        font-size: 0.95em;
-        padding: 0.8em;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-    }
+        .pas-form input,
+        .pas-form select,
+        .pas-form textarea {
+            font-size: 0.95em;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
 
-    /* Add styles for the address suggestions dropdown */
-    .address-suggestions {
-        position: absolute;
-        width: 100%;
-        max-height: 200px;
-        overflow-y: auto;
-        background: white;
-        border: 1px solid #ccc;
-        border-top: none;
-        border-radius: 0 0 10px 10px;
-        z-index: 100;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none;
-    }
+        .address-suggestions {
+            position: absolute;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
 
-    .address-suggestions .suggestion-item {
-        padding: 10px 15px;
-        cursor: pointer;
-        border-bottom: 1px solid #eee;
-    }
+        .address-suggestions .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
 
-    .address-suggestions .suggestion-item:last-child {
-        border-bottom: none;
-    }
+        .address-suggestions .suggestion-item:last-child {
+            border-bottom: none;
+        }
 
-    .address-suggestions .suggestion-item:hover,
-    .address-suggestions .suggestion-item.active {
-        background-color: #f5f5f5;
-    }
+        .address-suggestions .suggestion-item:hover,
+        .address-suggestions .suggestion-item.active {
+            background-color: #f5f5f5;
+        }
 
-    .address-input-container {
-        position: relative;
-    }
+        .address-input-container {
+            position: relative;
+        }
 
-    .pas-form input:focus,
-    .pas-form select:focus,
-    .pas-form textarea:focus {
-        outline: none;
-        border-color: #981c1c;
-        box-shadow: 0 0 0 3px rgba(152, 28, 28,0.1);
-    }
+        .pas-form input:focus,
+        .pas-form select:focus,
+        .pas-form textarea:focus {
+            outline: none;
+            border-color: #981c1c;
+            box-shadow: 0 0 0 3px rgba(152, 28, 28,0.1);
+        }
 
-    .pas-form textarea {
-        resize: vertical;
-        min-height: 100px;
-    }
+        .pas-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
 
-    .pas-form .form-row {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5em;
-        margin-bottom: 1.2em;
-    }
-
-    .pas-form .form-row > .checkbox-group,
-    .pas-form .form-row > .radio-group,
-    .pas-form .form-row > .instruction-text,
-    .pas-form .form-row > textarea {
-        grid-column: 1 / -1;
-        width: 100%;
-    }
-
-    .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
-        grid-column: 1 / -1;
-    }
-
-    .pas-form fieldset {
-        margin: 1.5em 0;
-        padding: 1.5em;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        background: #f8f9fa;
-    }
-
-    .pas-form .inline-group {
-        display: flex;
-        gap: 1em;
-        margin: 1em 0;
-        flex-wrap: wrap;
-    }
-
-    .pas-form .inline-group .form-row {
-        flex: 1 1 100%;
-        min-width: 150px;
-    }
-
-    @media (max-width: 600px) {
-        .pas-form .inline-group {
+        .pas-form .form-row {
+            display: flex;
             flex-direction: column;
             gap: 0.5em;
+            margin-bottom: 1.2em;
+        }
+
+        .pas-form .form-row > .checkbox-group,
+        .pas-form .form-row > .radio-group,
+        .pas-form .form-row > .instruction-text,
+        .pas-form .form-row > textarea {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .pas-form .form-row > :not(label):not(:first-child):last-child:not(input):not(select) {
+            grid-column: 1 / -1;
+        }
+
+        .pas-form fieldset {
+            margin: 1.5em 0;
+            padding: 1.5em;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f8f9fa;
+        }
+
+        .pas-form .inline-group {
+            display: flex;
+            gap: 1em;
+            margin: 1em 0;
+            flex-wrap: wrap;
         }
 
         .pas-form .inline-group .form-row {
             flex: 1 1 100%;
+            min-width: 150px;
         }
-    }
 
-    .pas-form button {
-        background: #981c1c;
-        color: #fff;
-        padding: 1em 2em;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-size: 1em;
-        margin: 1.5em 0;
-        transition: all 0.3s ease;
-    }
+        @media (max-width: 600px) {
+            .pas-form .inline-group {
+                flex-direction: column;
+                gap: 0.5em;
+            }
 
-    .pas-form button:hover {
-        background: #003366;
-        transform: translateY(-1px);
-    }
+            .pas-form .inline-group .form-row {
+                flex: 1 1 100%;
+            }
+        }
 
-    .pas-form input[type="radio"],
-    .pas-form input[type="checkbox"] {
-        width: auto;
-        height: 1.1em;
-        margin-right: 0.5em;
-    }
+        .pas-form button {
+            background: #981c1c;
+            color: #fff;
+            padding: 1em 2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 1.5em 0;
+            transition: all 0.3s ease;
+        }
 
-    .pas-form .checkbox-group label,
-    .pas-form .radio-group label {
-        display: flex;
-        align-items: center;
-        margin: 0.5em 0;
-    }
+        .pas-form button:hover {
+            background: #003366;
+            transform: translateY(-1px);
+        }
 
-    .pas-form {
-        min-height: 100vh;
-        box-sizing: border-box;
-    }
+        .pas-form input[type="radio"],
+        .pas-form input[type="checkbox"] {
+            width: auto;
+            height: 1.1em;
+            margin-right: 0.5em;
+        }
 
-    .pas-form .instruction-text {
-        font-size: 0.9em;
-        margin: 1em 0;
-        padding: 1em;
-        border: 1px solid #eee;
-        border-radius: 4px;
-        background: #f8f9fa;
-        color: #555;
-    }
+        .pas-form .checkbox-group label,
+        .pas-form .radio-group label {
+            display: flex;
+            align-items: center;
+            margin: 0.5em 0;
+        }
 
-    .pas-form .required {
-        font-weight: 600;
-    }
+        .pas-form {
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-    .pas-form .required::after {
-        content: "*";
-        color: #e00;
-        margin-left: 4px;
-        display: inline-block;
-    }
+        .pas-form .instruction-text {
+            font-size: 0.9em;
+            margin: 1em 0;
+            padding: 1em;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: #f8f9fa;
+            color: #555;
+        }
 
-    .pas-form select {
-        appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 0.8em center;
-        background-size: 1em;
-    }
+        .pas-form .required {
+            font-weight: 600;
+        }
 
-    .pas-form h3 {
-        margin: 1.5em 0 1em;
-        color: #444;
-        font-size: 1.1em;
-        padding-top: 0.5em;
-        border-top: 1px solid #eee;
-    }
+        .pas-form .required::after {
+            content: "*";
+            color: #e00;
+            margin-left: 4px;
+            display: inline-block;
+        }
 
-    .error-highlight {
-        border-color: #ff0000 !important;
-        box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
-    }
+        .pas-form select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.8em center;
+            background-size: 1em;
+        }
 
-    .ques-description {
-        color: #666;
-    }
+        .pas-form h3 {
+            margin: 1.5em 0 1em;
+            color: #444;
+            font-size: 1.1em;
+            padding-top: 0.5em;
+            border-top: 1px solid #eee;
+        }
 
-    .error-message {
-        color: #ff0000;
-        font-size: 0.9em;
-        margin-top: 0.5em;
-        padding: 0.5em;
-        background-color: #fff0f0;
-        border: 1px solid #ffcccc;
-        border-radius: 4px;
-        display: inline-block;
-        width: 100%;
-        box-sizing: border-box;
-    }
+        .error-highlight {
+            border-color: #ff0000 !important;
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.1) !important;
+        }
 
-    .loading-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.9);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        z-index: 1000;
-    }
+        .ques-description {
+            color: #666;
+        }
 
-    .loading-spinner {
-        width: 80px;
-        height: 80px;
-        animation: spin 1s linear infinite;
-    }
+        .error-message {
+            color: #ff0000;
+            font-size: 0.9em;
+            margin-top: 0.5em;
+            padding: 0.5em;
+            background-color: #fff0f0;
+            border: 1px solid #ffcccc;
+            border-radius: 4px;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-    .loading-text {
-        margin-top: 1em;
-        color: #981c1c;
-        font-weight: bold;
-    }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        }
 
-    .pas-form datalist {
-        position: absolute;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 0 0 4px 4px;
-        width: 100%;
-    }
+        .loading-text {
+            margin-top: 1em;
+            color: #981c1c;
+            font-weight: bold;
+        }
 
-    .pas-form label {
-        font-weight: bold;
-    }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pas-form datalist {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 0 0 4px 4px;
+            width: 100%;
+        }
+
+        .pas-form label {
+            font-weight: bold;
+        }
+
         .enrollment-guidelines {
-        background-color: #f8f9fa;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        padding: 1.5em;
-        margin-bottom: 2em;
-        line-height: 1.6;
-    }
-    
-    .enrollment-guidelines h2 {
-        color: #981c1c;
-        margin-bottom: 0.5em;
-        font-size: 1.5em;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 0.5em;
-    }
-    
-    .enrollment-guidelines p {
-        margin-bottom: 1em;
-    }
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1.5em;
+            margin-bottom: 2em;
+            line-height: 1.6;
+        }
 
-    .faq-accordion {
-        margin-bottom: 2em;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-        background-color: transparent;
-    }
+        .enrollment-guidelines h2 {
+            color: #981c1c;
+            margin-bottom: 0.5em;
+            font-size: 1.5em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5em;
+        }
 
-    .faq-accordion h2 {
-        color: #333;
-        margin-bottom: 0;
-        font-size: 1.2em;
-        padding: 0.5em 1.2em;
-        border-bottom: 1px solid #ddd;
-        background-color: transparent;
-    }
+        .enrollment-guidelines p {
+            margin-bottom: 1em;
+        }
 
-    .accordion-item {
-        border-bottom: 1px solid #ddd;
-    }
+        .faq-accordion {
+            margin-bottom: 2em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: transparent;
+        }
 
-    .accordion-item:last-child {
-        border-bottom: none;
-    }
+        .faq-accordion h2 {
+            color: #333;
+            margin-bottom: 0;
+            font-size: 1.2em;
+            padding: 0.5em 1.2em;
+            border-bottom: 1px solid #ddd;
+            background-color: transparent;
+        }
 
-    .accordion-button {
-        background-color: #f8f9fa !important;
-        color: #333 !important;
-        cursor: pointer !important;
-        padding: 0.5em 1.3em !important;
-        width: 100% !important;
-        text-align: left !important;
-        border: 0.8 !important;
-        border-color: #f8f9fa !important;
-        border-bottom: 0.8px solid #f8f9fa !important;
-        outline: none !important;
-        transition: 0.2s !important;
-        font-weight: bold !important;
-        font-size: 0.9em !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        margin: 0 !important;
-    }
+        .accordion-item {
+            border-bottom: 1px solid #ddd;
+        }
 
-    .accordion-button:hover {
-        background-color: #fafafa;
-    }
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
 
-    .accordion-button.active {
-        background-color: #fff;
-        border-bottom: none;
-    }
+        .accordion-button {
+            background-color: #f8f9fa !important;
+            color: #333 !important;
+            cursor: pointer !important;
+            padding: 0.5em 1.3em !important;
+            width: 100% !important;
+            text-align: left !important;
+            border: 0.8 !important;
+            border-color: #f8f9fa !important;
+            border-bottom: 0.8px solid #f8f9fa !important;
+            outline: none !important;
+            transition: 0.2s !important;
+            font-weight: bold !important;
+            font-size: 0.9em !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin: 0 !important;
+        }
 
-    .accordion-button:after {
-        content: '+';
-        font-size: 1em;
-        color: #555;
-        margin-left: 5px;
-    }
+        .accordion-button:hover {
+            background-color: #fafafa;
+        }
 
-    .accordion-content {
-        padding: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-        background-color: transparent;
-        border-top: none;
-    }
+        .accordion-button.active {
+            background-color: #fff;
+            border-bottom: none;
+        }
 
-    .accordion-content-inner {
-        padding: 0.8em 1.2em;
-        color: #555;
-        font-size: 0.9em;
-        border-top: 1px solid #eee;
-    }
+        .accordion-button:after {
+            content: '+';
+            font-size: 1em;
+            color: #555;
+            margin-left: 5px;
+        }
 
-    .accordion-content p {
-        margin-bottom: 0.8em;
-    }
+        .accordion-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: transparent;
+            border-top: none;
+        }
 
-    .accordion-content p:last-child {
-        margin-bottom: 0;
-    }
+        .accordion-content-inner {
+            padding: 0.8em 1.2em;
+            color: #555;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+        }
 
-    /* School dropdown styles */
-    .school-dropdown-container {
-        position: relative;
-        width: 100%;
-    }
-    
-    .school-dropdown-input {
-        width: 100%;
-        padding: 0.8em;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        font-size: 0.95em;
-    }
-    
-    .school-dropdown-list {
-        position: absolute;
-        width: 100%;
-        max-height: 200px;
-        overflow-y: auto;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 0 0 10px 10px;
-        z-index: 100;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none;
-        margin-top: 2px;
-    }
-    
-    .school-dropdown-item {
-        padding: 10px 15px;
-        cursor: pointer;
-        border-bottom: 1px solid #eee;
-    }
-    
-    .school-dropdown-item:hover,
-    .school-dropdown-item.active {
-        background-color: #f5f5f5;
-    }
-    
-    .school-dropdown-item:last-child {
-        border-bottom: none;
-    }
-    
-    .school-search-box {
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        position: sticky;
-        top: 0;
-        background: white;
-    }
-    
-    .school-search-box input {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-    
-    .no-results {
-        padding: 15px;
-        text-align: center;
-        color: #666;
-    }
-</style>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete" async defer></script>
+        .accordion-content p {
+            margin-bottom: 0.8em;
+        }
+
+        .accordion-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .school-dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .school-dropdown-input {
+            width: 100%;
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .school-dropdown-list {
+            position: absolute;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 0 0 10px 10px;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 2px;
+        }
+
+        .school-dropdown-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .school-dropdown-item:hover,
+        .school-dropdown-item.active {
+            background-color: #f5f5f5;
+        }
+
+        .school-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .school-search-box {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+
+        .school-search-box input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .no-results {
+            padding: 15px;
+            text-align: center;
+            color: #666;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete" async defer></script>
 </head>
 <body>
     <div class="pas-form">
@@ -470,7 +470,7 @@
 
         <div class="faq-accordion">
             <h2 style="color: #981c1c;">Frequently Asked Questions</h2>
-            
+
             <div class="accordion-item">
                 <button class="accordion-button">What is the length of the program and attendance requirements?</button>
                 <div class="accordion-content">
@@ -481,7 +481,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="accordion-item">
                 <button class="accordion-button">How much do I need to pay?</button>
                 <div class="accordion-content">
@@ -491,7 +491,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="accordion-item">
                 <button class="accordion-button">Do you provide tahfiz (Quran memorisation) programs?</button>
                 <div class="accordion-content">
@@ -502,7 +502,7 @@
                 </div>
             </div>
         </div>
-        
+
         <form id="enrollmentForm">
             <fieldset>
                 <legend>Student Details</legend>
@@ -551,91 +551,121 @@
                     <label class="required">Other School Name</label>
                     <input type="text" name="otherSchoolName">
                 </div>
+            </fieldset>
+                <fieldset>
+                    <legend>Family Details</legend>
 
-                <h3>Parent/Carer 2</h3>
-                <div class="form-row">
-                    <label>Full Name</label>
-                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
-                    <input type="text" name="parent2Name">
-                </div>
-
-                <div class="form-row">
-                    <label>Relationship to Student</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
-                        <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
-                        <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
-                        <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
+                    <h3>Parent/Carer 1</h3>
+                    <div class="form-row">
+                        <label class="required">Full Name</label>
+                        <input type="text" name="parent1Name" required>
                     </div>
-                    <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
 
-                <div class="form-row">
-                    <label>Mobile</label>
-                    <input type="tel" name="parent2Phone">
-                </div>
-
-                <div class="form-row">
-                    <label>Email Address</label>
-                    <input type="email" name="parent2Email">
-                </div>
-
-                <h3>Address</h3>
-                <div class="form-row">
-                    <label class="required">Street Address</label>
-                    <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
-                    <div class="address-input-container">
-                        <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
-                        <div class="address-suggestions" id="addressSuggestions"></div>
+                    <div class="form-row">
+                        <label>Relationship to Student</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="parent1Relationship" value="Father"> Father</label>
+                            <label><input type="radio" name="parent1Relationship" value="Mother"> Mother</label>
+                            <label><input type="radio" name="parent1Relationship" value="Carer"> Carer</label>
+                            <label><input type="radio" name="parent1Relationship" value="Other"> Other</label>
+                        </div>
+                        <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
                     </div>
-                </div>
 
-                <div class="inline-group">
-                    <div class="form-row" style="flex:1">
-                        <label class="required">Suburb</label>
-                        <input type="text" name="suburb" required>
+                    <div class="form-row">
+                        <label class="required">Mobile</label>
+                        <input type="tel" name="parent1Phone" required>
                     </div>
-                    <div class="form-row" style="flex:1">
-                        <label class="required">State</label>
-                        <select name="state" required>
-                            <option>NSW</option>
-                            <option>VIC</option>
-                            <option>QLD</option>
-                            <option>SA</option>
-                            <option>WA</option>
-                            <option>TAS</option>
-                            <option>NT</option>
-                            <option>ACT</option>
-                        </select>
-                    </div>
-                    <div class="form-row" style="flex:1">
-                        <label class="required">Post Code</label>
-                        <input type="number" name="postCode" required>
-                    </div>
-                </div>
 
-                <h3>Emergency Contact</h3>
-                <div class="form-row">
-                    <label class="required">Full Name</label>
-                    <input type="text" name="emergencyContactName" required>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Relationship</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
-                        <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
+                    <div class="form-row">
+                        <label class="required">Email</label>
+                        <input type="email" name="parent1Email" required>
                     </div>
-                    <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
-                </div>
 
-                <div class="form-row">
-                    <label class="required">Emergency Phone Number</label>
-                    <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
-                    <input type="tel" name="emergencyContactPhone" required>
-                </div>
+                    <h3>Parent/Carer 2</h3>
+                    <div class="form-row">
+                        <label>Full Name</label>
+                        <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
+                        <input type="text" name="parent2Name">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Relationship to Student</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
+                            <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
+                            <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
+                            <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
+                        </div>
+                        <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Mobile</label>
+                        <input type="tel" name="parent2Phone">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Email Address</label>
+                        <input type="email" name="parent2Email">
+                    </div>
+
+                    <h3>Address</h3>
+                    <div class="form-row">
+                        <label class="required">Street Address</label>
+                        <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
+                        <div class="address-input-container">
+                            <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
+                            <div class="address-suggestions" id="addressSuggestions"></div>
+                        </div>
+                    </div>
+
+                    <div class="inline-group">
+                        <div class="form-row" style="flex:1">
+                            <label class="required">Suburb</label>
+                            <input type="text" name="suburb" required>
+                        </div>
+                        <div class="form-row" style="flex:1">
+                            <label class="required">State</label>
+                            <select name="state" required>
+                                <option>NSW</option>
+                                <option>VIC</option>
+                                <option>QLD</option>
+                                <option>SA</option>
+                                <option>WA</option>
+                                <option>TAS</option>
+                                <option>NT</option>
+                                <option>ACT</option>
+                            </select>
+                        </div>
+                        <div class="form-row" style="flex:1">
+                            <label class="required">Post Code</label>
+                            <input type="number" name="postCode" required>
+                        </div>
+                    </div>
+
+                    <h3>Emergency Contact</h3>
+                    <div class="form-row">
+                        <label class="required">Full Name</label>
+                        <input type="text" name="emergencyContactName" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="required">Relationship</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
+                            <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
+                            <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
+                            <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
+                        </div>
+                        <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
+                    </div>
+
+                    <div class="form-row">
+                        <label class="required">Emergency Phone Number</label>
+                        <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
+                        <input type="tel" name="emergencyContactPhone" required>
+                    </div>
             </fieldset>
 
             <!-- Program Details Section -->
@@ -711,7 +741,7 @@
                     </div>
                 </div>
             </fieldset>
-            
+
             <div style="text-align: center">
                 <button type="submit">Submit Application</button>
             </div>
@@ -731,8 +761,8 @@
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
-        <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg" 
-             alt="Loading..." 
+        <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg"
+             alt="Loading..."
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
@@ -769,7 +799,7 @@
         const suburbInput = document.querySelector('[name="suburb"]');
         const stateInput = document.querySelector('[name="state"]');
         const postCodeInput = document.querySelector('[name="postCode"]');
-        
+
         const stateMapping = {
             'New South Wales': 'NSW',
             'Victoria': 'VIC',
@@ -780,49 +810,49 @@
             'Northern Territory': 'NT',
             'Australian Capital Territory': 'ACT'
         };
-        
+
         const autocomplete = new google.maps.places.Autocomplete(addressInput, {
             componentRestrictions: { country: 'au' },
             types: ['address']
         });
-        
+
         addressInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && document.querySelector('.pac-container:visible')) {
                 e.preventDefault();
                 return false;
             }
         });
-        
+
         autocomplete.addListener('place_changed', function() {
             const place = autocomplete.getPlace();
             if (!place.geometry) return;
-            
+
             const originalValue = addressInput.value;
             const ausStyleRegex = /^(?:(?:unit|apt|apartment|suite|flat|level|#)\s*)?([0-9]+)\/([0-9]+)/i;
             const apartmentRegex = /(?:unit|apt|apartment|suite|flat|level|#)\s*\.?\s*[a-z0-9-]+/i;
             const ausMatch = ausStyleRegex.exec(originalValue);
             const apartmentMatch = ausMatch ? null : apartmentRegex.exec(originalValue);
             let apartmentInfo = '';
-            
+
             if (ausMatch && ausMatch[0]) {
                 apartmentInfo = ausMatch[0].trim();
             } else if (apartmentMatch && apartmentMatch[0]) {
                 apartmentInfo = apartmentMatch[0].trim();
             }
-            
+
             suburbInput.value = '';
             stateInput.value = 'NSW';
             postCodeInput.value = '';
-            
+
             let streetNumber = '';
             let streetName = '';
             let suburb = '';
             let state = '';
             let postCode = '';
-            
+
             for (const component of place.address_components) {
                 const type = component.types[0];
-                
+
                 switch(type) {
                     case 'street_number':
                         streetNumber = component.long_name;
@@ -843,12 +873,12 @@
                         break;
                 }
             }
-            
+
             if (apartmentInfo) {
                 if (ausMatch) {
-                    const unitPart = ausMatch[1]; 
-                    const streetPart = ausMatch[2]; 
-                    
+                    const unitPart = ausMatch[1];
+                    const streetPart = ausMatch[2];
+
                     if (streetPart === streetNumber) {
                         addressInput.value = originalValue;
                     } else {
@@ -861,18 +891,18 @@
             } else {
                 addressInput.value = streetNumber + ' ' + streetName;
             }
-            
+
             suburbInput.value = suburb;
-            
+
             if (state && stateMapping[state]) {
                 stateInput.value = stateMapping[state];
             } else if (state) {
                 stateInput.value = state;
             }
-            
+
             postCodeInput.value = postCode;
         });
-        
+
         addressInput.addEventListener('input', function(e) {
             if (!this.value || !suburbInput.value) return;
             this.dataset.lastValue = this.value;
@@ -882,7 +912,7 @@
     // School Dropdown Functionality
     document.addEventListener('DOMContentLoaded', function() {
         let schoolsList = [];
-        
+
         fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
             .then(response => response.json())
             .then(schools => {
@@ -890,11 +920,11 @@
                 populateSchoolsList(schoolsList);
             })
             .catch(error => console.error('Error fetching schools:', error));
-        
+
         function populateSchoolsList(schools) {
             const schoolListContainer = document.getElementById('schoolListContainer');
             schoolListContainer.innerHTML = '';
-            
+
             if (schools.length === 0) {
                 const otherItem = document.createElement('div');
                 otherItem.className = 'school-dropdown-item';
@@ -905,7 +935,7 @@
                 schoolListContainer.appendChild(otherItem);
                 return;
             }
-            
+
             schools.forEach(school => {
                 const item = document.createElement('div');
                 item.className = 'school-dropdown-item';
@@ -915,7 +945,7 @@
                 });
                 schoolListContainer.appendChild(item);
             });
-            
+
             const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
             if (searchValue && !schools.some(school => school.toLowerCase() === searchValue)) {
                 const otherItem = document.createElement('div');
@@ -927,28 +957,28 @@
                 schoolListContainer.appendChild(otherItem);
             }
         }
-        
+
         const schoolDropdownInput = document.querySelector('.school-dropdown-input');
         const schoolNameInput = document.querySelector('input[name="mainstreamSchoolName"]');
         const schoolSearchInput = document.getElementById('schoolSearchInput');
         const schoolDropdownList = document.querySelector('.school-dropdown-list');
         const otherSchoolContainer = document.getElementById('otherSchoolContainer');
-        
+
         function selectSchool(school) {
             schoolDropdownInput.value = school;
             schoolNameInput.value = school;
             schoolDropdownList.style.display = 'none';
-            
+
             if (school === 'Other') {
                 schoolDropdownInput.value = document.getElementById('schoolSearchInput').value || 'Enter School Name';
                 otherSchoolContainer.style.display = 'block';
-                
+
                 if (!document.querySelector('[name="otherSchoolName"]')) {
                     const label = document.createElement('label');
                     label.className = 'required';
                     label.textContent = 'School Name';
                     otherSchoolContainer.appendChild(label);
-                    
+
                     const input = document.createElement('input');
                     input.type = 'text';
                     input.name = 'otherSchoolName';
@@ -968,10 +998,10 @@
                     otherInput.value = '';
                 }
             }
-            
+
             schoolSearchInput.value = '';
         }
-        
+
         schoolDropdownInput.addEventListener('click', function() {
             if (schoolDropdownList.style.display === 'block') {
                 schoolDropdownList.style.display = 'none';
@@ -981,11 +1011,11 @@
                 populateSchoolsList(schoolsList);
             }
         });
-        
+
         schoolSearchInput.addEventListener('input', function() {
             const searchValue = this.value.toLowerCase();
             if (searchValue) {
-                const filteredSchools = schoolsList.filter(school => 
+                const filteredSchools = schoolsList.filter(school =>
                     school.toLowerCase().includes(searchValue)
                 );
                 populateSchoolsList(filteredSchools);
@@ -993,24 +1023,24 @@
                 populateSchoolsList(schoolsList);
             }
         });
-        
+
         document.addEventListener('click', function(event) {
-            const isClickInside = schoolDropdownInput.contains(event.target) || 
+            const isClickInside = schoolDropdownInput.contains(event.target) ||
                                 schoolDropdownList.contains(event.target);
-            
+
             if (!isClickInside && schoolDropdownList.style.display === 'block') {
                 schoolDropdownList.style.display = 'none';
             }
         });
-        
+
         schoolSearchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const searchValue = this.value.trim().toLowerCase();
-                const matchedSchool = schoolsList.find(school => 
+                const matchedSchool = schoolsList.find(school =>
                     school.toLowerCase() === searchValue
                 );
-                
+
                 if (matchedSchool) {
                     selectSchool(matchedSchool);
                 } else if (searchValue) {
@@ -1063,7 +1093,7 @@
                             field.parentNode.insertBefore(errorDiv, field.nextSibling);
                         }
                     });
-                    
+
                     if (firstErrorField) {
                         setTimeout(() => {
                             firstErrorField.scrollIntoView({
@@ -1073,7 +1103,7 @@
                             firstErrorField.focus();
                         }, 100);
                     }
-                    
+
                     document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
                     throw new Error('Validation errors');
                 }
@@ -1156,12 +1186,12 @@
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
                 submitButton.disabled = false;
-                
+
                 if (error.message === 'Validation errors') {
                     document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
                 } else {
                     console.error('Error:', error);
-                    document.getElementById('statusMessage').textContent = 
+                    document.getElementById('statusMessage').textContent =
                         'Error submitting form. Please try again or contact support.';
                 }
             } finally {
@@ -1170,7 +1200,30 @@
                 submitButton.disabled = false;
             }
         });
+
+        // Toggle "Other" relationship input fields
+        function toggleOtherRelationshipInput(radioGroupName, inputFieldName) {
+            const radioButtons = document.querySelectorAll(`input[name="${radioGroupName}"]`);
+            const otherInput = document.querySelector(`input[name="${inputFieldName}"]`);
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Other') {
+                        otherInput.style.display = 'block';
+                        otherInput.required = true;
+                    } else {
+                        otherInput.style.display = 'none';
+                        otherInput.required = false;
+                    }
+                });
+            });
+        }
+
+        // Initialize the toggles for both parent relationships
+        toggleOtherRelationshipInput('parent1Relationship', 'parent1OtherRelationship');
+        toggleOtherRelationshipInput('parent2Relationship', 'parent2OtherRelationship');
     });
+
     let lastHeight = 0;
     function sendHeight() {
         const height = document.body.scrollHeight;
