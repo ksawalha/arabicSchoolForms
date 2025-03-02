@@ -555,7 +555,7 @@
                 <fieldset>
                     <legend>Family Details</legend>
 
-                    <h3>Parent1/Carer</h3>
+                    <h3>Parent/Carer 1</h3>
                     <div class="form-row">
                         <label class="required">Full Name</label>
                         <input type="text" name="parent1Name" required>
@@ -582,7 +582,7 @@
                         <input type="email" name="parent1Email" required>
                     </div>
 
-                    <h3>Parent2</h3>
+                    <h3>Parent/Carer 2</h3>
                     <div class="form-row">
                         <label>Full Name</label>
                         <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
@@ -767,6 +767,27 @@
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
 <script>
+    // Height Reporting Functions
+    function sendHeightToParent() {
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ type: 'iframeHeight', height: height }, '*');
+    }
+
+    const observer = new MutationObserver(sendHeightToParent);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+    });
+
+    window.addEventListener('load', () => {
+        sendHeightToParent();
+        setTimeout(sendHeightToParent, 1000);
+    });
+
+    window.addEventListener('resize', sendHeightToParent);
+
     // Existing Functions
     function clearExistingErrors() {
         document.querySelectorAll('.error-message').forEach(el => el.remove());
