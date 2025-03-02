@@ -808,6 +808,23 @@
         
     }
 
+    schoolSearchInput.addEventListener('keydown', function(e) {
+         if (e.key === 'Enter') {
+             e.preventDefault();
+             const searchValue = this.value.trim().toLowerCase();
+               const matchedSchool = schoolsList.find(school =>
+                school.toLowerCase() === searchValue
+            );
+
+             if (matchedSchool) {
+                 selectSchool(matchedSchool);
+             } else if (searchValue) {
+                selectSchool('Other');
+               }
+            return false;
+         }
+       });
+    
     const accordionButtons = document.querySelectorAll('.accordion-button');
         accordionButtons.forEach(button => {
             button.addEventListener('click', function() {
