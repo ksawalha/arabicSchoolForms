@@ -765,8 +765,14 @@
                 <div class="form-row" id="applicantNameContainer" style="display: none;">
                     <label class="required">Applicant's Full Name</label>
                     <div class="radio-group" id="applicantNameGroup">
-                        <label><input type="radio" name="applicantName" value="" required checked> <span id="parent1NameOption"></span></label>
-                        <label id="parent2NameLabel" style="display: none;"><input type="radio" name="applicantName" value=""> <span id="parent2NameOption"></span></label>
+                        <label>
+                            <input type="radio" name="applicantName" id="parent1Radio" required checked> 
+                            <span id="parent1NameOption"></span>
+                        </label>
+                        <label id="parent2NameLabel" style="display: none;">
+                            <input type="radio" name="applicantName" id="parent2Radio"> 
+                            <span id="parent2NameOption"></span>
+                        </label>
                     </div>
                 </div>
             </fieldset>
@@ -944,21 +950,25 @@
         const parent1NameOption = document.getElementById('parent1NameOption');
         const parent2NameOption = document.getElementById('parent2NameOption');
         const parent2NameLabel = document.getElementById('parent2NameLabel');
+        const parent1Radio = document.getElementById('parent1Radio');
+        const parent2Radio = document.getElementById('parent2Radio');
     
         function updateApplicantVisibility() {
             const parent1Filled = parent1NameInput.value.trim() !== '';
             const parent2Filled = parent2NameInput.value.trim() !== '';
-            
-            if(parent1Filled || parent2Filled) {
+    
+            if (parent1Filled || parent2Filled) {
                 applicantContainer.style.display = 'block';
-                parent1NameOption.textContent = parent1NameInput.value.trim() || 'Parent 1';
-                parent2NameOption.textContent = parent2NameInput.value.trim() || 'Parent 2';
+                parent1Radio.value = parent1NameInput.value.trim() || 'Parent 1';
+                parent2Radio.value = parent2NameInput.value.trim() || 'Parent 2';
+                parent1NameOption.textContent = parent1Radio.value;
+                parent2NameOption.textContent = parent2Radio.value;
                 parent2NameLabel.style.display = parent2Filled ? 'block' : 'none';
             } else {
                 applicantContainer.style.display = 'none';
             }
         }
-    
+
         parent1NameInput.addEventListener('input', updateApplicantVisibility);
         parent2NameInput.addEventListener('input', updateApplicantVisibility);
 
