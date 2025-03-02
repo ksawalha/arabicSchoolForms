@@ -546,10 +546,22 @@
                         </div>
                     </div>
                 </div>
-
+                
+                <label>Does your child have any medical conditions or allergies we should be aware of?</label>
+                <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
+                <div class="form-row">
+                    <textarea name="medicalInfo" rows="4"></textarea>
+                </div>
+                
                 <div class="form-row" id="otherSchoolContainer" style="display: none;">
                     <label class="required">Other School Name</label>
                     <input type="text" name="otherSchoolName">
+                </div>
+
+                <div class="form-row">
+                    <label>Student School Email</label>
+                    <div class="ques-description">Provide your child's email address if they have one. This will be used to invite your child for any online activity.</div>
+                    <input type="email" name="studentEmail">
                 </div>
             </fieldset>
                 <fieldset>
@@ -558,6 +570,7 @@
                     <h3>Parent/Carer 1</h3>
                     <div class="form-row">
                         <label class="required">Full Name</label>
+                        <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
                         <input type="text" name="parent1Name" required>
                     </div>
 
@@ -703,16 +716,7 @@
                     <label>Notes/Suggestions/Comments</label>
                     <textarea name="notes" rows="4"></textarea>
                 </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Medical Status</legend>
-                <div class="form-row">
-                    <label>Medical Issues</label>
-                    <textarea  type="text" name="medicalInfo" value="None" rows="4"></textarea>
-                </div>
-            </fieldset>
-            
+            </fieldset>   
             <!-- Consent & Declaration Section -->
             <fieldset>
                 <legend>Consent and Declaration</legend>
