@@ -532,6 +532,21 @@
                 </div>
 
                 <div class="form-row">
+                    <label class="required">Mainstream School Name</label>
+                    <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
+                    <div class="school-dropdown-container">
+                        <input type="text" class="school-dropdown-input" readonly placeholder="Click to select a school">
+                        <input type="hidden" name="mainstreamSchoolName" required>
+                        <div class="school-dropdown-list">
+                            <div class="school-search-box">
+                                <input type="text" placeholder="Search for schools..." id="schoolSearchInput">
+                            </div>
+                            <div id="schoolListContainer"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
                     <label class="required">Year Level</label>
                     <select name="yearLevel" required>
                         <option value="">Select Year Level</option>
@@ -547,21 +562,6 @@
                         <option>Year 9</option>
                         <option>Year 10</option>
                     </select>
-                </div>
-
-                <div class="form-row">
-                    <label class="required">Mainstream School Name</label>
-                    <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
-                    <div class="school-dropdown-container">
-                        <input type="text" class="school-dropdown-input" readonly placeholder="Click to select a school">
-                        <input type="hidden" name="mainstreamSchoolName" required>
-                        <div class="school-dropdown-list">
-                            <div class="school-search-box">
-                                <input type="text" placeholder="Search for schools..." id="schoolSearchInput">
-                            </div>
-                            <div id="schoolListContainer"></div>
-                        </div>
-                    </div>
                 </div>
                 
                 <div class="form-row" id="otherSchoolContainer" style="display: none;">
@@ -807,6 +807,19 @@
         document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
         
     }
+
+    const accordionButtons = document.querySelectorAll('.accordion-button');
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
 
     function initAutocomplete() {
         const addressInput = document.querySelector('[name="streetName"]');
