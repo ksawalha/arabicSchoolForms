@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Your existing styles */
         .pas-form * {
             box-sizing: border-box;
             margin: 0;
@@ -533,6 +532,24 @@
                 </div>
 
                 <div class="form-row">
+                    <label class="required">Year Level</label>
+                    <select name="yearLevel" required>
+                        <option value="">Select Year Level</option>
+                        <option>Kindergarten</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Year 3</option>
+                        <option>Year 4</option>
+                        <option>Year 5</option>
+                        <option>Year 6</option>
+                        <option>Year 7</option>
+                        <option>Year 8</option>
+                        <option>Year 9</option>
+                        <option>Year 10</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
                     <label class="required">Mainstream School Name</label>
                     <div class="ques-description">Please provide details of the day school where the student is currently enrolled.</div>
                     <div class="school-dropdown-container">
@@ -547,15 +564,15 @@
                     </div>
                 </div>
                 
-                <label>Does your child have any medical conditions or allergies we should be aware of?</label>
-                <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
-                <div class="form-row">
-                    <textarea name="medicalInfo" rows="4"></textarea>
-                </div>
-                
                 <div class="form-row" id="otherSchoolContainer" style="display: none;">
                     <label class="required">Other School Name</label>
                     <input type="text" name="otherSchoolName">
+                </div>
+
+                <div class="form-row">
+                    <label>Does your child have any medical conditions or allergies we should be aware of?</label>
+                    <div class="ques-description">Please provide details of any medical conditions, allergies, or specific health needs your child has. This information will help us ensure their safety and well-being during school activities. If your child requires medication or special assistance, please include this in your response.</div>
+                    <textarea name="medicalInfo" rows="4"></textarea>
                 </div>
 
                 <div class="form-row">
@@ -564,124 +581,124 @@
                     <input type="email" name="studentEmail">
                 </div>
             </fieldset>
-                <fieldset>
-                    <legend>Family Details</legend>
 
-                    <h3>Parent/Carer 1</h3>
-                    <div class="form-row">
-                        <label class="required">Full Name</label>
-                        <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
-                        <input type="text" name="parent1Name" required>
-                    </div>
+            <fieldset>
+                <legend>Family Details</legend>
 
-                    <div class="form-row">
-                        <label>Relationship to Student</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="parent1Relationship" value="Father"> Father</label>
-                            <label><input type="radio" name="parent1Relationship" value="Mother"> Mother</label>
-                            <label><input type="radio" name="parent1Relationship" value="Carer"> Carer</label>
-                            <label><input type="radio" name="parent1Relationship" value="Other"> Other</label>
-                        </div>
-                        <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
-                    </div>
+                <h3>Parent/Carer 1</h3>
+                <div class="form-row">
+                    <label class="required">Full Name</label>
+                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact first.</div>
+                    <input type="text" name="parent1Name" required>
+                </div>
 
-                    <div class="form-row">
-                        <label class="required">Mobile</label>
-                        <input type="tel" name="parent1Phone" required>
+                <div class="form-row">
+                    <label>Relationship to Student</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="parent1Relationship" value="Father"> Father</label>
+                        <label><input type="radio" name="parent1Relationship" value="Mother"> Mother</label>
+                        <label><input type="radio" name="parent1Relationship" value="Carer"> Carer</label>
+                        <label><input type="radio" name="parent1Relationship" value="Other"> Other</label>
                     </div>
+                    <input type="text" name="parent1OtherRelationship" placeholder="Please specify" style="display: none;">
+                </div>
 
-                    <div class="form-row">
-                        <label class="required">Email</label>
-                        <input type="email" name="parent1Email" required>
-                    </div>
+                <div class="form-row">
+                    <label class="required">Mobile</label>
+                    <input type="tel" name="parent1Phone" required>
+                </div>
 
-                    <h3>Parent/Carer 2</h3>
-                    <div class="form-row">
-                        <label>Full Name</label>
-                        <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
-                        <input type="text" name="parent2Name">
-                    </div>
+                <div class="form-row">
+                    <label class="required">Email</label>
+                    <input type="email" name="parent1Email" required>
+                </div>
 
-                    <div class="form-row">
-                        <label>Relationship to Student</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
-                            <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
-                            <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
-                            <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
-                        </div>
-                        <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
-                    </div>
+                <h3>Parent/Carer 2</h3>
+                <div class="form-row">
+                    <label>Full Name</label>
+                    <div class="ques-description">Please provide the first and last name of the parent/carer to contact second.</div>
+                    <input type="text" name="parent2Name">
+                </div>
 
-                    <div class="form-row">
-                        <label>Mobile</label>
-                        <input type="tel" name="parent2Phone">
+                <div class="form-row">
+                    <label>Relationship to Student</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="parent2Relationship" value="Father"> Father</label>
+                        <label><input type="radio" name="parent2Relationship" value="Mother"> Mother</label>
+                        <label><input type="radio" name="parent2Relationship" value="Carer"> Carer</label>
+                        <label><input type="radio" name="parent2Relationship" value="Other"> Other</label>
                     </div>
+                    <input type="text" name="parent2OtherRelationship" placeholder="Please specify" style="display: none;">
+                </div>
 
-                    <div class="form-row">
-                        <label>Email Address</label>
-                        <input type="email" name="parent2Email">
-                    </div>
+                <div class="form-row">
+                    <label>Mobile</label>
+                    <input type="tel" name="parent2Phone">
+                </div>
 
-                    <h3>Address</h3>
-                    <div class="form-row">
-                        <label class="required">Street Address</label>
-                        <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
-                        <div class="address-input-container">
-                            <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
-                            <div class="address-suggestions" id="addressSuggestions"></div>
-                        </div>
-                    </div>
+                <div class="form-row">
+                    <label>Email Address</label>
+                    <input type="email" name="parent2Email">
+                </div>
 
-                    <div class="inline-group">
-                        <div class="form-row" style="flex:1">
-                            <label class="required">Suburb</label>
-                            <input type="text" name="suburb" required>
-                        </div>
-                        <div class="form-row" style="flex:1">
-                            <label class="required">State</label>
-                            <select name="state" required>
-                                <option>NSW</option>
-                                <option>VIC</option>
-                                <option>QLD</option>
-                                <option>SA</option>
-                                <option>WA</option>
-                                <option>TAS</option>
-                                <option>NT</option>
-                                <option>ACT</option>
-                            </select>
-                        </div>
-                        <div class="form-row" style="flex:1">
-                            <label class="required">Post Code</label>
-                            <input type="number" name="postCode" required>
-                        </div>
+                <h3>Address</h3>
+                <div class="form-row">
+                    <label class="required">Street Address</label>
+                    <div class="ques-description">Include apartment/unit number (if applicable), street number and street name</div>
+                    <div class="address-input-container">
+                        <input type="text" name="streetName" required placeholder="Start typing to search for address" autocomplete="off">
+                        <div class="address-suggestions" id="addressSuggestions"></div>
                     </div>
+                </div>
 
-                    <h3>Emergency Contact</h3>
-                    <div class="form-row">
-                        <label class="required">Full Name</label>
-                        <input type="text" name="emergencyContactName" required>
+                <div class="inline-group">
+                    <div class="form-row" style="flex:1">
+                        <label class="required">Suburb</label>
+                        <input type="text" name="suburb" required>
                     </div>
+                    <div class="form-row" style="flex:1">
+                        <label class="required">State</label>
+                        <select name="state" required>
+                            <option>NSW</option>
+                            <option>VIC</option>
+                            <option>QLD</option>
+                            <option>SA</option>
+                            <option>WA</option>
+                            <option>TAS</option>
+                            <option>NT</option>
+                            <option>ACT</option>
+                        </select>
+                    </div>
+                    <div class="form-row" style="flex:1">
+                        <label class="required">Post Code</label>
+                        <input type="number" name="postCode" required>
+                    </div>
+                </div>
 
-                    <div class="form-row">
-                        <label class="required">Relationship</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
-                            <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
-                            <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
-                            <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
-                        </div>
-                        <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
-                    </div>
+                <h3>Emergency Contact</h3>
+                <div class="form-row">
+                    <label class="required">Full Name</label>
+                    <input type="text" name="emergencyContactName" required>
+                </div>
 
-                    <div class="form-row">
-                        <label class="required">Emergency Phone Number</label>
-                        <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
-                        <input type="tel" name="emergencyContactPhone" required>
+                <div class="form-row">
+                    <label class="required">Relationship</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="emergencyContactRelationship" value="Neighbour" required> Neighbour</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Aunt" required> Aunt</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Uncle" required> Uncle</label>
+                        <label><input type="radio" name="emergencyContactRelationship" value="Other" required> Other</label>
                     </div>
+                    <input type="text" name="emergencyOtherRelationship" placeholder="Please specify" style="display: none;">
+                </div>
+
+                <div class="form-row">
+                    <label class="required">Emergency Phone Number</label>
+                    <div style="margin: 2px;">Please provide a different number than the one provided above.</div>
+                    <input type="tel" name="emergencyContactPhone" required>
+                </div>
             </fieldset>
 
-            <!-- Program Details Section -->
             <fieldset>
                 <legend>Program Details</legend>
                 <div class="instruction-text">
@@ -717,7 +734,7 @@
                     <textarea name="notes" rows="4"></textarea>
                 </div>
             </fieldset>   
-            <!-- Consent & Declaration Section -->
+
             <fieldset>
                 <legend>Consent and Declaration</legend>
                 <div class="instruction-text">
@@ -771,15 +788,14 @@
         <div id="statusMessage" style="text-align: center; margin-top: 1em;"></div>
     </div>
 
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <img src="https://arabicschool.blob.core.windows.net/arabicschool/statics/loading.svg"
              alt="Loading..."
              class="loading-spinner">
         <div class="loading-text">Submitting your application... Please wait</div>
     </div>
+
 <script>
-    // Existing Functions
     function clearExistingErrors() {
         document.querySelectorAll('.error-message').forEach(el => el.remove());
         document.querySelectorAll('.error-highlight').forEach(el => el.classList.remove('error-highlight'));
@@ -790,7 +806,6 @@
         const suburbInput = document.querySelector('[name="suburb"]');
         const stateInput = document.querySelector('[name="state"]');
         const postCodeInput = document.querySelector('[name="postCode"]');
-
         const stateMapping = {
             'New South Wales': 'NSW',
             'Victoria': 'VIC',
@@ -843,7 +858,6 @@
 
             for (const component of place.address_components) {
                 const type = component.types[0];
-
                 switch(type) {
                     case 'street_number':
                         streetNumber = component.long_name;
@@ -869,12 +883,7 @@
                 if (ausMatch) {
                     const unitPart = ausMatch[1];
                     const streetPart = ausMatch[2];
-
-                    if (streetPart === streetNumber) {
-                        addressInput.value = originalValue;
-                    } else {
-                        addressInput.value = `${unitPart}/${streetNumber} ${streetName}`;
-                    }
+                    addressInput.value = streetPart === streetNumber ? originalValue : `${unitPart}/${streetNumber} ${streetName}`;
                 } else {
                     const separator = apartmentInfo.endsWith(',') ? ' ' : ', ';
                     addressInput.value = apartmentInfo + separator + streetNumber + ' ' + streetName;
@@ -884,13 +893,7 @@
             }
 
             suburbInput.value = suburb;
-
-            if (state && stateMapping[state]) {
-                stateInput.value = stateMapping[state];
-            } else if (state) {
-                stateInput.value = state;
-            }
-
+            stateInput.value = stateMapping[state] || state;
             postCodeInput.value = postCode;
         });
 
@@ -900,29 +903,28 @@
         });
     }
 
-    // School Dropdown Functionality
     document.addEventListener('DOMContentLoaded', function() {
         let schoolsList = [];
-
-        fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==')
-            .then(response => response.json())
-            .then(schools => {
-                schoolsList = schools;
+        const fetchSchools = async () => {
+            try {
+                const response = await fetch('https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw==');
+                schoolsList = await response.json();
                 populateSchoolsList(schoolsList);
-            })
-            .catch(error => console.error('Error fetching schools:', error));
+            } catch (error) {
+                console.error('Error fetching schools:', error);
+            }
+        };
 
         function populateSchoolsList(schools) {
             const schoolListContainer = document.getElementById('schoolListContainer');
             schoolListContainer.innerHTML = '';
+            const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
 
-            if (schools.length === 0) {
+            if (schools.length === 0 || (searchValue && !schools.some(school => school.toLowerCase() === searchValue))) {
                 const otherItem = document.createElement('div');
                 otherItem.className = 'school-dropdown-item';
                 otherItem.textContent = 'Enter School Name';
-                otherItem.addEventListener('click', function() {
-                    selectSchool('Other');
-                });
+                otherItem.addEventListener('click', () => selectSchool('Other'));
                 schoolListContainer.appendChild(otherItem);
                 return;
             }
@@ -931,29 +933,17 @@
                 const item = document.createElement('div');
                 item.className = 'school-dropdown-item';
                 item.textContent = school;
-                item.addEventListener('click', function() {
-                    selectSchool(school);
-                });
+                item.addEventListener('click', () => selectSchool(school));
                 schoolListContainer.appendChild(item);
             });
-
-            const searchValue = document.getElementById('schoolSearchInput').value.trim().toLowerCase();
-            if (searchValue && !schools.some(school => school.toLowerCase() === searchValue)) {
-                const otherItem = document.createElement('div');
-                otherItem.className = 'school-dropdown-item';
-                otherItem.textContent = 'Enter School Name';
-                otherItem.addEventListener('click', function() {
-                    selectSchool('Other');
-                });
-                schoolListContainer.appendChild(otherItem);
-            }
         }
 
         const schoolDropdownInput = document.querySelector('.school-dropdown-input');
-        const schoolNameInput = document.querySelector('input[name="mainstreamSchoolName"]');
+        const schoolNameInput = document.querySelector('[name="mainstreamSchoolName"]');
         const schoolSearchInput = document.getElementById('schoolSearchInput');
         const schoolDropdownList = document.querySelector('.school-dropdown-list');
         const otherSchoolContainer = document.getElementById('otherSchoolContainer');
+        const otherSchoolInput = document.querySelector('[name="otherSchoolName"]');
 
         function selectSchool(school) {
             schoolDropdownInput.value = school;
@@ -961,65 +951,30 @@
             schoolDropdownList.style.display = 'none';
 
             if (school === 'Other') {
-                schoolDropdownInput.value = document.getElementById('schoolSearchInput').value || 'Enter School Name';
                 otherSchoolContainer.style.display = 'block';
-
-                if (!document.querySelector('[name="otherSchoolName"]')) {
-                    const label = document.createElement('label');
-                    label.className = 'required';
-                    label.textContent = 'School Name';
-                    otherSchoolContainer.appendChild(label);
-
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.name = 'otherSchoolName';
-                    input.required = true;
-                    input.value = document.getElementById('schoolSearchInput').value;
-                    otherSchoolContainer.appendChild(input);
-                } else {
-                    const otherInput = document.querySelector('[name="otherSchoolName"]');
-                    otherInput.required = true;
-                    otherInput.value = document.getElementById('schoolSearchInput').value;
-                }
+                otherSchoolInput.required = true;
+                schoolDropdownInput.value = 'Other - Please specify below';
             } else {
                 otherSchoolContainer.style.display = 'none';
-                const otherInput = document.querySelector('[name="otherSchoolName"]');
-                if (otherInput) {
-                    otherInput.required = false;
-                    otherInput.value = '';
-                }
+                otherSchoolInput.required = false;
+                otherSchoolInput.value = '';
             }
-
-            schoolSearchInput.value = '';
         }
 
         schoolDropdownInput.addEventListener('click', function() {
-            if (schoolDropdownList.style.display === 'block') {
-                schoolDropdownList.style.display = 'none';
-            } else {
-                schoolDropdownList.style.display = 'block';
-                schoolSearchInput.focus();
-                populateSchoolsList(schoolsList);
-            }
+            schoolDropdownList.style.display = schoolDropdownList.style.display === 'block' ? 'none' : 'block';
+            if (schoolDropdownList.style.display === 'block') schoolSearchInput.focus();
+            populateSchoolsList(schoolsList);
         });
 
         schoolSearchInput.addEventListener('input', function() {
             const searchValue = this.value.toLowerCase();
-            if (searchValue) {
-                const filteredSchools = schoolsList.filter(school =>
-                    school.toLowerCase().includes(searchValue)
-                );
-                populateSchoolsList(filteredSchools);
-            } else {
-                populateSchoolsList(schoolsList);
-            }
+            const filtered = schoolsList.filter(school => school.toLowerCase().includes(searchValue));
+            populateSchoolsList(filtered);
         });
 
         document.addEventListener('click', function(event) {
-            const isClickInside = schoolDropdownInput.contains(event.target) ||
-                                schoolDropdownList.contains(event.target);
-
-            if (!isClickInside && schoolDropdownList.style.display === 'block') {
+            if (!event.target.closest('.school-dropdown-container')) {
                 schoolDropdownList.style.display = 'none';
             }
         });
@@ -1027,46 +982,110 @@
         schoolSearchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const searchValue = this.value.trim().toLowerCase();
-                const matchedSchool = schoolsList.find(school =>
-                    school.toLowerCase() === searchValue
-                );
-
-                if (matchedSchool) {
-                    selectSchool(matchedSchool);
-                } else if (searchValue) {
+                const searchValue = this.value.trim();
+                if (schoolsList.includes(searchValue)) {
+                    selectSchool(searchValue);
+                } else {
                     selectSchool('Other');
                 }
-                return false;
             }
         });
 
-        // Accordion Functionality
-        const accordionButtons = document.querySelectorAll('.accordion-button');
-        accordionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const content = this.nextElementSibling;
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
-                } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                }
-            });
-        });
+        const initializeRelationshipFields = () => {
+            const handleRelationshipChange = (radioName, textFieldName) => {
+                const radios = document.querySelectorAll(`input[name="${radioName}"]`);
+                const textField = document.querySelector(`input[name="${textFieldName}"]`);
 
-        // Form Submission Handler
+                radios.forEach(radio => {
+                    radio.addEventListener('change', () => {
+                        if (radio.value === 'Other') {
+                            textField.style.display = 'block';
+                            textField.required = true;
+                        } else {
+                            textField.style.display = 'none';
+                            textField.required = false;
+                            textField.value = '';
+                        }
+                    });
+                });
+            };
+
+            handleRelationshipChange('parent1Relationship', 'parent1OtherRelationship');
+            handleRelationshipChange('parent2Relationship', 'parent2OtherRelationship');
+            handleRelationshipChange('emergencyContactRelationship', 'emergencyOtherRelationship');
+        };
+
+        const validateForm = (formData) => {
+            const errors = [];
+            const validateOtherField = (radioValue, otherValue, fieldName) => {
+                if (radioValue === 'Other' && !otherValue?.trim()) {
+                    errors.push({ field: fieldName, message: 'Please specify this field' });
+                }
+            };
+
+            if (formData.get('mainstreamSchoolName') === 'Other' && !formData.get('otherSchoolName')?.trim()) {
+                errors.push({ field: 'otherSchoolName', message: 'Please specify school name' });
+            }
+
+            validateOtherField(formData.get('parent1Relationship'), formData.get('parent1OtherRelationship'), 'parent1OtherRelationship');
+            validateOtherField(formData.get('parent2Relationship'), formData.get('parent2OtherRelationship'), 'parent2OtherRelationship');
+            validateOtherField(formData.get('emergencyContactRelationship'), formData.get('emergencyOtherRelationship'), 'emergencyOtherRelationship');
+
+            const parent1 = {
+                name: formData.get('parent1Name')?.trim().toLowerCase(),
+                phone: formData.get('parent1Phone')?.trim().toLowerCase(),
+                email: formData.get('parent1Email')?.trim().toLowerCase()
+            };
+            const parent2 = {
+                name: formData.get('parent2Name')?.trim().toLowerCase(),
+                phone: formData.get('parent2Phone')?.trim().toLowerCase(),
+                email: formData.get('parent2Email')?.trim().toLowerCase()
+            };
+            const emergency = {
+                name: formData.get('emergencyContactName')?.trim().toLowerCase(),
+                phone: formData.get('emergencyContactPhone')?.trim().toLowerCase()
+            };
+
+            const checkUniqueness = (source, sourceType, targets) => {
+                const fields = sourceType === 'emergency' ? ['name', 'phone'] : ['name', 'phone', 'email'];
+                fields.forEach(field => {
+                    const sourceValue = source[field];
+                    if (!sourceValue) return;
+                    targets.forEach(target => {
+                        Object.entries(target).forEach(([targetField, targetValue]) => {
+                            if (sourceValue === targetValue && targetValue) {
+                                errors.push({
+                                    field: `${sourceType}${field.charAt(0).toUpperCase() + field.slice(1)}`,
+                                    message: `${sourceType.replace('parent', 'Parent ')} ${field} cannot match ${target.relationType} ${targetField}`
+                                });
+                            }
+                        });
+                    });
+                });
+            };
+
+            checkUniqueness(parent1, 'parent1', [{ ...parent2, relationType: 'Parent 2' }, { ...emergency, relationType: 'Emergency Contact' }]);
+            if (parent2.name) checkUniqueness(parent2, 'parent2', [{ ...parent1, relationType: 'Parent 1' }, { ...emergency, relationType: 'Emergency Contact' }]);
+            checkUniqueness(emergency, 'emergency', [{ ...parent1, relationType: 'Parent 1' }, { ...parent2, relationType: 'Parent 2' }]);
+
+            return errors;
+        };
+
         document.getElementById('enrollmentForm').addEventListener('submit', async function(event) {
             event.preventDefault();
-            const submitButton = event.target.querySelector('button[type="submit"]');
+            const form = event.target;
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             const loadingOverlay = document.getElementById('loadingOverlay');
             loadingOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            submitButton.disabled = true;
             clearExistingErrors();
 
             try {
-                const formData = new FormData(event.target);
+                const formData = new FormData(form);
                 const errors = validateForm(formData);
 
                 if (errors.length > 0) {
@@ -1074,9 +1093,7 @@
                     errors.forEach(error => {
                         const field = document.querySelector(`[name="${error.field}"]`);
                         if (field) {
-                            if (!firstErrorField) {
-                                firstErrorField = field;
-                            }
+                            if (!firstErrorField) firstErrorField = field;
                             field.classList.add('error-highlight');
                             const errorDiv = document.createElement('div');
                             errorDiv.className = 'error-message';
@@ -1087,29 +1104,22 @@
 
                     if (firstErrorField) {
                         setTimeout(() => {
-                            firstErrorField.scrollIntoView({
-                                behavior: 'smooth',
-                                block: 'center'
-                            });
+                            firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
                             firstErrorField.focus();
                         }, 100);
                     }
 
-                    document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
                     throw new Error('Validation errors');
                 }
 
-                const schoolValue = formData.get('mainstreamSchoolName');
-                const otherSchoolValue = formData.get('otherSchoolName');
-                const mainstream = schoolValue === 'Other' ? otherSchoolValue : schoolValue;
-
-                const parent1Relationship = formData.get('parent1Relationship') === 'Other' ? formData.get('parent1OtherRelationship') : formData.get('parent1Relationship');
-                const parent2Relationship = formData.get('parent2Relationship') === 'Other' ? formData.get('parent2OtherRelationship') : formData.get('parent2Relationship');
-                const emergencyRelationship = formData.get('emergencyContactRelationship') === 'Other' ? formData.get('emergencyOtherRelationship') : formData.get('emergencyContactRelationship');
-
-                const unitNumber = formData.get('unitNumber');
-                const streetName = formData.get('streetName');
-                let streetAddress = unitNumber ? `${unitNumber}, ${streetName}` : streetName;
+                const buildRelationshipData = (prefix) => ({
+                    name: formData.get(`${prefix}Name`),
+                    relationship: formData.get(`${prefix}Relationship`) === 'Other' 
+                        ? formData.get(`${prefix}OtherRelationship`) 
+                        : formData.get(`${prefix}Relationship`),
+                    phone: formData.get(`${prefix}Phone`),
+                    email: formData.get(`${prefix}Email`)
+                });
 
                 const data = {
                     student: {
@@ -1117,22 +1127,14 @@
                         lastName: formData.get('studentLastName'),
                         birthDate: formData.get('studentBirthDate'),
                         gender: formData.get('gender'),
-                        school: mainstream,
                         yearLevel: formData.get('yearLevel'),
+                        school: formData.get('mainstreamSchoolName') === 'Other' 
+                            ? formData.get('otherSchoolName') 
+                            : formData.get('mainstreamSchoolName'),
                         email: formData.get('studentEmail')
                     },
-                    parent1: {
-                        name: formData.get('parent1Name'),
-                        relationship: parent1Relationship,
-                        phone: formData.get('parent1Phone'),
-                        email: formData.get('parent1Email')
-                    },
-                    parent2: {
-                        name: formData.get('parent2Name'),
-                        relationship: parent2Relationship,
-                        phone: formData.get('parent2Phone'),
-                        email: formData.get('parent2Email')
-                    },
+                    parent1: buildRelationshipData('parent1'),
+                    parent2: buildRelationshipData('parent2'),
                     address: {
                         street: formData.get('streetName'),
                         suburb: formData.get('suburb'),
@@ -1141,7 +1143,9 @@
                     },
                     emergencyContact: {
                         name: formData.get('emergencyContactName'),
-                        relationship: emergencyRelationship,
+                        relationship: formData.get('emergencyContactRelationship') === 'Other' 
+                            ? formData.get('emergencyOtherRelationship') 
+                            : formData.get('emergencyContactRelationship'),
                         phone: formData.get('emergencyContactPhone')
                     },
                     programDetails: {
@@ -1152,134 +1156,33 @@
                     medicalInfo: formData.get('medicalInfo') || 'None',
                     photoConsent: formData.get('photoConsent'),
                     consent: "I agree to the terms and conditions.",
-                    applicantName: formData.get('applicantName'),
-                    mainstream: mainstream
+                    applicantName: formData.get('applicantName')
                 };
 
-                console.log(JSON.stringify(data));
                 const response = await fetch('https://arabicschool.azurewebsites.net/api/student?code=jBJmpUad8UZ03f6ftJkX6l55TrxIFGjvp2khZuZw1Rq6AzFuM_nJ7g==', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                if (!response.ok) throw new Error('Network response was not ok');
-
+                if (!response.ok) throw new Error('Network error');
                 document.getElementById('enrollmentForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
-                document.getElementById('statusMessage').textContent = '';
             } catch (error) {
-                loadingOverlay.style.display = 'none';
-                document.body.style.overflow = '';
-                submitButton.disabled = false;
-
-                if (error.message === 'Validation errors') {
-                    document.getElementById('statusMessage').textContent = 'Please correct the highlighted errors.';
-                } else {
-                    console.error('Error:', error);
-                    document.getElementById('statusMessage').textContent =
-                        'Error submitting form. Please try again or contact support.';
-                }
+                document.getElementById('statusMessage').textContent = error.message === 'Validation errors' 
+                    ? 'Please correct the highlighted errors.' 
+                    : 'Error submitting form. Please try again.';
             } finally {
                 loadingOverlay.style.display = 'none';
                 document.body.style.overflow = '';
-                submitButton.disabled = false;
             }
         });
 
-        // Toggle "Other" relationship input fields
-        function toggleOtherRelationshipInput(radioGroupName, inputFieldName) {
-            const radioButtons = document.querySelectorAll(`input[name="${radioGroupName}"]`);
-            const otherInput = document.querySelector(`input[name="${inputFieldName}"]`);
-
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'Other') {
-                        otherInput.style.display = 'block';
-                        otherInput.required = true;
-                    } else {
-                        otherInput.style.display = 'none';
-                        otherInput.required = false;
-                    }
-                });
-            });
-        }
-
-        // Initialize the toggles for both parent relationships
-        toggleOtherRelationshipInput('parent1Relationship', 'parent1OtherRelationship');
-        toggleOtherRelationshipInput('parent2Relationship', 'parent2OtherRelationship');
-        toggleOtherRelationshipInput('emergencyContactRelationship', 'emergencyOtherRelationship');
+        initializeRelationshipFields();
+        fetchSchools();
+        initAutocomplete();
     });
 
-    function validateForm(formData) {
-        const errors = [];
-
-        // Get trimmed values
-        const getValue = (field) => formData.get(field) ? formData.get(field).trim().toLowerCase() : '';
-        
-        const parent1 = {
-            name: getValue('parent1Name'),
-            phone: getValue('parent1Phone'),
-            email: getValue('parent1Email')
-        };
-
-        const parent2 = {
-            name: getValue('parent2Name'),
-            phone: getValue('parent2Phone'),
-            email: getValue('parent2Email')
-        };
-
-        const emergency = {
-            name: getValue('emergencyContactName'),
-            phone: getValue('emergencyContactPhone')
-        };
-
-        // Check Parent 1 uniqueness
-        checkUniqueness(parent1, 'parent1', [parent2, emergency], errors);
-
-        // Check Parent 2 uniqueness if parent2 name is provided
-        if (parent2.name) {
-            checkUniqueness(parent2, 'parent2', [parent1, emergency], errors);
-        }
-
-        // Check Emergency uniqueness
-        checkUniqueness(emergency, 'emergency', [parent1, parent2], errors);
-
-        return errors;
-    }
-
-    // Helper function to check uniqueness
-    function checkUniqueness(source, sourceType, targets, errors) {
-        const fields = sourceType === 'emergency' ? ['name', 'phone'] : ['name', 'phone', 'email'];
-        
-        fields.forEach(field => {
-            const sourceValue = source[field];
-            if (!sourceValue) return;
-
-            targets.forEach((target, index) => {
-                const targetType = index === 0 ? 
-                    (sourceType === 'parent1' ? 'parent2' : 'parent1') : 
-                    'emergency';
-                    
-                Object.entries(target).forEach(([targetField, targetValue]) => {
-                    if (sourceValue === targetValue && targetValue) {
-                        errors.push({
-                            field: `${sourceType}${field.charAt(0).toUpperCase() + field.slice(1)}`,
-                            message: `${formatSourceType(sourceType)} ${field} cannot match ${formatSourceType(targetType)} ${targetField}`
-                        });
-                    }
-                });
-            });
-        });
-    }
-
-    // Format type for error messages
-    function formatSourceType(type) {
-        return type === 'parent1' ? 'Parent 1' : 
-               type === 'parent2' ? 'Parent 2' : 'Emergency Contact';
-    }
     let lastHeight = 0;
     function sendHeight() {
         const height = document.body.scrollHeight;
