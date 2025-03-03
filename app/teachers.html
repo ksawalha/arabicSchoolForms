@@ -334,7 +334,6 @@
          }
          }
       </style>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete" async defer></script>
    </head>
    <body>
       <div class="pas-form">
@@ -799,6 +798,19 @@
                  postCodeInput.value = postCode;
              });
          }
+
+        function loadGoogleMaps() {
+            const script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDLwIOHwQuG-RA0xU2bBna-P1A_W9JaHU8&libraries=places&callback=initAutocomplete';
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+        if (document.readyState === 'complete') {
+            loadGoogleMaps();
+        } else {
+            window.addEventListener('load', loadGoogleMaps);
+        }
          
          document.addEventListener('DOMContentLoaded', function() {
              const wwccDetails = document.getElementById('wwccDetails');
