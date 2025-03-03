@@ -1704,8 +1704,8 @@
               if (!response.ok) throw new Error("Network error");
               document.getElementById("enrollmentForm").style.display = "none";
               document.getElementById("statusMessage").textContent = "";
-              document.getElementById("thankYouMessage").style.display =
-                "block";
+              document.getElementById("thankYouMessage").style.display ="block";
+              window.location.href = "https://arabicschool.org.au/thank-you";
             } catch (error) {
               document.getElementById("statusMessage").textContent =
                 error.message === "Validation errors"
