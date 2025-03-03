@@ -1668,7 +1668,7 @@
                 parent1: buildRelationshipData("parent1"),
                 parent2: buildRelationshipData("parent2"),
                 address: {
-                  street: formData.get("streetName"),
+                  street: formData.get("streetName").split(',')[0].trim(),
                   suburb: formData.get("suburb"),
                   state: formData.get("state"),
                   postCode: formData.get("postCode"),
