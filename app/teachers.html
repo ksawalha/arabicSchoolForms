@@ -916,10 +916,8 @@
                      const formData = new FormData(event.target);
          
                      const streetNameInput = document.querySelector('[name="streetName"]');
-                     const streetNameValue = streetNameInput.value;
-                    
+                     let streetNameValue = streetNameInput.value;
                      streetNameValue = streetNameValue.split(',')[0].trim();
-
                      formData.set('streetName', streetNameValue);
          
                      const response = await fetch('https://arabicschool.azurewebsites.net/api/teacher?code=BoMZp_wXeDIG-DW-RW76ITrIMGhw37THxGLzFx10doskAzFuEb0n3w==', {
