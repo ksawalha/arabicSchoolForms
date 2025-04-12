@@ -357,26 +357,6 @@
                   <p>Date of birth is required for us to meet our obligations under the Child Protection (Working With Children) Act 2012.</p>
                   <input type="date" name="teacherBirthDate" required>
                </div>
-               <div class="form-row">
-                  <label class="required">Gender</label>
-                  <div class="checkbox-group">
-                     <label><input type="radio" name="gender" value="male" required> Male</label>
-                     <label><input type="radio" name="gender" value="female" required> Female</label>
-                  </div>
-               </div>
-               <div class="form-row">
-                  <label class="required">Mother Tongue</label>
-                  <p>What language did you first speak as a child?</p>
-                  <div class="checkbox-group">
-                     <label><input type="radio" name="motherTongue" value="Arabic" required> Arabic</label>
-                     <label><input type="radio" name="motherTongue" value="English" required> English</label>
-                     <label><input type="radio" name="motherTongue" value="Other" required> Other</label>
-                  </div>
-                  <div id="otherMotherTongueContainer" style="display: none; margin-top: 10px;">
-                     <label class="required">Please specify</label>
-                     <input type="text" name="otherMotherTongue">
-                  </div>
-               </div>
             </fieldset>
             <fieldset>
                <legend>Contact Details</legend>
@@ -640,6 +620,29 @@
                            </div>
                         </div>
                      </div>
+                  </div>
+               </div>
+            </fieldset>
+            <fieldset>
+               <legend>Diversity Information</legend>
+               <div class="form-row">
+                  <label class="required">Gender</label>
+                  <div class="checkbox-group">
+                     <label><input type="radio" name="gender" value="male" required> Male</label>
+                     <label><input type="radio" name="gender" value="female" required> Female</label>
+                  </div>
+               </div>
+               <div class="form-row">
+                  <label class="required">Mother Tongue</label>
+                  <p>What language did you first speak as a child?</p>
+                  <div class="checkbox-group">
+                     <label><input type="radio" name="motherTongue" value="Arabic" required> Arabic</label>
+                     <label><input type="radio" name="motherTongue" value="English" required> English</label>
+                     <label><input type="radio" name="motherTongue" value="Other" required> Other</label>
+                  </div>
+                  <div id="otherMotherTongueContainer" style="display: none; margin-top: 10px;">
+                     <label class="required">Please specify</label>
+                     <input type="text" name="otherMotherTongue">
                   </div>
                </div>
             </fieldset>
