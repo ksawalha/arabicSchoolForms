@@ -770,30 +770,39 @@
           <div class="form-row">
             <label>Full Name</label>
             <div class="ques-description">
-              Please provide the first and last name of the parent/carer to contact second.
+              Please provide the first and last name of the parent/carer to
+              contact second.
             </div>
-            <input type="text" name="parent2Name" id="parent2NameInput" />
+            <input type="text" name="parent2Name" />
           </div>
-    
+
           <div class="form-row">
             <label>Relationship to Student</label>
             <div class="radio-group">
-              <label>
-                <input type="radio" name="parent2Relationship" value="Father" />
-                Father
-              </label>
-              <label>
-                <input type="radio" name="parent2Relationship" value="Mother" />
-                Mother
-              </label>
-              <label>
-                <input type="radio" name="parent2Relationship" value="Carer" />
-                Carer
-              </label>
-              <label>
-                <input type="radio" name="parent2Relationship" value="Other" />
-                Other
-              </label>
+              <label
+                ><input
+                  type="radio"
+                  name="parent2Relationship"
+                  value="Father"
+                />
+                Father</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="parent2Relationship"
+                  value="Mother"
+                />
+                Mother</label
+              >
+              <label
+                ><input type="radio" name="parent2Relationship" value="Carer" />
+                Carer</label
+              >
+              <label
+                ><input type="radio" name="parent2Relationship" value="Other" />
+                Other</label
+              >
             </div>
             <input
               type="text"
@@ -802,12 +811,12 @@
               style="display: none"
             />
           </div>
-    
+
           <div class="form-row">
             <label>Mobile</label>
             <input type="tel" name="parent2Phone" />
           </div>
-    
+
           <div class="form-row">
             <label>Email Address</label>
             <input type="email" name="parent2Email" />
@@ -1269,6 +1278,23 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
+        const parent2NameInput = document.querySelector('[name="parent2Name"]');
+        const parent2EmailInput = document.querySelector('[name="parent2Email"]');
+        const parent2PhoneInput = document.querySelector('[name="parent2Phone"]');
+        const parent2RelationshipRadios = document.querySelectorAll('input[name="parent2Relationship"]');
+        
+        function updateParent2Requirements() {
+          const isFilled = parent2NameInput.value.trim() !== "";
+        
+          parent2EmailInput.required = isFilled;
+          parent2PhoneInput.required = isFilled;
+          parent2RelationshipRadios.forEach((radio) => {
+            radio.required = isFilled;
+          });
+        }
+        
+        parent2NameInput.addEventListener("input", updateParent2Requirements);
+        updateParent2Requirements();
         let lastHeight = 0;
         function sendHeight() {
           const height = document.body.scrollHeight;
@@ -1309,45 +1335,6 @@
               content.style.maxHeight = content.scrollHeight + "px";
             }
           });
-          
-          const parent2NameInput = document.getElementById("parent2NameInput");
-          const parent2RelationshipRadios = document.querySelectorAll(
-            'input[name="parent2Relationship"]'
-          );
-          const parent2OtherRelationship = document.querySelector(
-            '[name="parent2OtherRelationship"]'
-          );
-          const parent2Phone = document.querySelector('[name="parent2Phone"]');
-          const parent2Email = document.querySelector('[name="parent2Email"]');
-  
-          function updateParent2Requirements() {
-            const isNameEntered = parent2NameInput.value.trim() !== "";
-  
-            parent2RelationshipRadios.forEach(radio => {
-              radio.required = isNameEntered;
-            });
-            parent2Phone.required = isNameEntered;
-            parent2Email.required = isNameEntered;
-  
-            const otherRadio = document.querySelector(
-              'input[name="parent2Relationship"][value="Other"]'
-            );
-            if (isNameEntered && otherRadio.checked) {
-              parent2OtherRelationship.style.display = "block";
-              parent2OtherRelationship.required = true;
-            } else {
-              parent2OtherRelationship.style.display = "none";
-              parent2OtherRelationship.required = false;
-            }
-          }
-  
-          parent2NameInput.addEventListener("input", updateParent2Requirements);
-          
-          parent2RelationshipRadios.forEach(radio => {
-            radio.addEventListener("change", updateParent2Requirements);
-          });
-  
-          updateParent2Requirements();
         });
 
         function populateSchoolsList(schools) {
