@@ -1278,23 +1278,6 @@
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        const parent2NameInput = document.querySelector('[name="parent2Name"]');
-        const parent2EmailInput = document.querySelector('[name="parent2Email"]');
-        const parent2PhoneInput = document.querySelector('[name="parent2Phone"]');
-        const parent2RelationshipRadios = document.querySelectorAll('input[name="parent2Relationship"]');
-        
-        function updateParent2Requirements() {
-          const isFilled = parent2NameInput.value.trim() !== "";
-        
-          parent2EmailInput.required = isFilled;
-          parent2PhoneInput.required = isFilled;
-          parent2RelationshipRadios.forEach((radio) => {
-            radio.required = isFilled;
-          });
-        }
-        
-        parent2NameInput.addEventListener("input", updateParent2Requirements);
-        updateParent2Requirements();
         let lastHeight = 0;
         function sendHeight() {
           const height = document.body.scrollHeight;
