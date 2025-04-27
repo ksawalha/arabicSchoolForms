@@ -11,7 +11,15 @@
         font-family: "Arial", sans-serif;
         line-height: 1.6;
       }
-
+      
+      .medical-conditions-container {
+        display: none;
+      }
+      
+      .medical-conditions-container.visible {
+        display: block;
+      }
+      
       .pas-form {
         background: #fcfcfc;
         color: #333;
@@ -683,10 +691,7 @@
           </div>
 
           <div class="form-row">
-            <label
-              >Does your child have any medical conditions or allergies we
-              should be aware of?</label
-            >
+            <label class="required">Does your child have any medical conditions or allergies we should be aware of?</label>
             <div class="ques-description">
               Please provide details of any medical conditions, allergies, or
               specific health needs your child has. This information will help
@@ -694,7 +699,19 @@
               your child requires medication or special assistance, please
               include this in your response.
             </div>
-            <textarea name="medicalInfo" rows="4"></textarea>
+            <div class="radio-group">
+              <label>
+                <input type="radio" name="hasMedicalConditions" value="Yes" required />
+                Yes
+              </label>
+              <label>
+                <input type="radio" name="hasMedicalConditions" value="No" required />
+                No
+              </label>
+            </div>
+            <div class="medical-conditions-container" id="medicalConditionsContainer">
+              <textarea name="medicalInfo" rows="4"></textarea>
+            </div>
           </div>
 
           <div class="form-row">
@@ -1290,6 +1307,25 @@
           }
         }
 
+        const medicalRadioYes = document.querySelector('input[name="hasMedicalConditions"][value="Yes"]');
+        const medicalRadioNo = document.querySelector('input[name="hasMedicalConditions"][value="No"]');
+        const medicalContainer = document.getElementById('medicalConditionsContainer');
+        const medicalTextarea = document.querySelector('textarea[name="medicalInfo"]');
+
+        const toggleMedicalVisibility = () => {
+          if (medicalRadioYes.checked) {
+            medicalContainer.classList.add('visible');
+            medicalTextarea.required = true;
+          } else {
+            medicalContainer.classList.remove('visible');
+            medicalTextarea.required = false;
+            medicalTextarea.value = '';
+          }
+        };
+
+        medicalRadioYes.addEventListener('change', toggleMedicalVisibility);
+        medicalRadioNo.addEventListener('change', toggleMedicalVisibility);
+        
         window.addEventListener("load", sendHeight);
         window.addEventListener("resize", sendHeight);
         setInterval(sendHeight, 500);
@@ -1508,6 +1544,13 @@
             }
           };
 
+          if (formData.get('hasMedicalConditions') === 'Yes' && !formData.get('medicalInfo')?.trim()) {
+            errors.push({
+              field: 'medicalInfo',
+              message: 'Please provide medical condition details'
+            });
+          }
+
           if (
             formData.get("mainstreamSchoolName") === "Other" &&
             !formData.get("otherSchoolName")?.trim()
@@ -1686,7 +1729,9 @@
                   interests: formData.getAll("interests"),
                   notes: formData.get("notes"),
                 },
-                medicalInfo: formData.get("medicalInfo") || "None",
+                medicalInfo: formData.get('hasMedicalConditions') === 'Yes' 
+                ? formData.get('medicalInfo') 
+                : '',
                 photoConsent: formData.get("photoConsent"),
                 consent: "I agree to the terms and conditions.",
                 applicantName: formData.get("applicantName"),
