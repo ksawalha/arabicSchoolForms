@@ -1,6 +1,7 @@
 {
   "name": "api",
   "version": "1.0.0",
+  "description": "Azure Functions API for Static Web App",
   "main": "index.js",
   "scripts": {
     "start": "func start",
@@ -9,7 +10,6 @@
   "dependencies": {
     "mssql": "^9.0.1"
   },
-  "devDependencies": {},
   "engines": {
     "node": "18.x"
   }
