@@ -1,0 +1,11 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "getCurrentClassrooms.js",
+  "scripts": {
+    "build": "echo \"No build step needed\""
+  },
+  "dependencies": {
+    "mssql": "^9.0.1"
+  }
+}
