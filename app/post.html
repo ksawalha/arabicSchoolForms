@@ -29,21 +29,22 @@
         .drag-active {
             @apply border-blue-500 bg-blue-50;
         }
-        .form-row {
-            @apply flex flex-wrap gap-4 mb-4;
+        .top-fields {
+            @apply flex flex-wrap items-end gap-4 mb-6;
         }
-        .form-row > div {
-            @apply flex-1 min-w-[200px];
+        .top-fields > div {
+            @apply flex-grow;
+            max-width: 300px;
         }
     </style>
 </head>
 <body class="bg-gray-50 p-6">
-    <div class="max-w-full">
+    <div class="max-w-[1800px] mx-auto">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Create New Post</h1>
         
         <form id="postForm" class="space-y-6">
-            <!-- Form Fields in Single Row -->
-            <div class="form-row">
+            <!-- Compact Top Row Fields -->
+            <div class="top-fields">
                 <!-- Title Field -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -65,7 +66,7 @@
                 </div>
 
                 <!-- Allow Submissions -->
-                <div id="allowSubmissionsField" class="hidden flex items-end">
+                <div id="allowSubmissionsField" class="hidden">
                     <div class="flex items-center h-[42px]">
                         <input type="checkbox" id="allowSubmissions" 
                             class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
@@ -74,13 +75,13 @@
                 </div>
             </div>
 
-            <!-- Editor (Full Width) -->
+            <!-- Full-height CKEditor -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Post Content</label>
                 <div id="editor"></div>
             </div>
 
-            <!-- Attachments (Full Width) -->
+            <!-- File Upload Section -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Attachments</label>
                 <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-lg relative"
@@ -102,7 +103,7 @@
                 <div id="attachmentList" class="mt-4 grid gap-2"></div>
             </div>
 
-            <!-- Submit Button (Full Width) -->
+            <!-- Submit Button -->
             <button type="submit" 
                 class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
                 Create Post
