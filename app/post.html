@@ -10,21 +10,27 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- Correct CKEditor CDN -->
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 
     <style>
+        /* Custom CSS fixes */
         .select2-container--default .select2-selection--multiple {
             @apply border-gray-300 rounded-lg shadow-sm;
         }
+        
+        /* CKEditor customizations */
         .ck-editor__editable_inline {
-            @apply min-h-[300px] border-gray-300 rounded-lg shadow-sm;
+            @apply min-h-[400px] border-gray-300 rounded-lg shadow-sm;
         }
+        
+        /* Hide powered by banner */
+        .ck-powered-by {
+            display: none !important;
+        }
+        
         .attachment-item {
             @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors;
         }
-        /* Fix CKEditor z-index issue */
-        .ck-editor__editable_inline { z-index: auto !important; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -123,7 +129,7 @@
             document.getElementById('submissionFields').classList.remove('hidden');
         }
 
-        // Initialize CKEditor
+        // Initialize CKEditor with custom configuration
         let editor;
 
         ClassicEditor
@@ -132,7 +138,7 @@
                     items: [
                         'undo', 'redo',
                         '|', 'bold', 'italic', 'underline',
-                        '|', 'link', 'uploadImage',
+                        '|', 'link', 'mediaEmbed',
                         '|', 'numberedList',
                         '|', 'fontSize',
                         '|', 'alignment:right'
@@ -146,11 +152,13 @@
                 },
                 link: {
                     addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://'
+                    defaultProtocol: 'https://',
+                    autoLink: true
                 },
-                simpleUpload: {
-                    uploadUrl: '/your-upload-endpoint' // Set your upload endpoint
-                }
+                mediaEmbed: {
+                    previewsInData: true
+                },
+                removePlugins: ['UploadAdapter']
             })
             .then(instance => {
                 editor = instance;
