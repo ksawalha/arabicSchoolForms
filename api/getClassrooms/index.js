@@ -12,13 +12,19 @@ module.exports = async function (context, req) {
     `);
     context.res = {
       status: 200,
-      body: result.recordset
+      body: result.recordset,
+      headers: {
+        'Content-Type': 'application/json'
+      }
     };
   } 
   catch (err) {
     context.res = {
       status: 500,
-      body: { error: 'Internal Server Error' }
+      body: { error: 'Internal Server Error' },
+      headers: {
+        'Content-Type': 'application/json'
+      }
     };
   }
 };
