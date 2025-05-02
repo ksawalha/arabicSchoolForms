@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post</title>
-    
+
     <!-- Required CDNs -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -13,85 +13,80 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 
     <style>
-        /* Custom Styles */
         .select2-container--default .select2-selection--multiple {
-            @apply border-gray-300 rounded-lg shadow-sm;
+            height: 2.5rem;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            line-height: 1.5rem;
+        }
+        .select2-container--default .select2-selection--multiple:focus {
+            outline: 2px solid #3b82f6;
+            border-color: #3b82f6;
         }
         .ck-editor__editable_inline {
-            @apply min-h-[70vh] border-gray-300 rounded-lg shadow-sm;
-        }
-        .ck-powered-by {
-            display: none !important;
-        }
-        .attachment-item {
-            @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors;
-        }
-        .drag-active {
-            @apply border-blue-500 bg-blue-50;
+            min-height: 80vh;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .form-row {
-            @apply flex flex-wrap items-end gap-4 mb-6;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: flex-end;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
         }
-        .form-row > div {
-            @apply flex-shrink-0;
+        .attachment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
         }
-        .title-field {
-            min-width: 250px;
+        .attachment-item:hover {
+            background: #f3f4f6;
         }
-        .classroom-field {
-            min-width: 300px;
-        }
-        .deadline-field {
-            min-width: 200px;
+        .drag-active {
+            border-color: #3b82f6;
+            background: #eff6ff;
         }
     </style>
 </head>
 <body class="bg-gray-50 p-6">
     <div class="max-w-[1800px] mx-auto">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Create New Post</h1>
-        
         <form id="postForm" class="space-y-6">
-            <!-- Compact Top Row Fields -->
             <div class="form-row">
-                <!-- Title Field -->
-                <div class="title-field">
+                <div class="min-w-[250px]">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <input type="text" id="title" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="text" id="title" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-
-                <!-- Classrooms Select -->
-                <div class="classroom-field">
+                <div class="min-w-[300px]">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Classrooms</label>
                     <select id="classrooms" multiple class="w-full classroom-select"></select>
                 </div>
-
-                <!-- Submission Fields -->
-                <div id="submissionFields" class="hidden deadline-field">
+                <div id="submissionFields" class="min-w-[200px]">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
-                    <input type="datetime-local" id="deadline"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <input type="datetime-local" id="deadline" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 </div>
-
-                <!-- Allow Submissions -->
-                <div id="allowSubmissionsField" class="hidden flex items-center h-[42px]">
-                    <input type="checkbox" id="allowSubmissions" 
-                        class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                <div id="allowSubmissionsField" class="flex items-center h-[42px]">
+                    <input type="checkbox" id="allowSubmissions" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
                     <label class="ml-2 block text-sm text-gray-700">Allow Submissions</label>
                 </div>
             </div>
-
-            <!-- Full-height CKEditor -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Post Content</label>
                 <div id="editor"></div>
             </div>
-
-            <!-- File Upload Section -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Attachments</label>
-                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-lg relative"
-                    id="dropZone">
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-lg relative" id="dropZone">
                     <div class="space-y-1 text-center">
                         <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                             <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-4 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -108,30 +103,25 @@
                 </div>
                 <div id="attachmentList" class="mt-4 grid gap-2"></div>
             </div>
-
-            <!-- Submit Button -->
-            <button type="submit" 
-                class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
-                Create Post
-            </button>
+            <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">Create Post</button>
         </form>
     </div>
 
     <script>
-        // Function to get path parameter
         function getPathParam() {
-            const path = window.location.pathname;
-            const segments = path.split('/').filter(segment => segment);
-            return segments.length > 0 ? segments[0] : null;
+            const segments = window.location.pathname.split('/').filter(Boolean);
+            return segments[0] || null;
         }
 
-        // Initialize Select2 with API data
-        $(document).ready(function() {
-            // Check path parameter and show/hide fields
+        $(document).ready(function () {
             const pathParam = getPathParam();
+
+            $('#submissionFields, #allowSubmissionsField').removeClass('hidden');
+
             if (pathParam === 'Homework') {
-                document.getElementById('submissionFields').classList.remove('hidden');
-                document.getElementById('allowSubmissionsField').classList.remove('hidden');
+                $('#deadline, #allowSubmissions').prop('disabled', false);
+            } else {
+                $('#deadline, #allowSubmissions').prop('disabled', true);
             }
 
             $('.classroom-select').select2({
@@ -141,141 +131,71 @@
             });
 
             fetch('https://enrol.arabicschool.org.au/api/classrooms')
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(data => {
-                    data.forEach(classroom => {
-                        $('.classroom-select').append(
-                            new Option(classroom.Name, classroom.Id, false, false)
-                        );
-                    });
-                }).catch(error => console.error('Error loading classrooms:', error));
+                    data.forEach(c => $('.classroom-select').append(new Option(c.Name, c.Id)));
+                })
+                .catch(err => console.error(err));
         });
 
-        // Initialize CKEditor
         let editor;
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                toolbar: {
-                    items: [
-                        'undo', 'redo',
-                        '|', 'bold', 'italic', 'underline',
-                        '|', 'link', 'mediaEmbed',
-                        '|', 'numberedList',
-                        '|', 'fontSize',
-                        '|', 'alignment:right'
-                    ]
-                },
-                fontSize: {
-                    options: [10, 12, 14, 'default', 18, 20, 24]
-                },
-                alignment: {
-                    options: ['right']
-                },
-                link: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://',
-                    autoLink: true
-                },
-                mediaEmbed: {
-                    previewsInData: true
-                },
-                removePlugins: ['UploadAdapter']
-            })
-            .then(instance => {
-                editor = instance;
-            })
-            .catch(error => console.error('Editor initialization error:', error));
+        ClassicEditor.create(document.querySelector('#editor'), {
+            toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'link', 'mediaEmbed', '|', 'numberedList', '|', 'fontSize', '|', 'alignment:right'],
+            fontSize: { options: [10, 12, 14, 'default', 18, 20, 24] },
+            alignment: { options: ['right'] },
+            link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },
+            mediaEmbed: { previewsInData: true },
+            removePlugins: ['UploadAdapter']
+        }).then(inst => { editor = inst; }).catch(err => console.error(err));
 
-        // File handling system
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('attachments');
+        const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('attachments');
         let filesArray = [];
 
-        // Drag-drop handlers
-        dropZone.addEventListener('dragover', (e) => {
+        ['dragover', 'dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => {
             e.preventDefault();
-            dropZone.classList.add('drag-active');
-        });
+            dropZone.classList.toggle('drag-active', evt === 'dragover');
+            if (evt === 'drop') handleFiles(e.dataTransfer.files);
+        }));
 
-        dropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-active');
-        });
-
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-active');
-            handleFiles(e.dataTransfer.files);
-        });
-
-        // File input handler
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
         function handleFiles(newFiles) {
-            const updatedFiles = [...filesArray];
-            Array.from(newFiles).forEach(newFile => {
-                if (!updatedFiles.some(existingFile => 
-                    existingFile.name === newFile.name &&
-                    existingFile.size === newFile.size &&
-                    existingFile.lastModified === newFile.lastModified
-                )) {
-                    updatedFiles.push(newFile);
-                }
+            [...newFiles].forEach(f => {
+                if (!filesArray.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified))
+                    filesArray.push(f);
             });
-            filesArray = updatedFiles;
-            updateFileDisplay();
-            updateFileInput();
+            renderFiles(); setInputFiles();
         }
-
-        function updateFileDisplay() {
+        function renderFiles() {
             const list = document.getElementById('attachmentList');
-            list.innerHTML = filesArray.map((file, index) => `
-                <div class="attachment-item">
-                    <div class="flex items-center space-x-3">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        <span class="text-sm font-medium text-gray-700">${file.name}</span>
-                        <span class="text-xs text-gray-500">${file.type || 'unknown type'}</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm text-gray-500">${(file.size/1024/1024).toFixed(2)} MB</span>
-                        <button type="button" onclick="removeFile(${index})" class="text-red-500 hover:text-red-700">
-                            ×
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+            list.innerHTML = filesArray.map((f, i) =>
+                `<div class="attachment-item"><div class="flex items-center gap-2"><svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="text-sm font-medium text-gray-700">${f.name}</span></div><div class="flex items-center gap-2"><span class="text-sm text-gray-500">${(f.size/1024/1024).toFixed(2)} MB</span><button type="button" onclick="filesArray.splice(${i},1);renderFiles();setInputFiles();" class="text-red-500 hover:text-red-700">×</button></div></div>`
+            ).join('');
+        }
+        function setInputFiles() {
+            const dt = new DataTransfer();
+            filesArray.forEach(f => dt.items.add(f));
+            fileInput.files = dt.files;
         }
 
-        function updateFileInput() {
-            const dataTransfer = new DataTransfer();
-            filesArray.forEach(file => dataTransfer.items.add(file));
-            fileInput.files = dataTransfer.files;
-        }
-
-        window.removeFile = (index) => {
-            filesArray = filesArray.filter((_, i) => i !== index);
-            updateFileDisplay();
-            updateFileInput();
-        };
-
-        // Form submission
-        document.getElementById('postForm').addEventListener('submit', function(e) {
+        document.getElementById('postForm').addEventListener('submit', e => {
             e.preventDefault();
-            const formData = new FormData();
-            
-            formData.append('title', document.getElementById('title').value);
-            formData.append('content', editor.getData());
-            
-            filesArray.forEach(file => {
-                formData.append('attachments[]', file);
-            });
 
-            // Add your submission logic here
-            console.log('Form data ready for submission:', formData);
+            $('#deadline, #allowSubmissions').prop('disabled', false);
+
+            const fd = new FormData();
+            fd.append('title', document.getElementById('title').value);
+            fd.append('content', editor.getData());
+            fd.append('deadline', document.getElementById('deadline').value);
+            fd.append('allowSubmissions', document.getElementById('allowSubmissions').checked);
+            filesArray.forEach(f => fd.append('attachments[]', f));
+
+            console.log(fd);
+
+            const pathParam = getPathParam();
+            if (pathParam !== 'Homework') {
+                $('#deadline, #allowSubmissions').prop('disabled', true);
+            }
         });
     </script>
 </body>
