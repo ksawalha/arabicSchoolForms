@@ -27,7 +27,24 @@
         .existing-attachment{background-color:#f0fff4;border-color:#c6f6d5;}
         .existing-attachment:hover{background-color:#e6ffed;}
         .attachment-item.removed{position:relative;opacity:0.7;}
-        .attachment-item.removed::after{content:"DELETED";position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,0,0,0.1);display:flex;align-items:center;justify-content:center;color:#dc2626;font-weight:bold;font-size:1.2em;border:2px dashed #dc2626;}
+        .attachment-item.removed::after {
+            content: "DELETED";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 1.5rem; /* leave space for the Undo button */
+            background: rgba(255, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 1.2em;
+            border: 2px dashed #dc2626;
+            pointer-events: none;
+            border-radius: 0.5rem;
+        }
         .undo-button{color:#2563eb;cursor:pointer;margin-left:0.5rem;font-size:0.875rem;}
         .undo-button:hover{text-decoration:underline;}
     </style>
