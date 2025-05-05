@@ -228,15 +228,13 @@
                 });
             });
 
-            // Initialize Select2
             $('.classroom-select').select2({
                 placeholder: 'Select classrooms',
                 allowClear: true,
                 width: '100%'
             });
 
-            // Fetch classrooms
-            fetch('https://enrol.arabicschool.org.au/api/classrooms')
+            fetch('/api/classrooms')
                 .then(res => res.json())
                 .then(classrooms => {
                     classrooms.forEach(c => {
@@ -244,8 +242,7 @@
                     });
 
                     if (isEditMode) {
-                        // Fetch post data
-                        fetch(`https://enrol.arabicschool.org.au/api/posts/${postId}`)
+                        fetch(`/api/posts/${postId}`)
                             .then(res => res.json())
                             .then(({ post, privacySettings, attachments }) => {
                                 document.querySelector('h1').textContent = 'Edit Post';
