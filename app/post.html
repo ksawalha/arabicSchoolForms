@@ -83,8 +83,8 @@
         let editor, filesArray = [], removedAttachments = [];
         
         function getPathParam() {
-            const segments = window.location.pathname.split('/').filter(Boolean);
-            return segments.length > 1 ? segments[1] : null;
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
         }
 
         async function fetchPostData(postId) {
