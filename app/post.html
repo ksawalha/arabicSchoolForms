@@ -28,6 +28,8 @@
         .existing-attachment:hover{background-color:#e6ffed;}
         .attachment-item.removed{position:relative;opacity:0.7;}
         .attachment-item.removed::after{content:"DELETED";position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,0,0,0.1);display:flex;align-items:center;justify-content:center;color:#dc2626;font-weight:bold;font-size:1.2em;border:2px dashed #dc2626;}
+        .undo-button{color:#2563eb;cursor:pointer;margin-left:0.5rem;font-size:0.875rem;}
+        .undo-button:hover{text-decoration:underline;}
     </style>
 </head>
 <body class="bg-gray-50 p-6">
@@ -80,26 +82,24 @@
     </div>
 
     <script>
-        let editor, filesArray = [], removedAttachments = [];
-        
+        let editor, filesArray = [], removedAttachments = [], undoMap = new Map();
+
         function getPathParam() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id');
         }
-        
+
         async function fetchPostData(postId) {
             try {
                 const [postRes, classroomsRes] = await Promise.all([
                     fetch(`/api/posts/${postId}`),
                     fetch('/api/classrooms')
                 ]);
-                
                 const postData = await postRes.json();
                 const classrooms = await classroomsRes.json();
-                
                 return {
-                    post: postData.post || postData, // Handle both structures
-                    classrooms: classrooms,
+                    post: postData.post || postData,
+                    classrooms,
                     privacySettings: postData.privacySettings || [],
                     attachments: postData.attachments || []
                 };
@@ -108,40 +108,25 @@
                 window.location.href = '/';
             }
         }
-        
+
         function populateForm(data) {
             document.getElementById('title').value = data.post.title;
-            
-            // Wait for editor to be ready before setting data
-            if (editor) {
-                editor.setData(data.post.body);
-            } else {
-                console.error('Editor not initialized');
-            }
-            
+            if (editor) editor.setData(data.post.body);
             if (data.post.type === 'Homework') {
                 const deadline = new Date(data.post.deadline);
                 deadline.setMinutes(deadline.getMinutes() - deadline.getTimezoneOffset());
                 document.getElementById('deadline').value = deadline.toISOString().slice(0,16);
                 document.getElementById('allowSubmissions').checked = data.post.submissionallowed;
             }
-        
-            // Clear existing options first
             $('#classrooms').empty();
             data.classrooms.forEach(c => $('#classrooms').append(new Option(c.Name, c.Id)));
-            
-            // Set selected classrooms from privacySettings
             if (data.privacySettings && data.privacySettings.length) {
                 $('#classrooms').val(data.privacySettings.map(p => p.classroom.toString())).trigger('change');
             }
-        
-            // Clear existing attachments first
             document.getElementById('attachmentList').innerHTML = '';
-            
-            // Add attachments if they exist
             if (data.attachments && data.attachments.length) {
                 data.attachments.forEach(a => {
-                    document.getElementById('attachmentList').innerHTML += `
+                    const attachmentHTML = `
                         <div class="attachment-item existing-attachment" data-attachment-id="${a.id}">
                             <div class="flex items-center gap-2">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,20 +140,37 @@
                             </div>
                         </div>
                     `;
+                    document.getElementById('attachmentList').innerHTML += attachmentHTML;
                 });
             }
         }
-        
+
         function removeExistingAttachment(id) {
-            removedAttachments.push(id);
-            document.querySelector(`[data-attachment-id="${id}"]`).classList.add('removed');
+            const el = document.querySelector(`[data-attachment-id="${id}"]`);
+            if (!removedAttachments.includes(id)) {
+                removedAttachments.push(id);
+                el.classList.add('removed');
+                const undoBtn = document.createElement('span');
+                undoBtn.textContent = 'Undo';
+                undoBtn.className = 'undo-button';
+                undoBtn.onclick = () => undoRemoveAttachment(id);
+                el.querySelector('.flex.items-center.gap-2:last-child').appendChild(undoBtn);
+                undoMap.set(id, undoBtn);
+            }
         }
-        
+
+        function undoRemoveAttachment(id) {
+            const el = document.querySelector(`[data-attachment-id="${id}"]`);
+            el.classList.remove('removed');
+            removedAttachments = removedAttachments.filter(rid => rid !== id);
+            const undoBtn = undoMap.get(id);
+            if (undoBtn) undoBtn.remove();
+            undoMap.delete(id);
+        }
+
         $(document).ready(async function() {
             const postId = getPathParam();
             const isEditMode = !!postId;
-            
-            // Initialize CKEditor first and wait for it to be ready
             editor = await ClassicEditor.create(document.querySelector('#editor'), {
                 toolbar: ['undo','redo','|','bold','italic','underline','|','link','mediaEmbed','|','numberedList','|','fontSize','|','alignment:right'],
                 fontSize: {options:[10,12,14,'default',18,20,24]},
@@ -177,33 +179,21 @@
                 mediaEmbed: {previewsInData:true},
                 removePlugins:['UploadAdapter']
             });
-        
             $('.classroom-select').select2({
                 placeholder: 'Select classrooms',
                 allowClear: true,
                 width: '100%'
             });
-        
             if (isEditMode) {
-                try {
-                    const data = await fetchPostData(postId);
-                    document.querySelector('h1').textContent = 'Edit Post';
-                    document.querySelector('button[type="submit"]').textContent = 'Update Post';
-                    populateForm(data);
-                } catch(error) {
-                    console.error('Error loading post data:', error);
-                }
+                const data = await fetchPostData(postId);
+                document.querySelector('h1').textContent = 'Edit Post';
+                document.querySelector('button[type="submit"]').textContent = 'Update Post';
+                populateForm(data);
             } else {
-                try {
-                    const response = await fetch('/api/classrooms');
-                    const classrooms = await response.json();
-                    classrooms.forEach(c => $('#classrooms').append(new Option(c.Name, c.Id)));
-                } catch(error) {
-                    console.error('Error loading classrooms:', error);
-                }
+                const response = await fetch('/api/classrooms');
+                const classrooms = await response.json();
+                classrooms.forEach(c => $('#classrooms').append(new Option(c.Name, c.Id)));
             }
-        
-            // File upload/drop handling
             const dropZone = document.getElementById('dropZone');
             ['dragover','dragleave','drop'].forEach(evt => {
                 dropZone.addEventListener(evt, e => {
@@ -215,13 +205,11 @@
                     }
                 });
             });
-        
             document.getElementById('attachments').addEventListener('change', e => {
                 if (e.target.files.length) {
                     handleFiles(e.target.files);
                 }
             });
-        
             function handleFiles(newFiles) {
                 filesArray = [...filesArray, ...Array.from(newFiles)];
                 renderFiles();
@@ -229,16 +217,9 @@
                 filesArray.forEach(f => dt.items.add(f));
                 document.getElementById('attachments').files = dt.files;
             }
-        
             function renderFiles() {
                 const attachmentList = document.getElementById('attachmentList');
-                
-                // Keep existing attachments (those with data-attachment-id)
-                const existingAttachments = Array.from(attachmentList.querySelectorAll('[data-attachment-id]'))
-                    .map(el => el.outerHTML)
-                    .join('');
-                
-                // Add new files
+                const existingAttachments = Array.from(attachmentList.querySelectorAll('[data-attachment-id]')).map(el => el.outerHTML).join('');
                 const newFilesHTML = filesArray.map((f,i) => `
                     <div class="attachment-item">
                         <div class="flex items-center gap-2">
@@ -253,50 +234,36 @@
                         </div>
                     </div>
                 `).join('');
-                
                 attachmentList.innerHTML = existingAttachments + newFilesHTML;
             }
         });
-        
+
         document.getElementById('postForm').addEventListener('submit', async e => {
             e.preventDefault();
-            
             const postId = getPathParam();
             const isEditMode = !!postId;
             const formData = new FormData();
-            
             if (isEditMode) formData.append('id', postId);
             formData.append('title', document.getElementById('title').value);
             formData.append('content', editor.getData());
             formData.append('submissionallowed', document.getElementById('allowSubmissions').checked);
-            formData.append('type', 'Homework'); // Fixed type to always be Homework for this form
-            
-            // Add removed attachments if any
+            formData.append('type', 'Homework');
             removedAttachments.forEach(id => formData.append('removedAttachments[]', id));
-            
             if (document.getElementById('allowSubmissions').checked) {
                 formData.append('deadline', document.getElementById('deadline').value);
             }
-        
-            // Add new files
             Array.from(document.getElementById('attachments').files).forEach(f => {
                 formData.append('attachments[]', f);
             });
-        
             try {
-                const response = await fetch(
-                    isEditMode ? `/api/posts/${postId}` : '/api/posts',
-                    {
-                        method: isEditMode ? 'PUT' : 'POST',
-                        body: formData
-                    }
-                );
-                
+                const response = await fetch(isEditMode ? `/api/posts/${postId}` : '/api/posts', {
+                    method: isEditMode ? 'PUT' : 'POST',
+                    body: formData
+                });
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
                     throw new Error(errorData.message || 'Submission failed');
                 }
-                
                 window.location.href = '/posts';
             } catch (error) {
                 console.error('Submission error:', error);
