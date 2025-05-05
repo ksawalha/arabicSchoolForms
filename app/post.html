@@ -90,8 +90,8 @@
         async function fetchPostData(postId) {
             try {
                 const [postRes, classroomsRes] = await Promise.all([
-                    fetch(`https://enrol.arabicschool.org.au/api/posts/${postId}`),
-                    fetch('https://enrol.arabicschool.org.au/api/classrooms')
+                    fetch(`/api/posts/${postId}`),
+                    fetch('/api/classrooms')
                 ]);
                 return {
                     post: await postRes.json(),
@@ -165,7 +165,7 @@
                     console.error(error);
                 }
             } else {
-                fetch('https://enrol.arabicschool.org.au/api/classrooms')
+                fetch('/api/classrooms')
                     .then(r => r.json())
                     .then(classrooms => classrooms.forEach(c => 
                         $('#classrooms').append(new Option(c.Name, c.Id))
@@ -230,7 +230,7 @@
 
             try {
                 const response = await fetch(
-                    isEditMode ? `https://enrol.arabicschool.org.au/api/posts/${postId}` : 'https://enrol.arabicschool.org.au/api/posts',
+                    isEditMode ? `/api/posts/${postId}` : '/api/posts',
                     {method: isEditMode ? 'PUT' : 'POST', body: formData}
                 );
                 if (!response.ok) throw new Error('Submission failed');
