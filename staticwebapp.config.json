@@ -1,4 +1,8 @@
 {
   "routes": [
+    {
+      "route": "/post/:id",
+      "rewrite": "/app/post.html"
+    }
   ]
 }
