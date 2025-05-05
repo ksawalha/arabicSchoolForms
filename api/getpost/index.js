@@ -16,13 +16,10 @@ module.exports = async function (context, req) {
         dbRequest.input('postId', sql.Int, postId);
 
         const query = `
-            -- Get the post
             SELECT * FROM post WHERE id = @postId;
             
-            -- Get all privacy settings for this post
             SELECT * FROM postprivacy WHERE post = @postId;
             
-            -- Get all attachments for this post
             SELECT * FROM attachment WHERE post = @postId;
         `;
 
@@ -57,7 +54,7 @@ module.exports = async function (context, req) {
             status: 500,
             body: { 
                 error: "Internal server error",
-                details: process.env.NODE_ENV === 'development' ? err.message : undefined
+                details: err.message
             }
         };
     }
