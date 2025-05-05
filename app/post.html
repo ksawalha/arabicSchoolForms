@@ -40,6 +40,21 @@
         .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
             color: #6b7280;
         }
+
+        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+            border-bottom: 0 !important;
+        }
+        
+        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused)::after,
+        .ck.ck-editor__main>.ck-editor__editable.ck-blurred::after,
+        .ck.ck-editor__main>.ck-editor__editable::after {
+            display: none !important;
+        }
+        
+        a.ck-powered-by {
+            display: none !important;
+        }
+        
         .ck-editor__editable_inline {
             min-height: 50vh;
             border: 1px solid #d1d5db;
