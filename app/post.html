@@ -86,26 +86,38 @@
             const params = new URLSearchParams(window.location.search);
             return params.get('id');
         }
-
+        
         async function fetchPostData(postId) {
             try {
                 const [postRes, classroomsRes] = await Promise.all([
                     fetch(`/api/posts/${postId}`),
                     fetch('/api/classrooms')
                 ]);
+                
+                const postData = await postRes.json();
+                const classrooms = await classroomsRes.json();
+                
                 return {
-                    post: await postRes.json(),
-                    classrooms: await classroomsRes.json()
+                    post: postData.post || postData, // Handle both structures
+                    classrooms: classrooms,
+                    privacySettings: postData.privacySettings || [],
+                    attachments: postData.attachments || []
                 };
             } catch (error) {
                 alert('Error loading data');
                 window.location.href = '/';
             }
         }
-
+        
         function populateForm(data) {
             document.getElementById('title').value = data.post.title;
-            editor.setData(data.post.body);
+            
+            // Wait for editor to be ready before setting data
+            if (editor) {
+                editor.setData(data.post.body);
+            } else {
+                console.error('Editor not initialized');
+            }
             
             if (data.post.type === 'Homework') {
                 const deadline = new Date(data.post.deadline);
@@ -113,48 +125,65 @@
                 document.getElementById('deadline').value = deadline.toISOString().slice(0,16);
                 document.getElementById('allowSubmissions').checked = data.post.submissionallowed;
             }
-
+        
+            // Clear existing options first
+            $('#classrooms').empty();
             data.classrooms.forEach(c => $('#classrooms').append(new Option(c.Name, c.Id)));
-            $('#classrooms').val(data.post.privacySettings.map(p => p.classroom.toString())).trigger('change');
-
-            data.post.attachments.forEach(a => {
-                document.getElementById('attachmentList').innerHTML += `
-                    <div class="attachment-item existing-attachment" data-attachment-id="${a.id}">
-                        <div class="flex items-center gap-2">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">${a.originname}</span>
+            
+            // Set selected classrooms from privacySettings
+            if (data.privacySettings && data.privacySettings.length) {
+                $('#classrooms').val(data.privacySettings.map(p => p.classroom.toString())).trigger('change');
+            }
+        
+            // Clear existing attachments first
+            document.getElementById('attachmentList').innerHTML = '';
+            
+            // Add attachments if they exist
+            if (data.attachments && data.attachments.length) {
+                data.attachments.forEach(a => {
+                    document.getElementById('attachmentList').innerHTML += `
+                        <div class="attachment-item existing-attachment" data-attachment-id="${a.id}">
+                            <div class="flex items-center gap-2">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span class="text-sm font-medium text-gray-700">${a.originname}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="${a.path}" target="_blank" class="text-blue-500 hover:text-blue-700">View</a>
+                                <button type="button" onclick="removeExistingAttachment(${a.id})" class="text-red-500 hover:text-red-700">×</button>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <a href="${a.path}" target="_blank" class="text-blue-500 hover:text-blue-700">View</a>
-                            <button type="button" onclick="removeExistingAttachment(${a.id})" class="text-red-500 hover:text-red-700">×</button>
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
         }
-
+        
         function removeExistingAttachment(id) {
             removedAttachments.push(id);
             document.querySelector(`[data-attachment-id="${id}"]`).classList.add('removed');
         }
-
+        
         $(document).ready(async function() {
             const postId = getPathParam();
             const isEditMode = !!postId;
             
-            ClassicEditor.create(document.querySelector('#editor'), {
+            // Initialize CKEditor first and wait for it to be ready
+            editor = await ClassicEditor.create(document.querySelector('#editor'), {
                 toolbar: ['undo','redo','|','bold','italic','underline','|','link','mediaEmbed','|','numberedList','|','fontSize','|','alignment:right'],
                 fontSize: {options:[10,12,14,'default',18,20,24]},
                 alignment: {options:['right']},
                 link: {addTargetToExternalLinks:true, defaultProtocol:'https://', autoLink:true},
                 mediaEmbed: {previewsInData:true},
                 removePlugins:['UploadAdapter']
-            }).then(instance => editor = instance);
-
-            $('.classroom-select').select2({placeholder:'Select classrooms',allowClear:true,width:'100%'});
-
+            });
+        
+            $('.classroom-select').select2({
+                placeholder: 'Select classrooms',
+                allowClear: true,
+                width: '100%'
+            });
+        
             if (isEditMode) {
                 try {
                     const data = await fetchPostData(postId);
@@ -162,37 +191,55 @@
                     document.querySelector('button[type="submit"]').textContent = 'Update Post';
                     populateForm(data);
                 } catch(error) {
-                    console.error(error);
+                    console.error('Error loading post data:', error);
                 }
             } else {
-                fetch('/api/classrooms')
-                    .then(r => r.json())
-                    .then(classrooms => classrooms.forEach(c => 
-                        $('#classrooms').append(new Option(c.Name, c.Id))
-                    ));
+                try {
+                    const response = await fetch('/api/classrooms');
+                    const classrooms = await response.json();
+                    classrooms.forEach(c => $('#classrooms').append(new Option(c.Name, c.Id)));
+                } catch(error) {
+                    console.error('Error loading classrooms:', error);
+                }
             }
-
+        
+            // File upload/drop handling
             const dropZone = document.getElementById('dropZone');
             ['dragover','dragleave','drop'].forEach(evt => {
                 dropZone.addEventListener(evt, e => {
                     e.preventDefault();
+                    e.stopPropagation();
                     dropZone.classList.toggle('drag-active', evt === 'dragover');
-                    if (evt === 'drop') handleFiles(e.dataTransfer.files);
+                    if (evt === 'drop' && e.dataTransfer.files.length) {
+                        handleFiles(e.dataTransfer.files);
+                    }
                 });
             });
-
-            document.getElementById('attachments').addEventListener('change', e => handleFiles(e.target.files));
-
+        
+            document.getElementById('attachments').addEventListener('change', e => {
+                if (e.target.files.length) {
+                    handleFiles(e.target.files);
+                }
+            });
+        
             function handleFiles(newFiles) {
-                filesArray = [...filesArray, ...newFiles];
+                filesArray = [...filesArray, ...Array.from(newFiles)];
                 renderFiles();
                 const dt = new DataTransfer();
                 filesArray.forEach(f => dt.items.add(f));
                 document.getElementById('attachments').files = dt.files;
             }
-
+        
             function renderFiles() {
-                document.getElementById('attachmentList').innerHTML = filesArray.map((f,i) => `
+                const attachmentList = document.getElementById('attachmentList');
+                
+                // Keep existing attachments (those with data-attachment-id)
+                const existingAttachments = Array.from(attachmentList.querySelectorAll('[data-attachment-id]'))
+                    .map(el => el.outerHTML)
+                    .join('');
+                
+                // Add new files
+                const newFilesHTML = filesArray.map((f,i) => `
                     <div class="attachment-item">
                         <div class="flex items-center gap-2">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -206,11 +253,14 @@
                         </div>
                     </div>
                 `).join('');
+                
+                attachmentList.innerHTML = existingAttachments + newFilesHTML;
             }
         });
-
+        
         document.getElementById('postForm').addEventListener('submit', async e => {
             e.preventDefault();
+            
             const postId = getPathParam();
             const isEditMode = !!postId;
             const formData = new FormData();
@@ -219,24 +269,38 @@
             formData.append('title', document.getElementById('title').value);
             formData.append('content', editor.getData());
             formData.append('submissionallowed', document.getElementById('allowSubmissions').checked);
-            formData.append('type', isEditMode ? 'Homework' : getPathParam());
+            formData.append('type', 'Homework'); // Fixed type to always be Homework for this form
+            
+            // Add removed attachments if any
             removedAttachments.forEach(id => formData.append('removedAttachments[]', id));
             
             if (document.getElementById('allowSubmissions').checked) {
                 formData.append('deadline', document.getElementById('deadline').value);
             }
-
-            Array.from(document.getElementById('attachments').files).forEach(f => formData.append('attachments[]', f));
-
+        
+            // Add new files
+            Array.from(document.getElementById('attachments').files).forEach(f => {
+                formData.append('attachments[]', f);
+            });
+        
             try {
                 const response = await fetch(
                     isEditMode ? `/api/posts/${postId}` : '/api/posts',
-                    {method: isEditMode ? 'PUT' : 'POST', body: formData}
+                    {
+                        method: isEditMode ? 'PUT' : 'POST',
+                        body: formData
+                    }
                 );
-                if (!response.ok) throw new Error('Submission failed');
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Submission failed');
+                }
+                
                 window.location.href = '/posts';
             } catch (error) {
-                alert(error.message);
+                console.error('Submission error:', error);
+                alert(error.message || 'An error occurred while submitting the post');
             }
         });
     </script>
