@@ -16,19 +16,14 @@ module.exports = async function (context, req) {
     dbRequest.input('postId', sql.Int, postId);
 
     const result = await dbRequest.query(`
-      WITH PostData AS (
-        SELECT 
-          p.Id AS PostId, p.Title, p.Content, p.CreatedAt
-        FROM Post p
-        WHERE p.Id = @postId
-      )
-      SELECT 
-        pd.PostId, pd.Title, pd.Content, pd.CreatedAt,
-        pr.Id AS PrivacyId, pr.Type, pr.Value,
-        a.Id AS AttachmentId, a.Filename, a.Path
-      FROM PostData pd
-      LEFT JOIN PostPrivacy pr ON pd.PostId = pr.PostId
-      LEFT JOIN Attachment a ON pd.PostId = a.post
+    SELECT 
+      p.*,
+      pr.Id AS PrivacyId, pr.Type AS PrivacyType, pr.Value AS PrivacyValue,
+      a.Id AS AttachmentId, a.Filename AS AttachmentFilename, a.Path AS AttachmentPath
+    FROM Post p
+    LEFT JOIN postprivacy pr ON p.Id = pr.PostId
+    LEFT JOIN attachment a ON p.Id = a.post
+    WHERE p.Id = @postId
     `);
 
     const rows = result.recordset;
