@@ -17,10 +17,10 @@ module.exports = async function (context, req) {
 
         const query = `
             -- Get the post
-            SELECT * FROM Post WHERE Id = @postId;
+            SELECT * FROM post WHERE id = @postId;
             
             -- Get all privacy settings for this post
-            SELECT * FROM postprivacy WHERE PostId = @postId;
+            SELECT * FROM postprivacy WHERE post = @postId;
             
             -- Get all attachments for this post
             SELECT * FROM attachment WHERE post = @postId;
