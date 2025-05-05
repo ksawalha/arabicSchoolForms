@@ -12,6 +12,8 @@ module.exports = async function (context, req) {
     }
 
     try {
+        const connectionString = process.env.DB_CONNECTION_STRING;
+        await sql.connect(connectionString);
         const dbRequest = new sql.Request();
         dbRequest.input('postId', sql.Int, postId);
 
