@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- CDN imports and existing styles remain unchanged -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
     <style>
-        /* Add deleted attachment styling */
+        .ck.ck-editor{border-radius:0.5rem;}a.ck-powered-by,.ck.ck-powered-by{display:none!important;}
+        .select2-container--default .select2-selection--multiple{height:2.5rem;padding:0.5rem 0.75rem;border:1px solid #d1d5db;border-radius:0.5rem;box-shadow:0 1px 2px rgba(0,0,0,0.05);line-height:1.5rem;background-color:white;}
+        .select2-container--default .select2-selection--multiple:focus{outline:2px solid #3b82f6;border-color:#3b82f6;}
+        .select2-container--default .select2-selection--multiple .select2-selection__choice{background-color:#f3f4f6;border:1px solid #e5e7eb;border-radius:0.375rem;padding:0 0.5rem;margin-right:0.5rem;}
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{color:#9ca3af;margin-right:0.25rem;}
+        .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover{color:#6b7280;}
+        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused){border-bottom:0!important;}
+        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused)::after,.ck.ck-editor__main>.ck-editor__editable.ck-blurred::after,.ck.ck-editor__main>.ck-editor__editable::after{display:none!important;}
+        a.ck-powered-by{display:none!important;}
+        .ck-editor__editable_inline{min-height:50vh;border:1px solid #d1d5db;border-radius:0.5rem;box-shadow:0 1px 2px rgba(0,0,0,0.05);}
+        .form-row{display:flex;flex-wrap:nowrap;align-items:flex-end;gap:1rem;margin-bottom:1.5rem;overflow-x:auto;}
+        .attachment-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:0.5rem;transition:background 0.2s;}
+        .attachment-item:hover{background:#f3f4f6;}
+        .drag-active{border-color:#3b82f6;background:#eff6ff;}
+        .existing-attachment{background-color:#f0fff4;border-color:#c6f6d5;}
+        .existing-attachment:hover{background-color:#e6ffed;}
         .attachment-item.removed {
             position: relative;
             opacity: 0.7;
@@ -27,7 +48,53 @@
     </style>
 </head>
 <body class="bg-gray-50 p-6">
-    <!-- Existing HTML structure remains unchanged -->
+    <div class="max-w-[1800px] mx-auto">
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Create New Post</h1>
+        <form id="postForm" class="space-y-6">
+            <div class="form-row">
+                <div class="min-w-[250px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="title" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="min-w-[300px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Classrooms</label>
+                    <select id="classrooms" multiple class="w-full classroom-select"></select>
+                </div>
+                <div id="submissionFields" class="min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Deadline</label>
+                    <input type="datetime-local" id="deadline" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div id="allowSubmissionsField" class="flex items-center h-[42px]">
+                    <input type="checkbox" id="allowSubmissions" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label class="ml-2 block text-sm text-gray-700">Allow Submissions</label>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Post Content</label>
+                <div id="editor"></div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Attachments</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-lg relative" id="dropZone">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-4 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="flex text-sm text-gray-600 justify-center">
+                            <label for="attachments" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                <span>Upload files</span>
+                                <input type="file" id="attachments" multiple class="sr-only">
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">Any file types, no size limits</p>
+                    </div>
+                </div>
+                <div id="attachmentList" class="mt-4 grid gap-2"></div>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">Create Post</button>
+        </form>
+    </div>
 
     <script>
         let editor, filesArray = [], removedAttachments = [];
