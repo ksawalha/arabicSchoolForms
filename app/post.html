@@ -149,10 +149,11 @@
     </div>
 
     <script>
-        function getPathParam() {
-            const segments = window.location.pathname.split('/').filter(Boolean);
-            return segments.length > 1 ? segments[1] : null;
+        function getQueryParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
         }
+
 
         let editor;
         let filesArray = [];
@@ -197,7 +198,7 @@
         }
 
         $(document).ready(function () {
-            const postId = getPathParam();
+            const postId = getQueryParam('id');
             const isEditMode = !!postId;
 
             // Initialize CKEditor
