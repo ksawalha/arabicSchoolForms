@@ -189,7 +189,7 @@
             toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'link', 'mediaEmbed', '|', 'numberedList', '|', 'fontSize', '|', 'alignment:right'],
             fontSize: { options: [10, 12, 14, 'default', 18, 20, 24] },
             alignment: { options: ['right'] },
-            link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },
+            link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },  // Autolink enabled here
             mediaEmbed: { previewsInData: true },
             removePlugins: ['UploadAdapter']
         }).then(inst => { editor = inst; }).catch(err => console.error(err));
