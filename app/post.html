@@ -13,6 +13,7 @@
     <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 
     <style>
+        /* Previous styles remain unchanged */
         .ck.ck-editor {
             border-radius: 0.5rem;
         }
@@ -46,36 +47,22 @@
         .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
             color: #6b7280;
         }
-
         .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
             border-bottom: 0 !important;
         }
-        
         .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused)::after,
         .ck.ck-editor__main>.ck-editor__editable.ck-blurred::after,
         .ck.ck-editor__main>.ck-editor__editable::after {
             display: none !important;
         }
-        
         a.ck-powered-by {
             display: none !important;
         }
-        
         .ck-editor__editable_inline {
             min-height: 50vh;
             border: 1px solid #d1d5db;
             border-radius: 0.5rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        /* Hide CKEditor banner */
-        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
-            border-bottom: 0 !important;
-        }
-        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused)::after {
-            content: none !important;
-        }
-        .ck.ck-editor__main>.ck-editor__editable.ck-blurred::after {
-            display: none !important;
         }
         .form-row {
             display: flex;
@@ -102,12 +89,20 @@
             border-color: #3b82f6;
             background: #eff6ff;
         }
+        .existing-attachment {
+            background-color: #f0fff4;
+            border-color: #c6f6d5;
+        }
+        .existing-attachment:hover {
+            background-color: #e6ffed;
+        }
     </style>
 </head>
 <body class="bg-gray-50 p-6">
     <div class="max-w-[1800px] mx-auto">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Create New Post</h1>
         <form id="postForm" class="space-y-6">
+            <!-- Form fields remain unchanged -->
             <div class="form-row">
                 <div class="min-w-[250px]">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
@@ -156,91 +151,186 @@
     <script>
         function getPathParam() {
             const segments = window.location.pathname.split('/').filter(Boolean);
-            return segments[0] || null;
+            return segments.length > 1 ? segments[1] : null;
+        }
+
+        let editor;
+        let filesArray = [];
+
+        function populateFormData(postData, privacySettings, attachments) {
+            // Basic fields
+            document.getElementById('title').value = postData.title;
+            editor.setData(postData.body);
+            
+            // Submission fields
+            if (postData.type === 'Homework') {
+                const deadline = new Date(postData.deadline);
+                deadline.setMinutes(deadline.getMinutes() - deadline.getTimezoneOffset());
+                document.getElementById('deadline').value = deadline.toISOString().slice(0, 16);
+                document.getElementById('allowSubmissions').checked = postData.submissionallowed;
+                document.getElementById('submissionFields').style.display = 'block';
+                document.getElementById('allowSubmissionsField').style.display = 'flex';
+            }
+
+            // Classrooms
+            const classroomIds = privacySettings.map(p => p.classroom.toString());
+            $('#classrooms').val(classroomIds).trigger('change');
+
+            // Existing attachments
+            const attachmentList = document.getElementById('attachmentList');
+            attachments.forEach(attachment => {
+                attachmentList.innerHTML += `
+                    <div class="attachment-item existing-attachment">
+                        <div class="flex items-center gap-2">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">${attachment.originname}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="${attachment.path}" target="_blank" class="text-blue-500 hover:text-blue-700">View</a>
+                            <span class="text-sm text-gray-500">${(attachment.size/1024/1024).toFixed(2)} MB</span>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
         $(document).ready(function () {
-            const pathParam = getPathParam();
+            const postId = getPathParam();
+            const isEditMode = !!postId;
 
-            $('#submissionFields, #allowSubmissionsField').removeClass('hidden');
+            // Initialize CKEditor
+            ClassicEditor.create(document.querySelector('#editor'), {
+                toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'link', 'mediaEmbed', '|', 'numberedList', '|', 'fontSize', '|', 'alignment:right'],
+                fontSize: { options: [10, 12, 14, 'default', 18, 20, 24] },
+                alignment: { options: ['right'] },
+                link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },
+                mediaEmbed: { previewsInData: true },
+                removePlugins: ['UploadAdapter']
+            }).then(instance => {
+                editor = instance;
+            });
 
-            if (pathParam === 'Homework') {
-                $('#deadline, #allowSubmissions').prop('disabled', false);
-            } else {
-                $('#deadline, #allowSubmissions').prop('disabled', true);
-            }
-
+            // Initialize Select2
             $('.classroom-select').select2({
                 placeholder: 'Select classrooms',
                 allowClear: true,
                 width: '100%'
             });
 
+            // Fetch classrooms
             fetch('https://enrol.arabicschool.org.au/api/classrooms')
                 .then(res => res.json())
-                .then(data => {
-                    data.forEach(c => $('.classroom-select').append(new Option(c.Name, c.Id)));
+                .then(classrooms => {
+                    classrooms.forEach(c => {
+                        $('.classroom-select').append(new Option(c.Name, c.Id));
+                    });
+
+                    if (isEditMode) {
+                        // Fetch post data
+                        fetch(`https://enrol.arabicschool.org.au/api/posts/${postId}`)
+                            .then(res => res.json())
+                            .then(({ post, privacySettings, attachments }) => {
+                                document.querySelector('h1').textContent = 'Edit Post';
+                                document.querySelector('button[type="submit"]').textContent = 'Update Post';
+                                populateFormData(post, privacySettings, attachments);
+                            })
+                            .catch(console.error);
+                    }
                 })
-                .catch(err => console.error(err));
+                .catch(console.error);
+
+            // File handling
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('attachments');
+
+            ['dragover', 'dragleave', 'drop'].forEach(evt => {
+                dropZone.addEventListener(evt, e => {
+                    e.preventDefault();
+                    dropZone.classList.toggle('drag-active', evt === 'dragover');
+                    if (evt === 'drop') handleFiles(e.dataTransfer.files);
+                });
+            });
+
+            fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+            function handleFiles(newFiles) {
+                filesArray = [...filesArray, ...Array.from(newFiles)];
+                renderFiles();
+                setInputFiles();
+            }
+
+            function renderFiles() {
+                const list = document.getElementById('attachmentList');
+                list.innerHTML = filesArray.map((f, i) => `
+                    <div class="attachment-item">
+                        <div class="flex items-center gap-2">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">${f.name}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-gray-500">${(f.size/1024/1024).toFixed(2)} MB</span>
+                            <button type="button" onclick="filesArray.splice(${i},1); renderFiles(); setInputFiles();" class="text-red-500 hover:text-red-700">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function setInputFiles() {
+                const dt = new DataTransfer();
+                filesArray.forEach(f => dt.items.add(f));
+                fileInput.files = dt.files;
+            }
         });
 
-        let editor;
-        ClassicEditor.create(document.querySelector('#editor'), {
-            toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'link', 'mediaEmbed', '|', 'numberedList', '|', 'fontSize', '|', 'alignment:right'],
-            fontSize: { options: [10, 12, 14, 'default', 18, 20, 24] },
-            alignment: { options: ['right'] },
-            link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },  // Autolink enabled here
-            mediaEmbed: { previewsInData: true },
-            removePlugins: ['UploadAdapter']
-        }).then(inst => { editor = inst; }).catch(err => console.error(err));
-
-        const dropZone = document.getElementById('dropZone'), fileInput = document.getElementById('attachments');
-        let filesArray = [];
-
-        ['dragover', 'dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => {
+        // Form submission
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            dropZone.classList.toggle('drag-active', evt === 'dragover');
-            if (evt === 'drop') handleFiles(e.dataTransfer.files);
-        }));
+            const postId = getPathParam();
+            const isEditMode = !!postId;
 
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+            const formData = new FormData();
+            if (isEditMode) formData.append('id', postId);
+            formData.append('title', document.getElementById('title').value);
+            formData.append('content', editor.getData());
+            formData.append('type', isEditMode ? 'Homework' : getPathParam());
+            formData.append('submissionallowed', document.getElementById('allowSubmissions').checked);
+            
+            if (document.getElementById('allowSubmissions').checked) {
+                formData.append('deadline', document.getElementById('deadline').value);
+            }
 
-        function handleFiles(newFiles) {
-            [...newFiles].forEach(f => {
-                if (!filesArray.some(x => x.name === f.name && x.size === f.size && x.lastModified === f.lastModified))
-                    filesArray.push(f);
+            Array.from(document.getElementById('attachments').files).forEach(file => {
+                formData.append('attachments[]', file);
             });
-            renderFiles(); setInputFiles();
-        }
-        function renderFiles() {
-            const list = document.getElementById('attachmentList');
-            list.innerHTML = filesArray.map((f, i) =>
-                `<div class="attachment-item"><div class="flex items-center gap-2"><svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="text-sm font-medium text-gray-700">${f.name}</span></div><div class="flex items-center gap-2"><span class="text-sm text-gray-500">${(f.size/1024/1024).toFixed(2)} MB</span><button type="button" onclick="filesArray.splice(${i},1);renderFiles();setInputFiles();" class="text-red-500 hover:text-red-700">×</button></div></div>`
-            ).join('');
-        }
-        function setInputFiles() {
-            const dt = new DataTransfer();
-            filesArray.forEach(f => dt.items.add(f));
-            fileInput.files = dt.files;
-        }
 
-        document.getElementById('postForm').addEventListener('submit', e => {
-            e.preventDefault();
+            try {
+                const response = await fetch(
+                    isEditMode 
+                        ? `https://enrol.arabicschool.org.au/api/posts/${postId}`
+                        : 'https://enrol.arabicschool.org.au/api/posts',
+                    {
+                        method: isEditMode ? 'PUT' : 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json',
+                            // Add authorization headers if needed
+                        }
+                    }
+                );
 
-            $('#deadline, #allowSubmissions').prop('disabled', false);
-
-            const fd = new FormData();
-            fd.append('title', document.getElementById('title').value);
-            fd.append('content', editor.getData());
-            fd.append('deadline', document.getElementById('deadline').value);
-            fd.append('allowSubmissions', document.getElementById('allowSubmissions').checked);
-            filesArray.forEach(f => fd.append('attachments[]', f));
-
-            console.log(fd);
-
-            const pathParam = getPathParam();
-            if (pathParam !== 'Homework') {
-                $('#deadline, #allowSubmissions').prop('disabled', true);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = '/posts'; // Adjust redirect URL
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
         });
     </script>
