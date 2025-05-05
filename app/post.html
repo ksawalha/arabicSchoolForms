@@ -203,14 +203,29 @@
 
             // Initialize CKEditor
             ClassicEditor.create(document.querySelector('#editor'), {
-                toolbar: ['undo', 'redo', '|', 'bold', 'italic', 'underline', '|', 'link', 'mediaEmbed', '|', 'numberedList', '|', 'fontSize', '|', 'alignment:right'],
+                toolbar: [
+                    'undo', 'redo', '|',
+                    'bold', 'italic', 'underline', '|',
+                    'link', 'mediaEmbed', '|',
+                    'numberedList', '|',
+                    'fontSize', '|',
+                    'alignment:left', 'alignment:right', 'alignment:center'
+                ],
                 fontSize: { options: [10, 12, 14, 'default', 18, 20, 24] },
-                alignment: { options: ['right'] },
+                alignment: { options: ['left', 'right', 'center'] }, // Allow both LTR and RTL alignment
                 link: { addTargetToExternalLinks: true, defaultProtocol: 'https://', autoLink: true },
                 mediaEmbed: { previewsInData: true },
                 removePlugins: ['UploadAdapter']
             }).then(instance => {
                 editor = instance;
+            
+                // Detect when the user switches to RTL
+                editor.model.document.on('change', () => {
+                    const content = editor.getData();
+                    if (/[\u0600-\u06FF]/.test(content)) { // Detect Arabic characters in content
+                        editor.editing.view.document.isReadOnly = false;
+                    }
+                });
             });
 
             // Initialize Select2
