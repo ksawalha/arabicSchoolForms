@@ -1339,7 +1339,7 @@
         const fetchSchools = async () => {
           try {
             const response = await fetch(
-              "https://arabicschool.azurewebsites.net/api/mainstream?code=nCeL7kzjSTmt7QGi1iROsTgStOt-jrDlJ9baxZ5wIOCCAzFu9cCanw=="
+              "api/mainstream"
             );
             schoolsList = await response.json();
             populateSchoolsList(schoolsList);
