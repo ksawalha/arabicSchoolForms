@@ -57,7 +57,12 @@ module.exports = async function (context, req) {
             body: { 
                 error: "Internal server error",
                 details: err.message
-            }
+            }, headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'enrol.arabicschool.org.au',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      }
         };
     }
 };
