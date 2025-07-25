@@ -827,7 +827,7 @@
               if (height !== lastHeight) {
                 window.parent.postMessage(
                   { height },
-               "https://arabicschool.org.au/teach-with-us"
+                     "https://arabicschool.org.au"
                 );
                 lastHeight = height;
               }
@@ -860,6 +860,27 @@
                      }
                  });
                  if (radio.checked) radio.dispatchEvent(new Event('change'));
+                 const motherTongueRadios = document.querySelectorAll('input[name="motherTongue"]');
+                 const otherContainer = document.getElementById('otherMotherTongueContainer');
+                 const otherInput = document.querySelector('input[name="otherMotherTongue"]');
+                 
+                 motherTongueRadios.forEach(radio => {
+                 radio.addEventListener('change', function() {
+                     if (this.value === 'Other') {
+                         otherContainer.style.display = 'block';
+                         otherInput.required = true;
+                     } else {
+                         otherContainer.style.display = 'none';
+                         otherInput.required = false;
+                         otherInput.value = '';
+                     }
+                 });
+                 });
+                 
+                 if (document.querySelector('input[name="motherTongue"]:checked')?.value === 'Other') {
+                 otherContainer.style.display = 'block';
+                 otherInput.required = true;
+                 }
              });
          
              // File validation functions
@@ -1147,30 +1168,6 @@
                  uploadText.textContent = 'Click to upload file';
              }
          });
-         });
-         
-         document.addEventListener('DOMContentLoaded', function() {
-         const motherTongueRadios = document.querySelectorAll('input[name="motherTongue"]');
-         const otherContainer = document.getElementById('otherMotherTongueContainer');
-         const otherInput = document.querySelector('input[name="otherMotherTongue"]');
-         
-         motherTongueRadios.forEach(radio => {
-         radio.addEventListener('change', function() {
-             if (this.value === 'Other') {
-                 otherContainer.style.display = 'block';
-                 otherInput.required = true;
-             } else {
-                 otherContainer.style.display = 'none';
-                 otherInput.required = false;
-                 otherInput.value = '';
-             }
-         });
-         });
-         
-         if (document.querySelector('input[name="motherTongue"]:checked')?.value === 'Other') {
-         otherContainer.style.display = 'block';
-         otherInput.required = true;
-         }
          });
       </script>
    </body>
