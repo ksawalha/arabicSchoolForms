@@ -821,21 +821,21 @@
         }
          
          document.addEventListener('DOMContentLoaded', function() {
-let lastHeight = 0;
-  function sendHeight() {
-    const height = document.body.scrollHeight;
-    if (height !== lastHeight) {
-      window.parent.postMessage(
-        { height },
-     "https://arabicschool.org.au/teach-with-us/"
-      );
-      lastHeight = height;
-    }
-  }
-
-  window.addEventListener("load", sendHeight);
-  window.addEventListener("resize", sendHeight);
-  setInterval(sendHeight, 500);
+            let lastHeight = 0;
+            function sendHeight() {
+              const height = document.body.scrollHeight;
+              if (height !== lastHeight) {
+                window.parent.postMessage(
+                  { height },
+               "https://arabicschool.org.au/teach-with-us"
+                );
+                lastHeight = height;
+              }
+            }
+          
+            window.addEventListener("load", sendHeight);
+            window.addEventListener("resize", sendHeight);
+            setInterval(sendHeight, 500);
 
              const wwccDetails = document.getElementById('wwccDetails');
              const wwccRadios = document.querySelectorAll('input[name="hasWWCC"]');
