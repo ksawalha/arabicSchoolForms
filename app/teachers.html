@@ -824,6 +824,7 @@
             let lastHeight = 0;
             function sendHeight() {
                 const height = document.body.scrollHeight;
+                console.log(height);
                 if (height !== lastHeight) {
                     window.parent.postMessage(
                         { height },
