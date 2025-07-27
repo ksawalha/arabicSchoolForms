@@ -651,47 +651,38 @@
                </div>
             </fieldset>
             <fieldset>
-               <legend>Consent & Declaration</legend>
-               <h2>Please read the following carefully and tick the checkbox to confirm your understanding and agreement.</h2>
-               <ol>
-                  <li>Collection and use of your personal information
-                      By submitting this application, you consent to Parramatta Arabic School collecting and using the personal information you provide for recruitment, onboarding, and employment administration. This may include contact details, qualifications, referee information, bank details, tax file number, and superannuation fund details where required.
-                  </li>
-                  <div>
-                     <p style="color: white;">
-                        -
-                     </p>
-                  </div>
-                  <li>Your information will be:
-                      – Stored securely on our digital systems and retained only as long as necessary, or as required by law.
-                      – Used solely for assessing your suitability for the role, managing employment if successful, and meeting legal and compliance requirements.
-                  </li>
-                      <p style="color: white;">
-                        -
-                     </p>
-                  </div>
-                  <li>Disclosure of personal information
-                      You acknowledge that:
-                      – Some of your information may be shared with relevant government agencies, such as the Australian Taxation Office, NSW Fair Trading, or the Department of Education, for employment and compliance purposes.
-                      – Disclosure will only occur when necessary and in compliance with legal obligations.
-                  </li>
-                     <p style="color: white;">
-                        -
-                     </p>
-                  </div>
-                  <li>Employment and limitation of liability
-                      You acknowledge that:
-                        – Submitting this application does not guarantee employment.
-                        – You may be asked to provide additional documents if your application progresses.
+                <legend>Consent & Declaration</legend>
+                <h3>Please read the following carefully and tick the checkbox to confirm your understanding and agreement.</h3>
+                <ol>
+                    <li>
+                        <strong>Collection and use of your personal information</strong><br>
+                        By submitting this application, you consent to Parramatta Arabic School collecting and using the personal information you provide for recruitment, onboarding, and employment administration. This may include contact details, qualifications, referee information, bank details, tax file number, and superannuation fund details where required.<br>
+                        Your information will be:<br>
+                        – Stored securely on our digital systems and retained only as long as necessary, or as required by law.<br>
+                        – Used solely for assessing your suitability for the role, managing employment if successful, and meeting legal and compliance requirements.<br>
+                    </li>
+                    <li>
+                        <strong>Disclosure of personal information</strong><br>
+                        You acknowledge that:<br>
+                        – Some of your information may be shared with relevant government agencies, such as the Australian Taxation Office, NSW Fair Trading, or the Department of Education, for employment and compliance purposes.<br>
+                        – Disclosure will only occur when necessary and in compliance with legal obligations.
+                    </li>
+                    <li>
+                        <strong>Employment and limitation of liability</strong><br>
+                        You acknowledge that:<br>
+                        – Submitting this application does not guarantee employment.<br>
+                        – You may be asked to provide additional documents if your application progresses.<br>
                         – We will take reasonable steps to protect your information from misuse, interference, and unauthorised access or disclosure. Parramatta Arabic School is not liable for any errors, omissions, or technical issues arising from access to or use of our systems.
-                  </li>
-               </ol>
-              <h2>By ticking the checkbox, you confirm that you have read, understood, and consent to the terms provided.</h2>
-               <div class="form-row">
-                  <div class="checkbox-group">
-                     <label><input type="checkbox" name="informationAccuracy" required> I confirm the accuracy of provided information</label>
-                  </div>
-               </div>
+                    </li>
+                </ol>
+                <div class="form-row">
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" name="informationAccuracy" required>
+                            By ticking the checkbox, you confirm that you have read, understood, and consent to the terms provided.*
+                        </label>
+                    </div>
+                </div>
             </fieldset>
             <div style="text-align: center">
                <button type="submit">Submit Application</button>
@@ -840,7 +831,6 @@
             let lastHeight = 0;
             function sendHeight() {
                 const height = document.body.scrollHeight;
-                console.log(height);
                 if (height !== lastHeight) {
                     window.parent.postMessage(
                         { height },
